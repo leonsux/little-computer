@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7efe2" />
+    <title>小小电脑家 · 点星星</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="app" class="app-shell" aria-live="polite">
+      <section id="home-screen" class="screen home-screen" aria-labelledby="home-title">
+        <div class="sun-decor" aria-hidden="true"></div>
+        <div class="home-copy">
+          <p class="welcome-mark">今天来玩什么？</p>
+          <h1 id="home-title">小小<br /><span>电脑家</span></h1>
+          <p class="home-hint">动动小手，发现电脑里的快乐。</p>
+        </div>
+        <nav class="game-menu" aria-label="游戏选择">
+          <button class="game-card stars-card" data-game="stars" type="button">
+            <span class="game-icon" aria-hidden="true">★</span>
+            <span class="game-label">点星星</span>
+            <span class="game-note">动一动，点一点</span>
+          </button>
+          <button class="game-card fruit-card" data-game="fruit" type="button">
+            <span class="game-icon" aria-hidden="true">●</span>
+            <span class="game-label">水果篮</span>
+            <span class="game-note">拖一拖，装满篮子</span>
+          </button>
+          <button class="game-card artist-card" data-game="drawing" type="button">
+            <span class="game-icon artist-icon" aria-hidden="true">✦</span>
+            <span class="game-label">小画家</span>
+            <span class="game-note">画一画，留下作品</span>
+          </button>
+        </nav>
+        <button class="parent-button" data-parent type="button"><span aria-hidden="true">⚙</span> 家长</button>
+        <p class="version-label">小小电脑家 · V0.1</p>
+      </section>
+
+      <section id="stars-screen" class="screen game-screen hidden" aria-labelledby="stars-title">
+        <header class="game-header">
+          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
+          <h2 id="stars-title"><span aria-hidden="true">★</span> 点星星</h2>
+          <div class="progress-pill" aria-label="找到的星星数量"><span id="star-count">0</span><span class="progress-divider">/</span><span id="star-target">20</span> <span aria-hidden="true">★</span></div>
+        </header>
+        <div id="star-field" class="star-field" aria-label="星星游戏区域"></div>
+        <div class="game-tip" id="star-tip">找到一颗亮晶晶的星星吧！</div>
+      </section>
+
+      <section id="fruit-screen" class="screen fruit-screen hidden" aria-labelledby="fruit-title">
+        <header class="game-header fruit-header">
+          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
+          <h2 id="fruit-title"><span aria-hidden="true">●</span> 水果篮</h2>
+          <div class="progress-pill" aria-label="放好的水果数量"><span id="fruit-count">0</span><span class="progress-divider">/</span><span id="fruit-total">1</span> <span aria-hidden="true">●</span></div>
+        </header>
+        <div class="fruit-stage">
+          <div class="market-backdrop" aria-hidden="true">
+            <div class="market-awning"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="market-sign">小小水果摊</div>
+            <div class="market-shelf shelf-top"></div>
+            <div class="market-shelf shelf-bottom"></div>
+            <div class="market-crate crate-one">🍋 🍏</div>
+            <div class="market-crate crate-two">🥕 🌽</div>
+          </div>
+          <div class="fruit-instruction" id="fruit-instruction">把水果放进篮子吧！</div>
+          <div id="fruit-items" class="fruit-items" aria-label="可以拖动的物品"></div>
+          <div id="basket" class="basket" aria-label="水果篮" role="region">
+            <span class="basket-rim" aria-hidden="true"></span>
+            <span class="basket-body" aria-hidden="true">🧺</span>
+            <span id="basket-contents" class="basket-contents" aria-hidden="true"></span>
+            <span class="basket-label">放这里</span>
+          </div>
+          <div class="shopper" aria-hidden="true"><span class="shopper-character">🧒</span><span class="shopper-label">小小采购员</span></div>
+          <div id="fruit-tip" class="fruit-tip" role="status">按住水果，送它回家</div>
+        </div>
+      </section>
+
+      <section id="fruit-finish-screen" class="screen finish-screen hidden" aria-labelledby="fruit-finish-title">
+        <div id="fruit-fireworks" class="fireworks-layer" aria-hidden="true"></div>
+        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
+        <div class="finish-star fruit-finish-icon" aria-hidden="true">🧺</div>
+        <h2 id="fruit-finish-title">送到啦！</h2>
+        <p>所有水果都回到篮子里了！</p>
+        <div class="finish-stars" aria-hidden="true">🍓　🍉　🍍</div>
+        <div class="finish-actions">
+          <button class="primary-button" data-fruit-replay type="button">再玩一次</button>
+          <button class="secondary-button" data-home type="button">回家</button>
+        </div>
+      </section>
+
+      <section id="drawing-screen" class="screen drawing-screen hidden" aria-labelledby="drawing-title">
+        <header class="game-header drawing-header">
+          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
+          <h2 id="drawing-title"><span aria-hidden="true">✦</span> 小画家</h2>
+          <span class="drawing-badge">自由画画</span>
+        </header>
+        <div class="drawing-workspace">
+          <div class="canvas-frame">
+            <canvas id="drawing-canvas" aria-label="画布"></canvas>
+            <div id="drawing-empty" class="drawing-empty" aria-hidden="true">在这里画一画吧</div>
+          </div>
+          <div class="drawing-toolbar" aria-label="画画工具">
+            <div class="tool-group color-tools" aria-label="颜色">
+              <button class="color-tool active" data-color="#ef6f61" style="--swatch: #ef6f61" type="button" aria-label="红色"></button>
+              <button class="color-tool" data-color="#f2c84b" style="--swatch: #f2c84b" type="button" aria-label="黄色"></button>
+              <button class="color-tool" data-color="#69aeca" style="--swatch: #69aeca" type="button" aria-label="蓝色"></button>
+              <button class="color-tool" data-color="#82b56e" style="--swatch: #82b56e" type="button" aria-label="绿色"></button>
+              <button class="color-tool" data-color="#9b79bd" style="--swatch: #9b79bd" type="button" aria-label="紫色"></button>
+              <button class="color-tool" data-color="#3a3840" style="--swatch: #3a3840" type="button" aria-label="黑色"></button>
+            </div>
+            <div class="tool-group size-tools" aria-label="画笔大小">
+              <button class="size-tool active" data-size="8" type="button" aria-label="小画笔"><i class="size-dot small-dot"></i></button>
+              <button class="size-tool" data-size="18" type="button" aria-label="中画笔"><i class="size-dot medium-dot"></i></button>
+              <button class="size-tool" data-size="34" type="button" aria-label="大画笔"><i class="size-dot large-dot"></i></button>
+            </div>
+            <div class="tool-group action-tools">
+              <button class="drawing-action" id="eraser-tool" type="button"><span aria-hidden="true">⌫</span> 橡皮擦</button>
+              <button class="drawing-action" id="clear-drawing" type="button"><span aria-hidden="true">↺</span> 清空</button>
+              <button class="drawing-action save-action" id="save-drawing" type="button"><span aria-hidden="true">↓</span> 保存我的画</button>
+            </div>
+          </div>
+          <div id="clear-confirm" class="clear-confirm hidden" role="dialog" aria-labelledby="clear-title">
+            <span id="clear-title">要重新画画吗？</span>
+            <button id="cancel-clear" type="button">继续画</button>
+            <button id="confirm-clear" type="button">重新画</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="drawing-finish-screen" class="screen drawing-finish-screen hidden" aria-labelledby="drawing-finish-title">
+        <div id="drawing-fireworks" class="fireworks-layer" aria-hidden="true"></div>
+        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
+        <div class="drawing-finish-card">
+          <p class="finish-kicker">完成啦</p>
+          <h2 id="drawing-finish-title">这是你的作品！</h2>
+          <div class="art-preview-frame"><img id="drawing-preview" alt="刚刚完成的画" /></div>
+          <div class="finish-actions">
+            <button class="primary-button" data-drawing-replay type="button">再画一张</button>
+            <button class="secondary-button" data-home type="button">回家</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="finish-screen" class="screen finish-screen hidden" aria-labelledby="finish-title">
+        <div id="stars-fireworks" class="fireworks-layer" aria-hidden="true"></div>
+        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
+        <div class="finish-star" aria-hidden="true">★</div>
+        <h2 id="finish-title">太棒啦！</h2>
+        <p id="finish-subtitle">你找到了 20 颗星星！</p>
+        <div class="finish-stars" aria-hidden="true">★　★　★</div>
+        <div class="finish-actions">
+          <button class="primary-button" data-replay type="button">再玩一次</button>
+          <button class="secondary-button" data-home type="button">回家</button>
+        </div>
+      </section>
+
+      <section id="parent-screen" class="screen parent-screen hidden" aria-labelledby="parent-page-title">
+        <header class="parent-header">
+          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
+          <div>
+            <p class="parent-kicker">给爸爸妈妈</p>
+            <h2 id="parent-page-title">游戏小记录</h2>
+          </div>
+          <span class="parent-lock" aria-hidden="true">⚙</span>
+        </header>
+        <div class="parent-content">
+          <section class="parent-summary" aria-labelledby="summary-title">
+            <div class="summary-lead"><span class="summary-label" id="summary-title">今天玩了</span><strong><span id="today-minutes">0</span><small> 分钟</small></strong></div>
+            <div class="summary-note">这些记录只保存在这台电脑上。</div>
+          </section>
+          <section class="parent-section" aria-labelledby="stats-title">
+            <h3 id="stats-title">今天玩了什么</h3>
+            <div class="stats-grid">
+              <div class="stat-card stat-stars"><span class="stat-symbol" aria-hidden="true">★</span><div><b>点星星</b><span><strong id="stat-star-clicks">0</strong> 次点击 · <strong id="stat-star-rounds">0</strong> 次完成</span></div></div>
+              <div class="stat-card stat-fruits"><span class="stat-symbol" aria-hidden="true">●</span><div><b>水果篮</b><span><strong id="stat-fruit-rounds">0</strong> 次完成</span></div></div>
+              <div class="stat-card stat-drawing"><span class="stat-symbol" aria-hidden="true">✦</span><div><b>小画家</b><span><strong id="stat-drawing-count">0</strong> 幅作品</span></div></div>
+            </div>
+          </section>
+          <section class="parent-section settings-section" aria-labelledby="settings-title">
+            <h3 id="settings-title">游戏设置</h3>
+            <label class="setting-row" for="star-target-setting"><span><b>点星星通关数量</b><small>找到这些星星就可以完成</small></span><select id="star-target-setting"><option value="5">5 颗</option><option value="10">10 颗</option><option value="15">15 颗</option><option value="20">20 颗</option><option value="30">30 颗</option></select></label>
+            <label class="setting-row" for="fruit-level-setting"><span><b>水果篮关卡数量</b><small>每次游戏要完成的关卡数</small></span><select id="fruit-level-setting"><option value="1">1 关</option><option value="2">2 关</option><option value="3">3 关</option><option value="4">4 关</option></select></label>
+            <button class="primary-button save-settings" id="save-settings" type="button">保存设置</button>
+            <p class="settings-saved" id="settings-saved" role="status"></p>
+          </section>
+        </div>
+      </section>
+
+      <div id="parent-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="parent-title">
+        <div class="modal-card">
+          <button class="modal-close" data-close-modal type="button" aria-label="关闭">×</button>
+          <p class="modal-kicker">给爸爸妈妈</p>
+          <h2 id="parent-title">请先算一算</h2>
+          <p class="math-question" id="math-question">2 + 3 = ?</p>
+          <input id="math-answer" class="math-input" inputmode="numeric" aria-label="答案" autocomplete="off" />
+          <p id="math-error" class="math-error" role="alert"></p>
+          <button class="primary-button modal-submit" data-submit-parent type="button">进入家长页面</button>
+        </div>
+      </div>
+      <div id="toast" class="toast" role="status"></div>
+    </main>
+    <script src="app.js"></script>
+    <script src="games/fruits.js"></script>
+    <script src="games/drawing.js"></script>
+  </body>
+</html>
