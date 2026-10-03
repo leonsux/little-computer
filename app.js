@@ -1,34 +1,34 @@
 const screens = {
   home: document.querySelector('#home-screen'),
+  garden: document.querySelector('#garden-screen'),
   stars: document.querySelector('#stars-screen'),
   fruit: document.querySelector('#fruit-screen'),
   drawing: document.querySelector('#drawing-screen'),
-  finish: document.querySelector('#finish-screen'),
-  'fruit-finish': document.querySelector('#fruit-finish-screen'),
+  bubbles: document.querySelector('#bubbles-screen'),
+  memory: document.querySelector('#memory-screen'),
+  train: document.querySelector('#train-screen'),
   'drawing-finish': document.querySelector('#drawing-finish-screen'),
   parent: document.querySelector('#parent-screen'),
 };
 
-const starField = document.querySelector('#star-field');
-const starCount = document.querySelector('#star-count');
-const starTip = document.querySelector('#star-tip');
 const toast = document.querySelector('#toast');
 const parentModal = document.querySelector('#parent-modal');
 const mathAnswer = document.querySelector('#math-answer');
 const mathError = document.querySelector('#math-error');
 
-let foundStars = 0;
-let starTarget = 20;
 let audioContext;
 let parentChallengeAnswer = 0;
 let parentAttempts = 0;
 let parentLockedUntil = 0;
 
-const defaultSettings = { starTarget: 20, fruitLevels: 4 };
+const defaultSettings = { fruitLevels: 4 };
 
 function getSettings() {
   try {
-    return { ...defaultSettings, ...JSON.parse(localStorage.getItem('littleComputer.settings') || '{}') };
+    const saved = JSON.parse(localStorage.getItem('littleComputer.settings') || '{}') || {};
+    return {
+      fruitLevels: [1, 2, 3, 4].includes(Number(saved.fruitLevels)) ? Number(saved.fruitLevels) : defaultSettings.fruitLevels,
+    };
   } catch (_) {
     return { ...defaultSettings };
   }
@@ -44,15 +44,17 @@ function todayKey() {
 }
 
 function recordTodayTime() {
-  const now = Date.now();
-  const previous = Number(localStorage.getItem('littleComputer.lastTimeAt') || now);
-  const seconds = Math.min(Math.max(0, Math.round((now - previous) / 1000)), 60);
-  localStorage.setItem(todayKey(), String(Number(localStorage.getItem(todayKey()) || 0) + seconds));
-  localStorage.setItem('littleComputer.lastTimeAt', String(now));
+  try {
+    const now = Date.now();
+    const previous = Number(localStorage.getItem('littleComputer.lastTimeAt') || now);
+    const seconds = Math.min(Math.max(0, Math.round((now - previous) / 1000)), 60);
+    localStorage.setItem(todayKey(), String(Number(localStorage.getItem(todayKey()) || 0) + seconds));
+    localStorage.setItem('littleComputer.lastTimeAt', String(now));
+  } catch (_) { /* Storage is optional for playing. */ }
 }
 
 function readNumber(key) {
-  return Number(localStorage.getItem(key) || 0);
+  try { return Math.max(0, Number(localStorage.getItem(key)) || 0); } catch (_) { return 0; }
 }
 
 function refreshParentPage() {
@@ -61,8 +63,11 @@ function refreshParentPage() {
   document.querySelector('#stat-star-clicks').textContent = String(readNumber('littleComputer.starClicks'));
   document.querySelector('#stat-star-rounds').textContent = String(readNumber('littleComputer.starRounds'));
   document.querySelector('#stat-fruit-rounds').textContent = String(readNumber('littleComputer.fruitRounds'));
+  document.querySelector('#stat-garden-rounds').textContent = String(readNumber('littleComputer.gardenRounds'));
   document.querySelector('#stat-drawing-count').textContent = String(readNumber('littleComputer.drawingCount'));
-  document.querySelector('#star-target-setting').value = String(settings.starTarget);
+  document.querySelector('#stat-bubble-scenes').textContent = String(readNumber('littleComputer.bubbleScenes'));
+  document.querySelector('#stat-memory-boards').textContent = String(readNumber('littleComputer.memoryBoards'));
+  document.querySelector('#stat-train-trips').textContent = String(readNumber('littleComputer.trainTrips'));
   document.querySelector('#fruit-level-setting').value = String(settings.fruitLevels);
 }
 
@@ -81,150 +86,159 @@ function createParentChallenge() {
   document.querySelector('#math-question').textContent = `${first} ${subtraction ? '−' : '+'} ${second} = ?`;
 }
 
-function playVictorySound() {
-  try {
-    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-    if (audioContext.state === 'suspended') audioContext.resume();
-    const now = audioContext.currentTime;
-    [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((frequency, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      oscillator.type = index === 4 ? 'triangle' : 'sine';
-      oscillator.frequency.value = frequency;
-      const start = now + index * 0.11;
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(index === 4 ? 0.12 : 0.08, start + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.38);
-      oscillator.connect(gain).connect(audioContext.destination);
-      oscillator.start(start);
-      oscillator.stop(start + 0.42);
-    });
-  } catch (_) {
-    // 浏览器不支持 Web Audio 时，游戏仍然可以正常完成。
-  }
+function incrementRecord(key) {
+  try { localStorage.setItem(key, String(readNumber(key) + 1)); } catch (_) { /* Keep playing if storage is unavailable. */ }
 }
 
-function createFireworks(layerId) {
-  const layer = document.querySelector(`#${layerId}`);
-  if (!layer) return;
-  layer.innerHTML = '';
-  for (let burstIndex = 0; burstIndex < 3; burstIndex += 1) {
-    const burst = document.createElement('span');
-    burst.className = 'firework';
-    for (let particleIndex = 0; particleIndex < 8; particleIndex += 1) {
-      const particle = document.createElement('i');
-      particle.style.setProperty('--rotation', `${particleIndex * 45}deg`);
-      burst.append(particle);
-    }
-    layer.append(burst);
-  }
-}
-window.playVictorySound = playVictorySound;
-window.createFireworks = createFireworks;
+let soundEnabled = true;
+let masterGain;
+try { soundEnabled = localStorage.getItem('littleComputer.sound') !== 'off'; } catch (_) {}
 
-function showScreen(name) {
-  Object.values(screens).forEach((screen) => screen.classList.add('hidden'));
-  screens[name].classList.remove('hidden');
-}
-window.showScreen = showScreen;
-
-function playChime() {
-  try {
-    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-    const now = audioContext.currentTime;
-    [523.25, 659.25].forEach((frequency, index) => {
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-      oscillator.type = 'sine';
-      oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.0001, now + index * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.12, now + index * 0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.32);
-      oscillator.connect(gain).connect(audioContext.destination);
-      oscillator.start(now + index * 0.08);
-      oscillator.stop(now + index * 0.08 + 0.34);
-    });
-  } catch (_) {
-    // 音效不可用时不影响游戏本身。
-  }
-}
-
-function randomBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function placeStar(star) {
-  const field = starField.getBoundingClientRect();
-  const size = randomBetween(82, 126);
-  const safeX = Math.max(22, field.width * 0.08);
-  const safeY = Math.max(22, field.height * 0.08);
-  const left = randomBetween(safeX, Math.max(safeX, field.width - size - safeX));
-  const top = randomBetween(safeY, Math.max(safeY, field.height - size - safeY));
-  star.style.setProperty('--star-size', `${size}px`);
-  star.style.left = `${left}px`;
-  star.style.top = `${top}px`;
-}
-
-function beginStars() {
-  starTarget = getSettings().starTarget;
-  foundStars = 0;
-  starCount.textContent = '0';
-  document.querySelector('#star-target').textContent = String(starTarget);
-  starTip.textContent = '找到一颗亮晶晶的星星吧！';
-  starField.innerHTML = '';
-  showScreen('stars');
-  requestAnimationFrame(() => {
-    const star = document.createElement('button');
-    star.className = 'star-button';
-    star.type = 'button';
-    star.textContent = '★';
-    star.setAttribute('aria-label', '一颗星星');
-    star.addEventListener('click', () => collectStar(star));
-    starField.append(star);
-    placeStar(star);
+function syncSoundButtons() {
+  document.querySelectorAll('[data-sound]').forEach((button) => {
+    button.textContent = soundEnabled ? '声音：开' : '声音：关';
+    button.setAttribute('aria-pressed', String(soundEnabled));
   });
 }
 
-function createStarBurst(star) {
-  const starRect = star.getBoundingClientRect();
-  const fieldRect = starField.getBoundingClientRect();
-  const burst = document.createElement('span');
-  burst.className = 'star-burst';
-  burst.setAttribute('aria-hidden', 'true');
-  burst.style.left = `${starRect.left - fieldRect.left + starRect.width / 2}px`;
-  burst.style.top = `${starRect.top - fieldRect.top + starRect.height / 2}px`;
-  for (let index = 0; index < 8; index += 1) burst.append(document.createElement('i'));
-  starField.append(burst);
-  window.setTimeout(() => burst.remove(), 650);
-}
+// Picture tokens show what is left without asking a child to read a score.
+window.GameProgress = {
+  render(container, total, completed, symbol) {
+    container.setAttribute('aria-label', '已完成 ' + completed + ' 个，共 ' + total + ' 个');
+    container.replaceChildren();
+    for (let index = 0; index < total; index += 1) {
+      const token = document.createElement('span');
+      token.className = 'progress-token' + (index < completed ? ' is-filled' : '');
+      if (symbol === 'star') token.textContent = '★';
+      else {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const use = document.createElementNS(svg.namespaceURI, 'use');
+        use.setAttribute('href', '#' + symbol);
+        svg.append(use);
+        token.append(svg);
+      }
+      container.append(token);
+    }
+  },
+};
 
-function collectStar(star) {
-  if (star.classList.contains('collected')) return;
-  foundStars += 1;
-  createStarBurst(star);
-  star.classList.add('collected');
-  starCount.textContent = String(foundStars);
-  const progress = document.querySelector('.progress-pill');
-  progress.classList.remove('bump');
-  void progress.offsetWidth;
-  progress.classList.add('bump');
-  playChime();
-  const saved = Number(localStorage.getItem('littleComputer.starClicks') || 0);
-  localStorage.setItem('littleComputer.starClicks', String(saved + 1));
-  if (foundStars >= starTarget) {
-    const rounds = readNumber('littleComputer.starRounds');
-    localStorage.setItem('littleComputer.starRounds', String(rounds + 1));
-    document.querySelector('#finish-subtitle').textContent = `你找到了 ${starTarget} 颗星星！`;
-    playVictorySound();
-    createFireworks('stars-fireworks');
-    setTimeout(() => showScreen('finish'), 320);
-    return;
+window.GameAudio = {
+  play(complete = false) {
+    if (!soundEnabled) return;
+    try {
+      audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+      if (!masterGain) {
+        masterGain = audioContext.createGain();
+        masterGain.connect(audioContext.destination);
+      }
+      masterGain.gain.value = soundEnabled ? 1 : 0;
+      if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+      const now = audioContext.currentTime;
+      (complete ? [523, 659, 784] : [659, 784]).forEach((frequency, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const start = now + index * .1;
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(.045, start + .02);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + .25);
+        oscillator.connect(gain).connect(masterGain);
+        oscillator.start(start);
+        oscillator.stop(start + .28);
+        oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+      });
+    } catch (_) { /* All sound has an equivalent visual response. */ }
+  },
+};
+document.querySelectorAll('[data-sound]').forEach((button) => button.addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  if (masterGain) masterGain.gain.value = soundEnabled ? 1 : 0;
+  try { localStorage.setItem('littleComputer.sound', soundEnabled ? 'on' : 'off'); } catch (_) {}
+  syncSoundButtons();
+}));
+syncSoundButtons();
+
+let demoTimer;
+const demonstrated = new Set();
+window.GameHelp = {
+  hide() {
+    clearTimeout(demoTimer);
+    document.querySelectorAll('[data-demo-panel]').forEach((panel) => {
+      panel.classList.add('hidden');
+      panel.classList.remove('is-playing');
+    });
+  },
+  show(name) {
+    this.hide();
+    const panel = document.querySelector('[data-demo-panel="' + name + '"]');
+    if (!panel) return;
+    panel.classList.remove('hidden');
+    void panel.offsetWidth;
+    panel.classList.add('is-playing');
+    demonstrated.add(name);
+    demoTimer = setTimeout(() => this.hide(), 6500);
+  },
+  first(name) { if (!demonstrated.has(name)) this.show(name); },
+};
+
+let levelTransitionTimer;
+const levelTransition = document.querySelector('#level-transition');
+window.LevelTransition = {
+  show({ title = '完成啦！', note = '下一关马上开始', onDone }) {
+    this.cancel();
+    document.querySelector('#level-transition-title').textContent = title;
+    document.querySelector('#level-transition-note').textContent = note;
+    levelTransition.classList.remove('hidden');
+    void levelTransition.offsetWidth;
+    levelTransition.classList.add('is-showing');
+    levelTransitionTimer = window.setTimeout(() => {
+      this.cancel();
+      onDone?.();
+    }, 1500);
+  },
+  cancel() {
+    window.clearTimeout(levelTransitionTimer);
+    levelTransition.classList.add('hidden');
+    levelTransition.classList.remove('is-showing');
+  },
+};
+document.querySelectorAll('[data-demo]').forEach((button) => button.addEventListener('click', () => window.GameHelp.show(button.dataset.demo)));
+document.querySelectorAll('[data-close-demo]').forEach((button) => button.addEventListener('click', () => window.GameHelp.hide()));
+document.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('.star-button, .fruit-item, #drawing-canvas')) window.GameHelp.hide();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') window.GameHelp.hide();
+});
+
+function showScreen(name) {
+  window.LevelTransition.cancel();
+  if (name !== 'garden') window.GardenGame?.stop();
+  if (name !== 'stars') window.StarsGame?.stop();
+  if (name !== 'fruit') window.FruitGame?.stop();
+  if (name !== 'drawing') window.DrawingGame?.stop();
+  if (name !== 'bubbles') window.BubblesGame?.stop();
+  if (name !== 'memory') window.MemoryGame?.stop();
+  if (name !== 'train') window.TrainGame?.stop();
+  window.GameHelp.hide();
+  Object.values(screens).forEach((screen) => screen.classList.add('hidden'));
+  screens[name].classList.remove('hidden');
+  window.scrollTo(0, 0);
+  if (name === 'home') {
+    const entry = screens.home.querySelector('[data-game="' + showScreen.previousGame + '"]');
+    entry?.focus({ preventScroll: true });
+    entry?.scrollIntoView({ block: 'nearest' });
+  } else if (['garden', 'stars', 'fruit', 'drawing', 'bubbles', 'memory', 'train'].includes(name)) {
+    showScreen.previousGame = name;
+    const title = screens[name].querySelector('h2');
+    title.tabIndex = -1;
+    title.focus({ preventScroll: true });
   }
-  starTip.textContent = foundStars >= 10 ? '星星藏得更远啦，继续找找看！' : '找到了！再找一颗吧！';
-  setTimeout(() => {
-    star.classList.remove('collected');
-    placeStar(star);
-  }, 240);
+}
+window.showScreen = showScreen;
+
+function randomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function showToast(message) {
@@ -249,10 +263,17 @@ function closeParentModal() {
   parentModal.classList.add('hidden');
 }
 
-document.querySelectorAll('[data-game="stars"], [data-replay]').forEach((button) => button.addEventListener('click', beginStars));
-document.querySelectorAll('[data-game="fruit"], [data-fruit-replay]').forEach((button) => button.addEventListener('click', () => window.FruitGame?.start()));
+document.querySelector('[data-game="stars"]').addEventListener('click', () => window.StarsGame.start());
+document.querySelector('[data-game="fruit"]').addEventListener('click', () => window.FruitGame.start());
+document.querySelector('[data-game="bubbles"]').addEventListener('click', () => window.BubblesGame.start());
+document.querySelector('[data-game="memory"]').addEventListener('click', () => window.MemoryGame.start());
+document.querySelector('[data-game="train"]').addEventListener('click', () => window.TrainGame.start());
 document.querySelectorAll('[data-game="drawing"], [data-drawing-replay]').forEach((button) => button.addEventListener('click', () => window.DrawingGame?.start()));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
+document.querySelectorAll('[data-replay]').forEach((button) => button.addEventListener('click', () => {
+  const game = { stars: window.StarsGame, fruit: window.FruitGame, bubbles: window.BubblesGame, memory: window.MemoryGame, train: window.TrainGame }[button.dataset.replay];
+  game.start();
+}));
 document.querySelector('[data-parent]').addEventListener('click', openParentModal);
 document.querySelector('[data-close-modal]').addEventListener('click', closeParentModal);
 document.querySelector('[data-submit-parent]').addEventListener('click', () => {
@@ -282,17 +303,12 @@ document.querySelector('[data-submit-parent]').addEventListener('click', () => {
 });
 document.querySelector('#save-settings').addEventListener('click', () => {
   saveSettings({
-    starTarget: Number(document.querySelector('#star-target-setting').value),
     fruitLevels: Number(document.querySelector('#fruit-level-setting').value),
   });
   document.querySelector('#settings-saved').textContent = '设置已保存，下次游戏开始时生效。';
 });
 mathAnswer.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') document.querySelector('[data-submit-parent]').click();
-});
-window.addEventListener('resize', () => {
-  const star = starField.querySelector('.star-button:not(.collected)');
-  if (star) placeStar(star);
 });
 recordTodayTime();
 window.setInterval(recordTodayTime, 30000);

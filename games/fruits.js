@@ -1,164 +1,217 @@
 (function createFruitGame() {
-  const levels = [
-    [{ emoji: '🍎', name: '苹果' }],
-    [{ emoji: '🍌', name: '香蕉' }, { emoji: '🍊', name: '橙子' }],
-    [{ emoji: '🍓', name: '草莓' }, { emoji: '🍇', name: '葡萄' }, { emoji: '🍉', name: '西瓜' }],
-    [{ emoji: '🍑', name: '桃子' }, { emoji: '🍐', name: '梨子' }, { emoji: '🍍', name: '菠萝' }, { emoji: '🧸', name: '玩具熊', distractor: true }],
-  ];
-  const screen = document.querySelector('#fruit-screen');
+  const stage = document.querySelector('.fruit-stage');
   const items = document.querySelector('#fruit-items');
-  const basket = document.querySelector('#basket');
-  const basketContents = document.querySelector('#basket-contents');
-  const count = document.querySelector('#fruit-count');
-  const total = document.querySelector('#fruit-total');
-  const instruction = document.querySelector('#fruit-instruction');
+  const baskets = [...stage.querySelectorAll('.basket')];
   const tip = document.querySelector('#fruit-tip');
+  const lessonButtons = [...document.querySelectorAll('[data-fruit-step]')];
+  const lessons = [
+    { title: '先送一个', hint: '把苹果送进篮子吧', fruits: ['apple'] },
+    { title: '再送几个', hint: '一个一个，送进同一个篮子', fruits: ['apple', 'pear', 'apple'] },
+    { title: '送远一点', hint: '按住水果，送到远处的篮子', fruits: ['apple', 'pear', 'apple'] },
+    { title: '分开放好', hint: '看篮子上的图案，把水果送回家', fruits: ['apple', 'pear', 'apple', 'pear'] },
+  ];
+  let active = false;
   let level = 0;
+  let levelCount = 4;
   let placed = 0;
-  let dragState = null;
-  let audioContext;
+  let recorded = false;
+  let drag = null;
+  let transitioning = false;
+  let completed = new Set();
 
-  function configuredLevels() {
-    let settings = {};
-    try { settings = JSON.parse(localStorage.getItem('littleComputer.settings') || '{}'); } catch (_) { settings = {}; }
-    const levelCount = Math.min(4, Math.max(1, Number(settings.fruitLevels) || 4));
-    return levels.slice(0, levelCount);
-  }
-
-  function tone(frequency, start, duration, volume = 0.09, type = 'sine') {
-    audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    oscillator.type = type;
-    oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(volume, start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-    oscillator.connect(gain).connect(audioContext.destination);
-    oscillator.start(start);
-    oscillator.stop(start + duration + 0.03);
-  }
-
-  function playFruitSound(kind) {
-    try {
-      audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-      if (audioContext.state === 'suspended') audioContext.resume();
-      const now = audioContext.currentTime;
-      if (kind === 'success') {
-        tone(587.33, now, .2, .08);
-        tone(783.99, now + .07, .25, .07);
-      } else if (kind === 'wrong') {
-        tone(220, now, .16, .035, 'triangle');
-      } else {
-        [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => tone(frequency, now + index * .12, .34, .09));
-      }
-    } catch (_) {
-      // 浏览器不支持 Web Audio 时，游戏仍然可以正常操作。
-    }
-  }
-
-  function shuffle(list) {
-    return [...list].sort(() => Math.random() - 0.5);
-  }
-
-  function start() {
-    level = 0;
-    setupLevel();
-    window.showScreen('fruit');
-  }
-
-  function setupLevel() {
-    const current = configuredLevels()[level];
-    placed = 0;
-    count.textContent = '0';
-    total.textContent = String(current.filter((item) => !item.distractor).length);
-    instruction.textContent = level === 3 ? '把水果放进篮子，玩具熊不用动哦！' : '把水果放进篮子吧！';
-    tip.textContent = '按住水果，送它回家';
-    items.innerHTML = '';
-    basketContents.innerHTML = '';
-    shuffle(current).forEach((item, index) => {
-      const element = document.createElement('button');
-      element.className = 'fruit-item';
-      element.type = 'button';
-      element.textContent = item.emoji;
-      element.setAttribute('aria-label', item.name);
-      element.dataset.distractor = String(Boolean(item.distractor));
-      element.style.left = `${(index % 2) * 48 + (index > 1 ? 10 : 0)}%`;
-      element.style.top = `${Math.floor(index / 2) * 47 + 4}%`;
-      element.addEventListener('pointerdown', beginDrag);
-      items.append(element);
+  function renderProgress() {
+    window.GameProgress.render(document.querySelector('#fruit-trail'), lessons[level].fruits.length, placed, 'garden-basket-art');
+    lessonButtons.forEach((button, index) => {
+      button.disabled = index >= levelCount;
+      button.classList.toggle('is-complete', completed.has(index));
+      if (index === level) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
     });
   }
 
-  function beginDrag(event) {
-    const element = event.currentTarget;
-    if (element.classList.contains('correct')) return;
-    const rect = element.getBoundingClientRect();
-    dragState = { element, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top, origin: { left: element.style.left, top: element.style.top } };
-    element.classList.add('dragging');
-    element.setPointerCapture(event.pointerId);
-    element.addEventListener('pointermove', moveDrag);
-    element.addEventListener('pointerup', endDrag, { once: true });
-    element.addEventListener('pointercancel', endDrag, { once: true });
+  function art(kind) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const use = document.createElementNS(svg.namespaceURI, 'use');
+    svg.setAttribute('aria-hidden', 'true');
+    use.setAttribute('href', '#play-' + kind);
+    svg.append(use);
+    return svg;
   }
 
-  function moveDrag(event) {
-    if (!dragState) return;
-    const rect = items.getBoundingClientRect();
-    dragState.element.style.left = `${event.clientX - rect.left - dragState.offsetX}px`;
-    dragState.element.style.top = `${event.clientY - rect.top - dragState.offsetY}px`;
-    const basketRect = basket.getBoundingClientRect();
-    const inside = event.clientX > basketRect.left && event.clientX < basketRect.right && event.clientY > basketRect.top && event.clientY < basketRect.bottom;
-    basket.classList.toggle('is-target', inside);
-  }
-
-  function endDrag(event) {
-    if (!dragState) return;
-    const { element, origin } = dragState;
-    const basketRect = basket.getBoundingClientRect();
-    const inside = event.clientX > basketRect.left && event.clientX < basketRect.right && event.clientY > basketRect.top && event.clientY < basketRect.bottom;
-    element.classList.remove('dragging');
-    basket.classList.remove('is-target');
-    element.removeEventListener('pointermove', moveDrag);
-    if (inside && element.dataset.distractor !== 'true') {
-      placed += 1;
-      count.textContent = String(placed);
-      playFruitSound('success');
-      const basketFruit = document.createElement('span');
-      basketFruit.className = 'basket-fruit';
-      basketFruit.textContent = element.textContent;
-      basketContents.append(basketFruit);
-      element.classList.add('correct');
-      tip.textContent = placed === Number(total.textContent) ? '太棒啦！' : '叮！放得真好！';
-      window.setTimeout(() => {
-        element.remove();
-        if (placed === Number(total.textContent)) nextLevel();
-      }, 380);
-    } else {
-      playFruitSound('wrong');
-      element.style.left = origin.left;
-      element.style.top = origin.top;
-      element.classList.add('returning');
-      tip.textContent = element.dataset.distractor === 'true' ? '这是玩具熊，水果才去篮子里哦～' : '再试试～';
-      window.setTimeout(() => element.classList.remove('returning'), 400);
+  function cancelDrag() {
+    if (!drag) return;
+    const previous = drag;
+    drag = null;
+    previous.element.style.transform = '';
+    previous.element.classList.remove('dragging');
+    if (previous.pointerId !== null && previous.element.hasPointerCapture(previous.pointerId)) {
+      previous.element.releasePointerCapture(previous.pointerId);
     }
-    dragState = null;
+    baskets.forEach((basket) => basket.classList.remove('is-target'));
   }
 
-  function nextLevel() {
-    if (level === configuredLevels().length - 1) {
-      const completed = Number(localStorage.getItem('littleComputer.fruitRounds') || 0);
-      localStorage.setItem('littleComputer.fruitRounds', String(completed + 1));
-      window.setTimeout(() => {
-        window.showScreen('fruit-finish');
-        window.playVictorySound();
-        window.createFireworks('fruit-fireworks');
-      }, 240);
+  function dropTarget() {
+    if (!drag || Math.hypot(drag.dx, drag.dy) < 16) return null;
+    const rect = drag.element.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    return baskets.find((basket) => {
+      if (basket.classList.contains('hidden')) return false;
+      const r = basket.getBoundingClientRect();
+      return x >= r.left - 12 && x <= r.right + 12 && y >= r.top - 12 && y <= r.bottom + 12;
+    });
+  }
+
+  function move(dx, dy) {
+    if (!drag) return;
+    const bounds = stage.getBoundingClientRect();
+    drag.dx = Math.max(bounds.left - drag.origin.left + 3, Math.min(bounds.right - drag.origin.right - 3, dx));
+    drag.dy = Math.max(bounds.top - drag.origin.top + 3, Math.min(bounds.bottom - drag.origin.bottom - 3, dy));
+    drag.element.style.transform = 'translate(' + drag.dx + 'px, ' + drag.dy + 'px)';
+    const destination = dropTarget();
+    const correct = destination && (level !== 3 || destination === baskets[drag.element.dataset.fruit === 'pear' ? 1 : 0]);
+    baskets.forEach((basket) => basket.classList.toggle('is-target', correct && basket === destination));
+    tip.textContent = correct ? '到篮子啦，松开吧' : destination ? '看看图案，送到另一个篮子吧' : '按住水果，慢慢送过去';
+  }
+
+  function begin(element, pointerId, x = 0, y = 0) {
+    if (!active || transitioning || drag || element.disabled) return;
+    window.GameHelp.hide();
+    drag = { element, pointerId, x, y, dx: 0, dy: 0, origin: element.getBoundingClientRect() };
+    element.classList.add('dragging');
+    if (pointerId !== null) element.setPointerCapture(pointerId);
+    tip.textContent = '拿起来啦，送进篮子吧';
+  }
+
+  function finish() {
+    if (!drag) return;
+    const destination = dropTarget();
+    const { element, pointerId } = drag;
+    const correct = destination && (level !== 3 || destination === baskets[element.dataset.fruit === 'pear' ? 1 : 0]);
+    cancelDrag();
+    if (!correct) {
+      tip.textContent = destination ? '看看篮子上的图案，再送一次吧' : '水果回来了，再送一次吧';
       return;
     }
-    level += 1;
-    window.setTimeout(setupLevel, 450);
+    element.disabled = true;
+    element.classList.add('correct');
+    destination.querySelector('.basket-contents').append(art(element.dataset.fruit));
+    placed += 1;
+    document.querySelector('#fruit-count').textContent = String(placed);
+    const complete = placed === lessons[level].fruits.length;
+    window.GameAudio.play(complete);
+    tip.textContent = complete ? '都放好啦，谢谢你！' : '放好一个啦，还有朋友等你';
+    if (complete) completed.add(level);
+    renderProgress();
+    if (completed.size === levelCount && !recorded) {
+      recorded = true;
+      incrementRecord('littleComputer.fruitRounds');
+    }
+    if (complete) {
+      transitioning = true;
+      const finished = completed.size === levelCount;
+      window.LevelTransition.show({
+        title: level === 3 ? '水果都回家啦！' : '篮子装好啦！',
+        note: finished ? '马上再玩一遍' : '下一关马上开始',
+        onDone: () => {
+          if (!active) return;
+          transitioning = false;
+          if (finished) start();
+          else {
+            const following = lessons.findIndex((_, index) => index > level && index < levelCount && !completed.has(index));
+            level = following >= 0 ? following : lessons.findIndex((_, index) => index < levelCount && !completed.has(index));
+            setupLevel(pointerId === null);
+          }
+        },
+      });
+    }
+    if (pointerId === null) {
+      if (!complete) items.querySelector('.fruit-item:not(:disabled)').focus();
+    }
   }
 
-  window.FruitGame = { start };
-}());
+  function setupLevel(focus = false) {
+    cancelDrag();
+    placed = 0;
+    const lesson = lessons[level];
+    stage.dataset.level = String(level);
+    document.querySelector('#fruit-lesson').textContent = lesson.title;
+    document.querySelector('#fruit-instruction').textContent = lesson.hint;
+    document.querySelector('#fruit-count').textContent = '0';
+    document.querySelector('#fruit-total').textContent = String(lesson.fruits.length);
+    tip.textContent = '按住，移动，再松开。';
+    baskets.forEach((basket) => basket.querySelector('.basket-contents').replaceChildren());
+    baskets[1].classList.toggle('hidden', level !== 3);
+    baskets[0].querySelector('.basket-example').classList.toggle('hidden', level !== 3);
+    baskets[0].querySelector('.basket-label').textContent = level === 3 ? '苹果住这里' : '送到这里';
+    baskets[0].setAttribute('aria-label', level === 3 ? '苹果篮' : '水果篮');
+    items.replaceChildren();
+    renderProgress();
+    lesson.fruits.forEach((kind) => {
+      const element = document.createElement('button');
+      element.type = 'button';
+      element.className = 'fruit-item';
+      element.dataset.fruit = kind;
+      element.setAttribute('aria-label', (kind === 'apple' ? '苹果' : '梨子') + '，空格拿起，方向键移动，空格放下');
+      element.append(art(kind));
+      element.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0 || !event.isPrimary || drag) return;
+        event.preventDefault();
+        element.focus({ preventScroll: true });
+        begin(element, event.pointerId, event.clientX, event.clientY);
+      });
+      element.addEventListener('pointermove', (event) => {
+        if (drag?.element === element && drag.pointerId === event.pointerId) move(event.clientX - drag.x, event.clientY - drag.y);
+      });
+      element.addEventListener('pointerup', (event) => {
+        if (drag?.element === element && drag.pointerId === event.pointerId) {
+          move(event.clientX - drag.x, event.clientY - drag.y);
+          finish();
+        }
+      });
+      element.addEventListener('pointercancel', cancelDrag);
+      element.addEventListener('lostpointercapture', () => { if (drag?.element === element) cancelDrag(); });
+      element.addEventListener('keydown', (event) => {
+        if (event.key === ' ' || event.key === 'Enter') {
+          event.preventDefault();
+          if (event.repeat) return;
+          if (!drag) begin(element, null);
+          else if (drag.element === element && drag.pointerId === null) finish();
+        } else if (event.key.startsWith('Arrow') && drag?.element === element && drag.pointerId === null) {
+          event.preventDefault();
+          const amount = event.shiftKey ? 8 : 24;
+          move(drag.dx + (event.key === 'ArrowRight' ? amount : event.key === 'ArrowLeft' ? -amount : 0),
+            drag.dy + (event.key === 'ArrowDown' ? amount : event.key === 'ArrowUp' ? -amount : 0));
+        }
+      });
+      element.addEventListener('blur', () => { if (drag?.element === element && drag.pointerId === null) cancelDrag(); });
+      items.append(element);
+    });
+    if (focus) items.firstElementChild.focus();
+  }
+
+  function start() {
+    window.LevelTransition.cancel();
+    window.showScreen('fruit');
+    active = true;
+    transitioning = false;
+    level = 0;
+    levelCount = getSettings().fruitLevels;
+    recorded = false;
+    completed = new Set();
+    setupLevel();
+    window.GameHelp.first('fruit');
+  }
+
+  function stop() { active = false; transitioning = false; cancelDrag(); window.LevelTransition.cancel(); }
+  lessonButtons.forEach((button, index) => button.addEventListener('click', (event) => {
+    if (!active || transitioning || index >= levelCount || index === level) return;
+    level = index;
+    setupLevel(event.detail === 0);
+  }));
+  document.addEventListener('keydown', (event) => { if (event.key === 'Escape') cancelDrag(); });
+  window.addEventListener('blur', cancelDrag);
+  window.addEventListener('resize', cancelDrag);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) cancelDrag(); });
+  window.FruitGame = { start, stop };
+})();

@@ -3,154 +3,358 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f7efe2" />
-    <title>小小电脑家 · 点星星</title>
+    <meta name="theme-color" content="#f5f8ef" />
+    <title>小小电脑家 · 今天想去哪里玩？</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="games/garden.css" />
+    <link rel="stylesheet" href="games/play.css" />
+    <link rel="stylesheet" href="games/discovery.css" />
   </head>
   <body>
-    <main id="app" class="app-shell" aria-live="polite">
+    <main id="app" class="app-shell">
+      <svg class="garden-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <symbol id="shape-circle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="36" fill="currentColor" stroke="#577574" stroke-width="4"/></symbol>
+          <symbol id="shape-square" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="7" fill="currentColor" stroke="#577574" stroke-width="4"/></symbol>
+          <symbol id="shape-triangle" viewBox="0 0 100 100"><path d="M50 12L91 86H9Z" fill="currentColor" stroke="#577574" stroke-width="4" stroke-linejoin="round"/></symbol>
+          <symbol id="shape-star" viewBox="0 0 100 100"><path d="M50 8L63 34L92 39L71 59L76 88L50 74L24 88L29 59L8 39L37 34Z" fill="currentColor" stroke="#577574" stroke-width="4" stroke-linejoin="round"/></symbol>
+          <symbol id="mini-train" viewBox="0 0 180 140">
+            <path d="M14 104H164L172 113H12Z" fill="#688c7a" stroke="#456354" stroke-width="4"/>
+            <rect x="79" y="27" width="76" height="79" rx="9" fill="#93b5a0" stroke="#456354" stroke-width="4"/>
+            <path d="M75 30H160" stroke="#456354" stroke-width="11" stroke-linecap="round"/>
+            <rect x="97" y="42" width="41" height="31" rx="5" fill="#f5df95" stroke="#456354" stroke-width="3"/>
+            <rect x="20" y="60" width="61" height="46" rx="8" fill="#e0a582" stroke="#95674e" stroke-width="4"/>
+            <path d="M35 60V33H56V60M31 32H60" fill="#e0a582" stroke="#95674e" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="42" cy="119" r="16" fill="#6f8174" stroke="#456354" stroke-width="4"/><circle cx="133" cy="119" r="16" fill="#6f8174" stroke="#456354" stroke-width="4"/>
+            <circle cx="42" cy="119" r="6" fill="#dbe2ce"/><circle cx="133" cy="119" r="6" fill="#dbe2ce"/>
+            <path d="M36 79v2m24-2v2m-18 11q6 6 12 0" fill="none" stroke="#695342" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="42" cy="16" r="9" fill="#fffdf5"/>
+          </symbol>
+          <symbol id="mini-fish" viewBox="0 0 140 100">
+            <path d="M38 50L9 25V75Z" fill="currentColor" stroke="#567a82" stroke-width="3" stroke-linejoin="round"/>
+            <ellipse cx="82" cy="50" rx="46" ry="33" fill="currentColor" stroke="#567a82" stroke-width="3"/>
+            <path d="M72 18Q86 2 98 20M70 81Q84 97 99 80" fill="currentColor" stroke="#567a82" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="106" cy="42" r="7" fill="#fffdf5"/><circle cx="108" cy="42" r="3" fill="#35505b"/>
+            <path d="M113 58q-7 7-12 0M70 38q-13 12 0 24" fill="none" stroke="#567a82" stroke-width="3" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-seed-art" viewBox="0 0 180 250">
+            <ellipse cx="90" cy="236" rx="62" ry="9" fill="#345743" opacity=".12"/>
+            <path d="M90 166Q58 134 78 113Q105 111 108 137Q111 157 90 166" fill="#a17a4c" stroke="#6f573d" stroke-width="4"/>
+            <path d="M90 164V135" fill="none" stroke="#dec398" stroke-width="4" stroke-linecap="round"/>
+            <path d="M44 185h92l-12 43q-34 14-68 0z" fill="#d99172" stroke="#a86750" stroke-width="4"/>
+            <rect x="39" y="174" width="102" height="20" rx="7" fill="#efb091" stroke="#a86750" stroke-width="4"/>
+            <path d="M78 207v2m24-2v2m-20 8q8 6 16 0" fill="none" stroke="#694e37" stroke-width="3" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-pot-art" viewBox="0 0 180 250">
+            <ellipse cx="90" cy="236" rx="62" ry="9" fill="#345743" opacity=".12"/>
+            <path d="M44 185h92l-12 43q-34 14-68 0z" fill="#d99172" stroke="#a86750" stroke-width="4"/>
+            <rect x="39" y="174" width="102" height="20" rx="7" fill="#efb091" stroke="#a86750" stroke-width="4"/>
+            <path d="M78 207v2m24-2v2m-20 8q8 6 16 0" fill="none" stroke="#694e37" stroke-width="3" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-sprout-art" viewBox="0 0 180 250">
+            <use href="#garden-pot-art"/>
+            <path d="M90 177V97M90 142Q41 140 46 109Q79 109 90 142M90 125Q138 127 134 93Q99 94 90 125" fill="#87b878" stroke="#426b51" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </symbol>
+          <symbol id="garden-bud-art" viewBox="0 0 180 250">
+            <use href="#garden-sprout-art"/>
+            <path d="M90 103Q46 82 72 49Q83 45 90 55Q98 43 108 51Q131 84 90 103Z" fill="var(--petal, #eb967d)" stroke="var(--petal-edge, #cb745e)" stroke-width="4"/>
+            <path d="M90 102V71" stroke="#fff8" stroke-width="4" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-butterfly-art" viewBox="0 0 100 80">
+            <path d="M47 38C9-15-6 14 13 42C-2 73 33 81 49 48C67 84 99 72 86 43C109 10 81-12 52 37" fill="#efc961" stroke="#a6853e" stroke-width="3"/>
+            <path d="M50 30V58M50 33L41 20M50 33L59 20" fill="none" stroke="#6b614a" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="24" cy="31" r="6" fill="#fff7cd"/><circle cx="77" cy="31" r="6" fill="#fff7cd"/>
+          </symbol>
+          <symbol id="garden-flower-art" viewBox="0 0 180 250">
+            <ellipse cx="90" cy="236" rx="62" ry="9" fill="#345743" opacity=".12"/>
+            <path d="M90 189V84M90 149Q43 151 43 120Q79 118 90 149M90 167Q137 165 137 135Q101 133 90 167" fill="#74a17a" stroke="#426b51" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <g class="flower-head">
+              <g fill="var(--petal, #eb967d)" stroke="var(--petal-edge, #cb745e)" stroke-width="3">
+                <ellipse cx="90" cy="42" rx="24" ry="31"/><ellipse cx="90" cy="42" rx="24" ry="31" transform="rotate(60 90 77)"/>
+                <ellipse cx="90" cy="42" rx="24" ry="31" transform="rotate(120 90 77)"/><ellipse cx="90" cy="42" rx="24" ry="31" transform="rotate(180 90 77)"/>
+                <ellipse cx="90" cy="42" rx="24" ry="31" transform="rotate(240 90 77)"/><ellipse cx="90" cy="42" rx="24" ry="31" transform="rotate(300 90 77)"/>
+              </g>
+              <circle cx="90" cy="77" r="24" fill="#f9d66e" stroke="#c99740" stroke-width="3"/>
+              <path d="M81 77v2m18-2v2m-17 8q8 7 16 0" fill="none" stroke="#694e37" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <path d="M44 185h92l-12 43q-34 14-68 0z" fill="#d99172" stroke="#a86750" stroke-width="4" stroke-linejoin="round"/>
+            <rect x="39" y="174" width="102" height="20" rx="7" fill="#efb091" stroke="#a86750" stroke-width="4"/>
+            <path d="M66 204h46" stroke="#f4c7aa" stroke-width="5" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-can-art" viewBox="0 0 180 150">
+            <path d="M119 47q51-29 50 21q-2 30-39 27" fill="none" stroke="#487875" stroke-width="12"/>
+            <path d="M51 77L18 48 6 59l40 52" fill="#8abcb1" stroke="#487875" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M47 57q40-13 82 0l7 60q-48 24-95 0z" fill="#8abcb1" stroke="#487875" stroke-width="4"/>
+            <ellipse cx="88" cy="57" rx="41" ry="12" fill="#c2dfcc" stroke="#487875" stroke-width="4"/>
+            <path d="M66 84v21" stroke="#d3e9d7" stroke-width="8" stroke-linecap="round"/>
+            <path d="M8 46l-6 19" stroke="#487875" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="100" cy="96" r="12" fill="#e9eed1"/>
+          </symbol>
+          <symbol id="garden-rabbit-art" viewBox="0 0 160 210">
+            <ellipse cx="79" cy="194" rx="65" ry="10" fill="#345743" opacity=".12"/>
+            <path d="M51 92Q24 3 48 5Q71 8 73 77M91 79Q96-1 115 9Q134 21 109 94" fill="#fffbec" stroke="#a99b7b" stroke-width="4"/>
+            <path d="M53 28l8 41m47-37-7 38" stroke="#eab8a5" stroke-width="9" stroke-linecap="round"/>
+            <ellipse cx="80" cy="151" rx="49" ry="42" fill="#91b1a0" stroke="#5a7d69" stroke-width="4"/>
+            <path d="M44 143q-22 12-19 28m92-28q22 12 19 28" fill="none" stroke="#a99b7b" stroke-width="14" stroke-linecap="round"/>
+            <ellipse cx="80" cy="105" rx="53" ry="40" fill="#fffbec" stroke="#a99b7b" stroke-width="4"/>
+            <ellipse cx="48" cy="116" rx="10" ry="6" fill="#efb7a1"/><ellipse cx="112" cy="116" rx="10" ry="6" fill="#efb7a1"/>
+            <path d="M62 104v3m36-3v3m-23 8h10l-5 5zm5 5v5m-8-1q8 8 16 0" fill="none" stroke="#635642" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <ellipse cx="52" cy="185" rx="23" ry="11" fill="#fffbec" stroke="#a99b7b" stroke-width="4"/>
+            <ellipse cx="110" cy="185" rx="23" ry="11" fill="#fffbec" stroke="#a99b7b" stroke-width="4"/>
+            <circle cx="80" cy="157" r="6" fill="#e9cf7b"/>
+          </symbol>
+          <symbol id="garden-basket-art" viewBox="0 0 100 100">
+            <path d="M23 48Q22 7 50 10Q78 7 77 48" fill="none" stroke="#95744b" stroke-width="7"/>
+            <circle cx="34" cy="43" r="17" fill="#d8886b" stroke="#a9604c" stroke-width="3"/>
+            <circle cx="62" cy="39" r="18" fill="#ebc56c" stroke="#b18e40" stroke-width="3"/>
+            <path d="M30 23q12-16 20-8q-2 13-20 8" fill="#729462"/>
+            <path d="M12 46h76l-9 41H22z" fill="#d9b37d" stroke="#95744b" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M19 60h63M22 74h57M37 48l3 36m22-36-3 36" fill="none" stroke="#b68e58" stroke-width="3"/>
+            <path d="M12 46h76" stroke="#efcc96" stroke-width="9" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="garden-pencil-art" viewBox="0 0 100 100">
+            <g transform="rotate(35 50 50)">
+              <path d="M36 25h28v48L50 94 36 73z" fill="#88b7bd" stroke="#547e86" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M36 73h28L50 94z" fill="#e6c59a" stroke="#a88b67" stroke-width="3"/>
+              <path d="M45 86l5 8 5-8" fill="#355343"/>
+              <path d="M36 25V15q0-8 8-8h12q8 0 8 8v10z" fill="#e6a18a" stroke="#ac7561" stroke-width="3"/>
+              <path d="M36 27h28M46 33v33" stroke="#e2eddf" stroke-width="5"/>
+            </g>
+          </symbol>
+          <symbol id="play-apple" viewBox="0 0 120 120">
+            <path d="M61 28Q47 12 57 5" fill="none" stroke="#795641" stroke-width="5" stroke-linecap="round"/>
+            <path d="M65 25Q67 3 92 10Q89 31 65 25" fill="#86a26a" stroke="#587548" stroke-width="3"/>
+            <path d="M59 32C9 9 7 62 25 91Q43 116 59 101Q80 117 98 91C115 56 108 11 59 32Z" fill="#dd9078" stroke="#a65f4d" stroke-width="4"/>
+            <path d="M33 43Q23 55 29 66" fill="none" stroke="#f9c6a6" stroke-width="7" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="play-pear" viewBox="0 0 120 120">
+            <path d="M60 20Q55 6 66 3" fill="none" stroke="#795641" stroke-width="5" stroke-linecap="round"/>
+            <path d="M65 17Q75-1 92 10Q85 26 65 17" fill="#86a26a" stroke="#587548" stroke-width="3"/>
+            <path d="M44 29Q60 13 75 28Q81 39 78 48Q106 68 100 89Q94 108 61 108Q24 108 20 88Q15 66 41 48Q37 37 44 29Z" fill="#d6c877" stroke="#9a9349" stroke-width="4"/>
+            <path d="M39 68Q29 79 37 88" fill="none" stroke="#f6e5a2" stroke-width="7" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="play-basket" viewBox="0 0 220 180">
+            <path d="M48 69Q40 2 110 5Q180 2 172 69" fill="none" stroke="#aa8458" stroke-width="11"/>
+            <path d="M16 66H204L183 160Q110 182 37 160Z" fill="#dab886" stroke="#9b764d" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M26 91H194M31 116H189M38 141H183M64 73L76 164M110 72V169M156 73L145 164" fill="none" stroke="#b69061" stroke-width="4"/>
+            <path d="M17 66H203" stroke="#f0d5a8" stroke-width="15" stroke-linecap="round"/>
+          </symbol>
+        </defs>
+      </svg>
       <section id="home-screen" class="screen home-screen" aria-labelledby="home-title">
-        <div class="sun-decor" aria-hidden="true"></div>
-        <div class="home-copy">
-          <p class="welcome-mark">今天来玩什么？</p>
-          <h1 id="home-title">小小<br /><span>电脑家</span></h1>
-          <p class="home-hint">动动小手，发现电脑里的快乐。</p>
-        </div>
-        <nav class="game-menu" aria-label="游戏选择">
-          <button class="game-card stars-card" data-game="stars" type="button">
-            <span class="game-icon" aria-hidden="true">★</span>
-            <span class="game-label">点星星</span>
-            <span class="game-note">动一动，点一点</span>
-          </button>
-          <button class="game-card fruit-card" data-game="fruit" type="button">
-            <span class="game-icon" aria-hidden="true">●</span>
-            <span class="game-label">水果篮</span>
-            <span class="game-note">拖一拖，装满篮子</span>
-          </button>
-          <button class="game-card artist-card" data-game="drawing" type="button">
-            <span class="game-icon artist-icon" aria-hidden="true">✦</span>
-            <span class="game-label">小画家</span>
-            <span class="game-note">画一画，留下作品</span>
-          </button>
+        <header class="garden-home-header">
+          <div class="home-brand"><svg aria-hidden="true"><use href="#garden-rabbit-art"/></svg><h1 id="home-title">小小电脑家</h1></div>
+          <div class="home-controls"><button data-sound class="garden-control" type="button" aria-pressed="true">声音：开</button><button class="parent-button" data-parent type="button">家长</button></div>
+        </header>
+        <div class="home-welcome"><h2>今天想去哪里玩？</h2><p>小手动一动，发现大世界。</p></div>
+        <nav class="world-map" aria-label="选择一个游戏">
+        <button class="garden-entry" data-game="garden" type="button" aria-label="进入鼠标小花园，练习移动、定位、点击和拖放">
+          <span class="garden-entry-copy">
+            <span class="game-skill">移动 · 停稳 · 点击 · 拖放</span>
+            <span class="garden-entry-title">鼠标小花园</span>
+            <span class="garden-entry-note">陪一颗小种子，慢慢开花。</span>
+            <span class="portal-go" aria-hidden="true">去玩吧 ↗</span>
+          </span>
+          <span class="garden-entry-art" aria-hidden="true">
+            <span class="garden-sun"></span><span class="garden-cloud"></span>
+            <span class="garden-hill"></span>
+            <svg class="entry-flower flower-peach"><use href="#garden-flower-art"/></svg>
+            <svg class="entry-flower flower-gold"><use href="#garden-flower-art"/></svg>
+            <svg class="entry-flower flower-blue"><use href="#garden-flower-art"/></svg>
+            <svg class="entry-rabbit"><use href="#garden-rabbit-art"/></svg>
+            <svg class="entry-can"><use href="#garden-can-art"/></svg>
+          </span>
+        </button>
+        <button class="world-entry stars-entry" data-game="stars" type="button"><span class="portal-copy"><span class="game-skill">找一找 · 点一点</span><b>点星星</b><small>一颗一颗，点亮夜空。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art sky-art" aria-hidden="true"><span class="portal-moon"></span><svg viewBox="0 0 300 220"><path d="M150 30L60 160H240Z" fill="#ffdf7830" stroke="#f3da9b" stroke-width="3" stroke-dasharray="6 9"/><g fill="#ffe59a"><path d="m150 7 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m60 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m240 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/></g></svg></span></button>
+        <button class="world-entry fruit-entry" data-game="fruit" type="button"><span class="portal-copy"><span class="game-skill">按住 · 移动 · 松开</span><b>水果篮</b><small>装好水果，去野餐。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art picnic-art" aria-hidden="true"><span class="picnic-cloth"></span><svg class="portal-basket"><use href="#garden-basket-art"/></svg><svg class="portal-apple"><use href="#play-apple"/></svg><svg class="portal-pear"><use href="#play-pear"/></svg></span></button>
+        <button class="world-entry drawing-entry" data-game="drawing" type="button"><span class="portal-copy"><span class="game-skill">按住画线 · 自由创作</span><b>小画家</b><small>把脑袋里的世界画出来。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art studio-art" aria-hidden="true"><svg class="portal-paper" viewBox="0 0 300 210"><rect x="20" y="15" width="260" height="180" rx="8" fill="#fffdf7"/><circle cx="216" cy="54" r="22" fill="#f3cc64"/><path d="M40 162Q80 96 122 144Q158 83 241 158" fill="none" stroke="#85b781" stroke-width="13" stroke-linecap="round"/><path d="M64 64q28-30 55 0m25 14q28-30 55 0" fill="none" stroke="#81bac8" stroke-width="8" stroke-linecap="round"/></svg><svg class="portal-pencil"><use href="#garden-pencil-art"/></svg></span></button>
         </nav>
-        <button class="parent-button" data-parent type="button"><span aria-hidden="true">⚙</span> 家长</button>
-        <p class="version-label">小小电脑家 · V0.1</p>
+        <section class="discovery-home" aria-labelledby="discovery-title"><h2 id="discovery-title">再去探索一下</h2>
+          <nav class="discovery-shelf" aria-label="更多小游戏">
+            <button class="discovery-entry bubbles-entry" data-game="bubbles" type="button"><span><small>点一点 · 小惊喜</small><b>泡泡海洋</b><em>泡泡里，住着谁？</em></span><svg aria-hidden="true"><use href="#mini-fish"/></svg></button>
+            <button class="discovery-entry memory-entry" data-game="memory" type="button"><span><small>翻一翻 · 找朋友</small><b>翻翻乐</b><em>相同的朋友在哪里？</em></span><svg aria-hidden="true"><use href="#garden-butterfly-art"/></svg></button>
+            <button class="discovery-entry train-entry" data-game="train" type="button"><span><small>拖一拖 · 认形状</small><b>形状小火车</b><em>装好车厢，出发啦！</em></span><svg aria-hidden="true"><use href="#mini-train"/></svg></button>
+          </nav>
+        </section>
+        <footer class="home-note"><span>没有输赢，慢慢玩就好。</span><span>和小兔一起，从第一次移动开始。</span></footer>
       </section>
-
-      <section id="stars-screen" class="screen game-screen hidden" aria-labelledby="stars-title">
-        <header class="game-header">
-          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
-          <h2 id="stars-title"><span aria-hidden="true">★</span> 点星星</h2>
-          <div class="progress-pill" aria-label="找到的星星数量"><span id="star-count">0</span><span class="progress-divider">/</span><span id="star-target">20</span> <span aria-hidden="true">★</span></div>
+      <section id="garden-screen" class="screen garden-screen hidden" aria-labelledby="garden-title">
+        <header class="garden-header">
+          <button data-home class="garden-control" type="button">⌂ 回家</button>
+          <h2 id="garden-title">鼠标小花园</h2>
+          <button id="garden-sound" data-sound class="garden-control" aria-pressed="true" type="button">声音：开</button>
         </header>
-        <div id="star-field" class="star-field" aria-label="星星游戏区域"></div>
-        <div class="game-tip" id="star-tip">找到一颗亮晶晶的星星吧！</div>
-      </section>
-
-      <section id="fruit-screen" class="screen fruit-screen hidden" aria-labelledby="fruit-title">
-        <header class="game-header fruit-header">
-          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
-          <h2 id="fruit-title"><span aria-hidden="true">●</span> 水果篮</h2>
-          <div class="progress-pill" aria-label="放好的水果数量"><span id="fruit-count">0</span><span class="progress-divider">/</span><span id="fruit-total">1</span> <span aria-hidden="true">●</span></div>
-        </header>
-        <div class="fruit-stage">
-          <div class="market-backdrop" aria-hidden="true">
-            <div class="market-awning"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="market-sign">小小水果摊</div>
-            <div class="market-shelf shelf-top"></div>
-            <div class="market-shelf shelf-bottom"></div>
-            <div class="market-crate crate-one">🍋 🍏</div>
-            <div class="market-crate crate-two">🥕 🌽</div>
+        <nav class="garden-skills" aria-label="选择练习">
+          <button data-garden-step="0" type="button"><span aria-hidden="true">↝</span>动一动</button>
+          <button data-garden-step="1" type="button"><span aria-hidden="true">◎</span>停一停</button>
+          <button data-garden-step="2" type="button"><span aria-hidden="true">☝&#xfe0e;</span>点一点</button>
+          <button data-garden-step="3" type="button"><span aria-hidden="true">↗</span>拖一拖</button>
+        </nav>
+        <div class="garden-workspace">
+          <aside class="garden-guide">
+            <svg class="guide-rabbit" aria-hidden="true"><use href="#garden-rabbit-art"/></svg>
+            <h3 id="garden-instruction"></h3>
+            <p id="garden-description"></p>
+            <div id="garden-demo" class="garden-demo" aria-hidden="true">
+              <svg class="demo-flower"><use href="#garden-flower-art"/></svg>
+              <span class="demo-pointer"><span>↖</span><svg><use href="#garden-can-art"/></svg></span>
+              <span class="demo-mouse"><i></i></span>
+              <span class="demo-caption"></span>
+            </div>
+            <button id="garden-demonstrate" class="garden-control" type="button">看我做一次</button>
+          </aside>
+          <div id="garden-field" class="garden-field" aria-label="小花园操作区">
+            <div class="garden-story"><span id="garden-scene-name">种子睡醒了</span><div id="garden-trail" class="picture-progress" aria-label="三盆花的进度"></div></div>
+            <div class="garden-cloud field-cloud" aria-hidden="true"></div>
+            <div class="garden-ground" aria-hidden="true"></div>
+            <div class="garden-plants">
+              <button class="garden-plant flower-peach" data-plant="0" type="button" aria-label="第一盆花">
+                <svg aria-hidden="true"><use href="#garden-flower-art"/></svg><span class="plant-pot" aria-hidden="true"></span><span class="plant-mark" aria-hidden="true"></span>
+              </button>
+              <button class="garden-plant flower-gold" data-plant="1" type="button" aria-label="第二盆花">
+                <svg aria-hidden="true"><use href="#garden-flower-art"/></svg><span class="plant-pot" aria-hidden="true"></span><span class="plant-mark" aria-hidden="true"></span>
+              </button>
+              <button class="garden-plant flower-blue" data-plant="2" type="button" aria-label="第三盆花">
+                <svg aria-hidden="true"><use href="#garden-flower-art"/></svg><span class="plant-pot" aria-hidden="true"></span><span class="plant-mark" aria-hidden="true"></span>
+              </button>
+            </div>
+            <button id="garden-can" class="garden-can hidden" type="button" aria-label="小水壶，空格拿起，方向键移动，空格放下，Escape 取消" aria-describedby="garden-keyboard">
+              <svg aria-hidden="true"><use href="#garden-can-art"/></svg>
+            </button>
+            <p id="garden-keyboard" class="garden-keyboard">键盘：空格拿起，方向键移动，再按空格放下。</p>
+            <div class="garden-result" role="status" id="garden-feedback"></div>
           </div>
-          <div class="fruit-instruction" id="fruit-instruction">把水果放进篮子吧！</div>
-          <div id="fruit-items" class="fruit-items" aria-label="可以拖动的物品"></div>
-          <div id="basket" class="basket" aria-label="水果篮" role="region">
-            <span class="basket-rim" aria-hidden="true"></span>
-            <span class="basket-body" aria-hidden="true">🧺</span>
-            <span id="basket-contents" class="basket-contents" aria-hidden="true"></span>
-            <span class="basket-label">放这里</span>
+        </div>
+        <footer class="garden-footer">
+          <button class="garden-control" id="garden-replay" type="button">重新玩</button>
+          <p id="garden-progress" aria-live="polite"></p>
+          <button class="garden-next hidden" id="garden-next" type="button">接着玩 →</button>
+        </footer>
+      </section>
+
+      <section id="stars-screen" class="screen play-screen night-screen hidden" aria-labelledby="stars-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="stars-title">点星星</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p class="play-eyebrow" id="star-level">图案小练习</p><h3 id="star-tip" role="status">点亮星星，拼出图案。</h3><p class="mission-note">找亮亮的星星，按一下鼠标。</p></div>
+        <div id="star-field" class="star-field" aria-label="点亮星星，拼出图案">
+          <div class="night-moon" aria-hidden="true"></div>
+          <div class="star-constellation"><svg id="star-guide" class="star-guide" viewBox="0 0 100 100" aria-hidden="true"></svg>
+          <svg id="star-thread" class="star-thread" viewBox="0 0 100 100" aria-hidden="true"></svg>
+          <div id="star-buttons"></div></div>
+          <aside class="play-demo hidden" data-demo-panel="stars" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><span class="help-pointer">↖</span><span class="help-star">★</span></div><p>移到星星上，按一下左键。</p></aside>
+        </div>
+        <footer class="play-footer stars-footer"><button class="play-control" data-demo="stars" type="button">看示范</button><div class="mission-progress"><div id="star-trail" class="picture-progress" aria-hidden="true"></div><p class="play-progress"><span id="star-count">0</span> / <span id="star-target">3</span> 颗已点亮</p></div><button class="play-control" data-replay="stars" type="button">重新玩</button></footer>
+      </section>
+
+      <section id="fruit-screen" class="screen play-screen fruit-screen hidden" aria-labelledby="fruit-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="fruit-title">水果篮</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="fruit-mission"><div class="play-heading"><p class="play-eyebrow" id="fruit-lesson">先送一个</p><h3 id="fruit-instruction">把苹果送进篮子吧</h3></div>
+        <nav class="fruit-lessons" aria-label="水果篮练习"><button data-fruit-step="0" type="button">送一个</button><button data-fruit-step="1" type="button">送几个</button><button data-fruit-step="2" type="button">送远点</button><button data-fruit-step="3" type="button">分一分</button></nav>
+        </div>
+        <div class="fruit-stage" data-level="0">
+          <div class="fruit-table" aria-hidden="true"></div>
+          <svg class="picnic-friend" aria-hidden="true"><use href="#garden-rabbit-art"/></svg>
+          <span class="fruit-scene-caption" aria-hidden="true">小兔的野餐日</span>
+          <div id="fruit-items" class="fruit-items" aria-label="可以拿起的水果"></div>
+          <div id="basket" class="basket" role="region" aria-label="水果篮">
+            <svg class="basket-art" aria-hidden="true"><use href="#play-basket"/></svg>
+            <div class="basket-drop" aria-hidden="true"></div><div class="basket-contents" aria-hidden="true"></div>
+            <svg class="basket-example hidden" aria-hidden="true"><use href="#play-apple"/></svg>
+            <span class="basket-label">送到这里</span>
           </div>
-          <div class="shopper" aria-hidden="true"><span class="shopper-character">🧒</span><span class="shopper-label">小小采购员</span></div>
-          <div id="fruit-tip" class="fruit-tip" role="status">按住水果，送它回家</div>
+          <div id="basket-pear" class="basket hidden" role="region" aria-label="梨子篮">
+            <svg class="basket-art" aria-hidden="true"><use href="#play-basket"/></svg>
+            <div class="basket-drop" aria-hidden="true"></div><div class="basket-contents" aria-hidden="true"></div>
+            <svg class="basket-example" aria-hidden="true"><use href="#play-pear"/></svg><span class="basket-label">梨子住这里</span>
+          </div>
+          <p id="fruit-tip" class="fruit-tip" role="status">按住，移动，再松开。</p>
+          <aside class="play-demo hidden" data-demo-panel="fruit" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><svg class="help-fruit"><use href="#play-apple"/></svg><svg class="help-basket"><use href="#play-basket"/></svg></div><p>按住水果，送进篮子，再松开。</p></aside>
         </div>
+        <footer class="play-footer"><button class="play-control" data-demo="fruit" type="button">看示范</button><div class="mission-progress"><div id="fruit-trail" class="picture-progress" aria-hidden="true"></div><p class="play-progress"><span id="fruit-count">0</span> / <span id="fruit-total">1</span> 个已放好</p></div><button class="play-control" data-replay="fruit" type="button">重新玩</button></footer>
+        <p class="play-keyboard">键盘：空格拿起，方向键移动，空格放下，Escape 取消。</p>
       </section>
 
-      <section id="fruit-finish-screen" class="screen finish-screen hidden" aria-labelledby="fruit-finish-title">
-        <div id="fruit-fireworks" class="fireworks-layer" aria-hidden="true"></div>
-        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
-        <div class="finish-star fruit-finish-icon" aria-hidden="true">🧺</div>
-        <h2 id="fruit-finish-title">送到啦！</h2>
-        <p>所有水果都回到篮子里了！</p>
-        <div class="finish-stars" aria-hidden="true">🍓　🍉　🍍</div>
-        <div class="finish-actions">
-          <button class="primary-button" data-fruit-replay type="button">再玩一次</button>
-          <button class="secondary-button" data-home type="button">回家</button>
+      <section id="bubbles-screen" class="screen play-screen bubbles-screen hidden" aria-labelledby="bubbles-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="bubbles-title">泡泡海洋</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="bubble-level" class="play-eyebrow"></p><h3>点开泡泡，和小鱼打招呼</h3><p class="mission-note">移过去，按一下鼠标。</p></div>
+        <div class="discovery-stage ocean-stage" aria-label="泡泡海洋操作区">
+          <div class="ocean-sand" aria-hidden="true"></div><span class="seaweed seaweed-left" aria-hidden="true"></span><span class="seaweed seaweed-right" aria-hidden="true"></span>
+          <div id="bubble-buttons" class="bubble-buttons"></div>
+          <p id="bubble-tip" class="discovery-tip" role="status">每个泡泡，都藏着一个朋友。</p>
+          <aside class="play-demo hidden" data-demo-panel="bubbles" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><span class="help-pointer">↖</span><span class="help-bubble"></span></div><p>移到大泡泡上，按一下左键。</p></aside>
         </div>
+        <footer class="play-footer"><button class="play-control" data-demo="bubbles" type="button">看示范</button><div id="bubble-trail" class="picture-progress"></div><button class="play-control" data-replay="bubbles" type="button">重新玩</button></footer>
       </section>
 
-      <section id="drawing-screen" class="screen drawing-screen hidden" aria-labelledby="drawing-title">
-        <header class="game-header drawing-header">
-          <button class="home-button" data-home type="button" aria-label="回到首页">⌂</button>
-          <h2 id="drawing-title"><span aria-hidden="true">✦</span> 小画家</h2>
-          <span class="drawing-badge">自由画画</span>
-        </header>
+      <section id="memory-screen" class="screen play-screen memory-screen hidden" aria-labelledby="memory-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="memory-title">翻翻乐</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="memory-level" class="play-eyebrow"></p><h3>翻开两张，找相同的朋友</h3><p class="mission-note">记不住也没关系，可以看看提示。</p></div>
+        <div id="memory-stage" class="discovery-stage memory-stage" aria-label="图片配对操作区">
+          <button id="memory-hint" class="play-control memory-hint" type="button" aria-pressed="false">看看提示</button>
+          <div id="memory-cards" class="memory-cards"></div><p id="memory-tip" class="discovery-tip" role="status">先翻一张，再找它的朋友。</p>
+          <aside class="play-demo hidden" data-demo-panel="memory" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><span class="help-pair">★ ★</span></div><p>点击翻开两张，找到一样的图片。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="memory" type="button">看示范</button><div id="memory-trail" class="picture-progress"></div><button class="play-control" data-replay="memory" type="button">重新玩</button></footer>
+      </section>
+
+      <section id="train-screen" class="screen play-screen train-screen hidden" aria-labelledby="train-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="train-title">形状小火车</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="train-level" class="play-eyebrow"></p><h3>把图形送进一样的轮廓</h3><p class="mission-note">按住图形，移动到车厢里，再松手。</p></div>
+        <div id="train-stage" class="discovery-stage train-stage" aria-label="小火车拖放操作区">
+          <div class="train-hills" aria-hidden="true"></div><div class="train-line"><svg class="train-engine" aria-hidden="true"><use href="#mini-train"/></svg><div id="train-slots" class="train-slots"></div></div>
+          <div id="train-pieces" class="train-pieces" aria-label="可以拿起的图形"></div><p id="train-tip" class="discovery-tip" role="status">看看形状，慢慢送过去。</p>
+          <aside class="play-demo hidden" data-demo-panel="train" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><svg class="help-fruit" style="color: #eaa18c"><use href="#shape-circle"/></svg><svg class="help-basket" style="color: #bdd2c5"><use href="#shape-circle"/></svg></div><p>按住图形，送进一样的轮廓，再松手。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="train" type="button">看示范</button><div id="train-trail" class="picture-progress"></div><button class="play-control" data-replay="train" type="button">重新玩</button></footer>
+        <p class="train-keyboard">键盘：空格拿起，方向键移动，空格放下，Escape 取消。</p>
+      </section>
+
+      <section id="drawing-screen" class="screen play-screen drawing-screen hidden" aria-labelledby="drawing-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="drawing-title">小画家</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="drawing-heading"><h3 id="drawing-prompt">今天，想画些什么？</h3><p>选一支蜡笔，按住鼠标，慢慢画。</p></div>
         <div class="drawing-workspace">
           <div class="canvas-frame">
-            <canvas id="drawing-canvas" aria-label="画布"></canvas>
-            <div id="drawing-empty" class="drawing-empty" aria-hidden="true">在这里画一画吧</div>
+            <canvas id="drawing-canvas" width="1600" height="1000" tabindex="0" aria-label="画布。方向键移动画笔，空格开始或结束画线，Escape 停笔。"></canvas>
+            <span id="drawing-cursor" aria-hidden="true"></span>
+            <div id="drawing-empty" class="drawing-empty" aria-hidden="true">选一支蜡笔，画一画吧</div>
+            <aside class="play-demo hidden" data-demo-panel="drawing" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><svg class="help-line" viewBox="0 0 150 70"><path d="M10 52Q34 4 59 45T137 23" fill="none" stroke="#d37d67" stroke-width="10" stroke-linecap="round"/></svg></div><p>选一支蜡笔，按住鼠标画一画。</p></aside>
           </div>
           <div class="drawing-toolbar" aria-label="画画工具">
-            <div class="tool-group color-tools" aria-label="颜色">
-              <button class="color-tool active" data-color="#ef6f61" style="--swatch: #ef6f61" type="button" aria-label="红色"></button>
-              <button class="color-tool" data-color="#f2c84b" style="--swatch: #f2c84b" type="button" aria-label="黄色"></button>
-              <button class="color-tool" data-color="#69aeca" style="--swatch: #69aeca" type="button" aria-label="蓝色"></button>
-              <button class="color-tool" data-color="#82b56e" style="--swatch: #82b56e" type="button" aria-label="绿色"></button>
-              <button class="color-tool" data-color="#9b79bd" style="--swatch: #9b79bd" type="button" aria-label="紫色"></button>
-              <button class="color-tool" data-color="#3a3840" style="--swatch: #3a3840" type="button" aria-label="黑色"></button>
+            <div class="drawing-ideas" aria-label="创作灵感"><button data-idea="free" type="button" aria-pressed="true">自由画</button><button id="next-idea" type="button" aria-pressed="false">找灵感 ↻</button></div>
+            <div id="drawing-reference" class="drawing-reference hidden" aria-label="创作参考"></div>
+            <div class="color-tools" aria-label="蜡笔颜色">
+              <button class="color-tool active" data-color="#ef6f61" style="--swatch: #ef6f61" type="button" aria-label="红色" aria-pressed="true"><span class="crayon" aria-hidden="true"></span></button>
+              <button class="color-tool" data-color="#f2c84b" style="--swatch: #f2c84b" type="button" aria-label="黄色" aria-pressed="false"><span class="crayon" aria-hidden="true"></span></button>
+              <button class="color-tool" data-color="#69aeca" style="--swatch: #69aeca" type="button" aria-label="蓝色" aria-pressed="false"><span class="crayon" aria-hidden="true"></span></button>
+              <button class="color-tool" data-color="#82b56e" style="--swatch: #82b56e" type="button" aria-label="绿色" aria-pressed="false"><span class="crayon" aria-hidden="true"></span></button>
+              <button class="color-tool" data-color="#9b79bd" style="--swatch: #9b79bd" type="button" aria-label="紫色" aria-pressed="false"><span class="crayon" aria-hidden="true"></span></button>
+              <button class="color-tool" data-color="#3a3840" style="--swatch: #3a3840" type="button" aria-label="黑色" aria-pressed="false"><span class="crayon" aria-hidden="true"></span></button>
             </div>
-            <div class="tool-group size-tools" aria-label="画笔大小">
-              <button class="size-tool active" data-size="8" type="button" aria-label="小画笔"><i class="size-dot small-dot"></i></button>
-              <button class="size-tool" data-size="18" type="button" aria-label="中画笔"><i class="size-dot medium-dot"></i></button>
-              <button class="size-tool" data-size="34" type="button" aria-label="大画笔"><i class="size-dot large-dot"></i></button>
-            </div>
-            <div class="tool-group action-tools">
-              <button class="drawing-action" id="eraser-tool" type="button"><span aria-hidden="true">⌫</span> 橡皮擦</button>
-              <button class="drawing-action" id="clear-drawing" type="button"><span aria-hidden="true">↺</span> 清空</button>
-              <button class="drawing-action save-action" id="save-drawing" type="button"><span aria-hidden="true">↓</span> 保存我的画</button>
-            </div>
+            <div class="drawing-main-actions"><button class="play-control" id="undo-drawing" type="button" disabled>撤销一笔</button><button class="play-primary" id="save-drawing" type="button" disabled>看看作品</button></div>
+            <details class="drawing-more"><summary>更多工具</summary>
+              <div class="size-tools" aria-label="笔刷粗细">
+                <button class="size-tool active" data-size="8" type="button" aria-pressed="true">细一点</button>
+                <button class="size-tool" data-size="18" type="button" aria-pressed="false">粗一点</button>
+                <button class="size-tool" data-size="34" type="button" aria-pressed="false">大画笔</button>
+              </div>
+              <button class="play-control" id="eraser-tool" type="button" aria-pressed="false">橡皮擦</button>
+              <button class="play-control" id="clear-drawing" type="button">重新画</button>
+            </details>
+            <button class="play-control" data-demo="drawing" type="button">看示范</button>
+            <p id="drawing-status" class="drawing-status" role="status">画到一半，也可以下次接着画。</p>
           </div>
-          <div id="clear-confirm" class="clear-confirm hidden" role="dialog" aria-labelledby="clear-title">
-            <span id="clear-title">要重新画画吗？</span>
-            <button id="cancel-clear" type="button">继续画</button>
-            <button id="confirm-clear" type="button">重新画</button>
-          </div>
+        </div>
+        <div id="clear-confirm" class="clear-confirm hidden" role="dialog" aria-modal="true" aria-labelledby="clear-title">
+          <div><h3 id="clear-title">要换一张白纸吗？</h3><p>还没导出的画，可以先留下来。</p>
+          <button id="cancel-clear" class="play-control" type="button">继续这张</button><button id="confirm-clear" class="play-primary" type="button">换张白纸</button></div>
         </div>
       </section>
 
-      <section id="drawing-finish-screen" class="screen drawing-finish-screen hidden" aria-labelledby="drawing-finish-title">
-        <div id="drawing-fireworks" class="fireworks-layer" aria-hidden="true"></div>
-        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
-        <div class="drawing-finish-card">
-          <p class="finish-kicker">完成啦</p>
-          <h2 id="drawing-finish-title">这是你的作品！</h2>
+      <section id="drawing-finish-screen" class="screen play-screen drawing-finish-screen hidden" aria-labelledby="drawing-finish-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="drawing-finish-title">这是你的作品</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="drawing-finish-card"><p class="play-eyebrow">每一笔，都是你的想法</p>
           <div class="art-preview-frame"><img id="drawing-preview" alt="刚刚完成的画" /></div>
-          <div class="finish-actions">
-            <button class="primary-button" data-drawing-replay type="button">再画一张</button>
-            <button class="secondary-button" data-home type="button">回家</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="finish-screen" class="screen finish-screen hidden" aria-labelledby="finish-title">
-        <div id="stars-fireworks" class="fireworks-layer" aria-hidden="true"></div>
-        <div class="confetti" aria-hidden="true">✦　·　✧　·　✦</div>
-        <div class="finish-star" aria-hidden="true">★</div>
-        <h2 id="finish-title">太棒啦！</h2>
-        <p id="finish-subtitle">你找到了 20 颗星星！</p>
-        <div class="finish-stars" aria-hidden="true">★　★　★</div>
-        <div class="finish-actions">
-          <button class="primary-button" data-replay type="button">再玩一次</button>
-          <button class="secondary-button" data-home type="button">回家</button>
+          <div class="finish-actions"><button class="play-control" data-drawing-replay type="button">继续画</button><button class="play-primary" id="export-drawing" type="button">导出图片 ↓</button><button class="play-control" id="new-drawing" type="button">画新的一张</button></div>
+          <p id="drawing-export-status" role="status"></p>
         </div>
       </section>
 
@@ -169,16 +373,19 @@
             <div class="summary-note">这些记录只保存在这台电脑上。</div>
           </section>
           <section class="parent-section" aria-labelledby="stats-title">
-            <h3 id="stats-title">今天玩了什么</h3>
+            <h3 id="stats-title">一起玩过的游戏</h3>
             <div class="stats-grid">
+              <div class="stat-card stat-garden"><div><b>鼠标小花园</b><span><strong id="stat-garden-rounds">0</strong> 次完整练习</span><span>完成记录不代表已独立掌握。</span></div></div>
               <div class="stat-card stat-stars"><span class="stat-symbol" aria-hidden="true">★</span><div><b>点星星</b><span><strong id="stat-star-clicks">0</strong> 次点击 · <strong id="stat-star-rounds">0</strong> 次完成</span></div></div>
               <div class="stat-card stat-fruits"><span class="stat-symbol" aria-hidden="true">●</span><div><b>水果篮</b><span><strong id="stat-fruit-rounds">0</strong> 次完成</span></div></div>
               <div class="stat-card stat-drawing"><span class="stat-symbol" aria-hidden="true">✦</span><div><b>小画家</b><span><strong id="stat-drawing-count">0</strong> 幅作品</span></div></div>
+              <div class="stat-card"><div><b>泡泡海洋</b><span><strong id="stat-bubble-scenes">0</strong> 片海湾探索完成</span></div></div>
+              <div class="stat-card"><div><b>翻翻乐</b><span><strong id="stat-memory-boards">0</strong> 次完整配对</span></div></div>
+              <div class="stat-card"><div><b>形状小火车</b><span><strong id="stat-train-trips">0</strong> 列火车装好出发</span></div></div>
             </div>
           </section>
           <section class="parent-section settings-section" aria-labelledby="settings-title">
             <h3 id="settings-title">游戏设置</h3>
-            <label class="setting-row" for="star-target-setting"><span><b>点星星通关数量</b><small>找到这些星星就可以完成</small></span><select id="star-target-setting"><option value="5">5 颗</option><option value="10">10 颗</option><option value="15">15 颗</option><option value="20">20 颗</option><option value="30">30 颗</option></select></label>
             <label class="setting-row" for="fruit-level-setting"><span><b>水果篮关卡数量</b><small>每次游戏要完成的关卡数</small></span><select id="fruit-level-setting"><option value="1">1 关</option><option value="2">2 关</option><option value="3">3 关</option><option value="4">4 关</option></select></label>
             <button class="primary-button save-settings" id="save-settings" type="button">保存设置</button>
             <p class="settings-saved" id="settings-saved" role="status"></p>
@@ -198,9 +405,25 @@
         </div>
       </div>
       <div id="toast" class="toast" role="status"></div>
+      <div id="level-transition" class="level-transition hidden" role="status" aria-live="assertive">
+        <div class="level-transition-card">
+          <div class="celebration-fireworks" aria-hidden="true">
+            <span class="firework-burst firework-left"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="firework-burst firework-center"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="firework-burst firework-right"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+          </div>
+          <strong id="level-transition-title">完成啦！</strong>
+          <span id="level-transition-note">下一关马上开始</span>
+        </div>
+      </div>
     </main>
     <script src="app.js"></script>
+    <script src="games/stars.js"></script>
     <script src="games/fruits.js"></script>
     <script src="games/drawing.js"></script>
+    <script src="games/garden.js"></script>
+    <script src="games/bubbles.js"></script>
+    <script src="games/memory.js"></script>
+    <script src="games/train.js"></script>
   </body>
 </html>
