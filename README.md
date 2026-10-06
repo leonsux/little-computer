@@ -38,6 +38,8 @@
 
 ## 运行
 
+在线访问：[小小电脑家](https://leonsux.github.io/little-computer/) 。GitHub Pages 使用 `master` 分支根目录作为发布源，启用 HTTPS；推送到 `master` 后由 GitHub 自动构建和更新。
+
 无需安装依赖，直接双击 index.html。页面、图形和音效均在本地运行，也可使用任意静态文件服务器访问。
 
 使用原生 HTML、CSS、JavaScript 和内联 SVG；音效由 Web Audio 生成。本地记录和画作草稿使用 localStorage，直接文件模式下由浏览器管理，不同浏览器或不同打开方式的记录可能独立。
