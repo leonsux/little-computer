@@ -63,7 +63,7 @@
   }
 
   function move(dx, dy) {
-    if (!drag) return;
+    if (!validDrag()) return;
     const bounds = stage.getBoundingClientRect();
     drag.dx = Math.max(bounds.left - drag.origin.left + 3, Math.min(bounds.right - drag.origin.right - 3, dx));
     drag.dy = Math.max(bounds.top - drag.origin.top + 3, Math.min(bounds.bottom - drag.origin.bottom - 3, dy));
@@ -77,14 +77,25 @@
   function begin(element, pointerId, x = 0, y = 0) {
     if (!active || transitioning || drag || element.disabled) return;
     window.GameHelp.hide();
-    drag = { element, pointerId, x, y, dx: 0, dy: 0, origin: element.getBoundingClientRect() };
+    drag = { element, pointerId, x, y, dx: 0, dy: 0, origin: element.getBoundingClientRect(), viewWidth: innerWidth, viewHeight: innerHeight };
     element.classList.add('dragging');
     if (pointerId !== null) element.setPointerCapture(pointerId);
     tip.textContent = '拿起来啦，送进篮子吧';
   }
 
+  function validDrag() {
+    if (!drag) return false;
+    // Some browsers deliver pointerup before resize, after the viewport has already changed.
+    if (drag.viewWidth !== innerWidth || drag.viewHeight !== innerHeight) {
+      cancelDrag();
+      tip.textContent = '水果回来了，再送一次吧';
+      return false;
+    }
+    return true;
+  }
+
   function finish() {
-    if (!drag) return;
+    if (!validDrag()) return;
     const destination = dropTarget();
     const { element, pointerId } = drag;
     const correct = destination && (level !== 3 || destination === baskets[element.dataset.fruit === 'pear' ? 1 : 0]);

@@ -1,0 +1,87 @@
+.cake-entry { width: 100%; min-height: 205px; margin-top: 16px; background: #f2dfdd; border-color: #cfb4b1; }
+.cake-entry > span:first-child { max-width: calc(100% - 130px); }
+.cake-entry .cake-entry-art { position: absolute; width: 150px; right: 26px; bottom: 25px; transform: rotate(-5deg); }
+.cake-entry-art svg { width: 100%; height: 140px; }
+.cake-screen { background: #fbf4ec; }
+.cake-stage { flex: initial; padding: 44px 24px 16px; background: #f5e9db; border-color: #d3bbaa; }
+.cake-awning { position: absolute; inset: 0 0 auto; height: 26px; border-radius: 0 0 14px 14px; background: repeating-linear-gradient(90deg, #cc9aa2 0 58px, #fff6e6 58px 116px); border-bottom: 4px solid #9f717629; }
+.cake-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 30px; max-width: 840px; margin: auto; }
+.cake-customer { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: end; gap: 12px; position: relative; }
+.cake-customer > svg { width: 110px; height: 170px; grid-row: 1 / 3; }
+.cake-customer > p { font-size: 18px; font-weight: 800; text-align: center; margin: 0; }
+.cake-order-card { background: #fffaf2; border: 3px solid #ccb49c; border-radius: 26px 26px 26px 6px; padding: 12px 8px 8px; text-align: center; }
+.cake-order-card > span, .cake-caption { font-size: 16px; font-weight: 800; color: #8b6d60; margin: 0; }
+.cake-making { text-align: center; }
+.cake-confection { --cake-width: 160px; min-height: 235px; display: flex; flex-direction: column; align-items: center; justify-content: end; }
+.cake-stack { width: var(--cake-width); display: flex; flex-direction: column-reverse; align-items: center; }
+.cake-piece { display: block; width: 100%; height: calc(var(--cake-width) * .3); position: relative; flex-shrink: 0; }
+.cake-piece > svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.cake-stack .cake-base:not(:first-child) { margin-bottom: calc(var(--cake-width) * -.06); }
+.cake-cream { height: calc(var(--cake-width) * .18); margin-bottom: calc(var(--cake-width) * -.06); z-index: 1; }
+.cake-cream > svg { height: calc(var(--cake-width) * .3); }
+.cake-fruit { height: calc(var(--cake-width) * .25); margin-bottom: calc(var(--cake-width) * -.04); z-index: 2; }
+.cake-candle { height: calc(var(--cake-width) * .26); margin-bottom: calc(var(--cake-width) * -.02); z-index: 3; }
+.cake-plate { width: calc(var(--cake-width) * 1.15); height: 16px; border: 2px solid #9daea4; border-radius: 50%; background: #dce8dc; margin-top: -5px; }
+#cake-made { --cake-width: 195px; min-height: 238px; padding: 8px 0; }
+.cake-piece.is-different { outline: 2px dashed #8d6955; outline-offset: -3px; border-radius: 8px; }
+.cake-recipe { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.cake-recipe-step { --cake-width: 45px; position: relative; display: grid; place-items: center; width: 48px; height: 43px; border: 2px solid transparent; border-radius: 12px; padding: 3px; }
+.cake-recipe-step .cake-piece { height: 25px; margin: 0; }
+.cake-recipe-step .cake-piece > svg { height: 25px; }
+.cake-recipe-step b { position: absolute; left: -4px; bottom: -6px; background: #fffaf2; border: 1px solid #ccb49c; border-radius: 50%; width: 21px; height: 21px; font-size: 13px; }
+.cake-recipe-step.is-next { border: 2px dashed #50755a; background: #fff8d7; }
+.cake-recipe-step.is-done::after { content: '✓'; position: absolute; right: -5px; top: -9px; border-radius: 50%; background: #f7faed; color: #355e48; }
+.cake-actions { display: flex; justify-content: center; gap: 12px; }
+.cake-supply { margin: 24px auto 12px; }
+#cake-step { font-size: 18px; font-weight: 800; text-align: center; color: #765d50; margin: 0 0 12px; }
+.cake-pantry { display: grid; grid-template-columns: repeat(3, 120px); justify-content: center; gap: 12px; }
+.cake-ingredient { min-width: 100px; min-height: 100px; border: 3px solid #71937c; border-radius: 20px; background: #fffaf0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 #9c85732b; }
+.cake-ingredient > svg { width: 90px; height: 35px; }
+.cake-ingredient:hover:not(:disabled) { background: #fff2d6; transform: translateY(-2px); }
+.cake-ingredient:disabled { opacity: .44; border-color: #c7b7a6; box-shadow: none; cursor: var(--cursor-default); }
+.cake-ingredient[data-ingredient='candle'] { grid-column: 1 / -1; justify-self: center; width: 120px; }
+.cake-served { display: flex; justify-content: center; align-items: end; gap: 20px; padding-top: 12px; border-top: 2px dashed #d3bba4; min-height: 72px; }
+.cake-served:empty::after { content: '朋友们的小蛋糕桌'; font-size: 15px; color: #927866; padding-bottom: 12px; }
+.cake-gift { --cake-width: 46px; min-height: 0; }
+.cake-gift .cake-plate { height: 6px; border-width: 1px; }
+.cake-tip { font-size: 17px; font-weight: 800; text-align: center; margin: 12px 0 0; min-height: 26px; }
+.cake-demo-art { display: flex; align-items: center; justify-content: center; gap: 10px; height: 66px; color: #997c60; font-size: 24px; }
+.cake-demo-art svg { width: 64px; height: 56px; }
+.play-demo[data-demo-panel='cake'].is-playing .cake-demo-art svg { animation: cake-example 2s ease-in-out 2; }
+.cake-stage.is-served .cake-customer > svg { animation: cake-thanks .6s ease-out; }
+.cake-stage.is-birthday .cake-awning { background: repeating-linear-gradient(90deg, #b1c8ba 0 58px, #f3d3da 58px 116px); }
+.cake-stage.is-birthday .cake-order-card { background: #fff7db; }
+@keyframes cake-thanks { 50% { transform: translateY(-10px) rotate(5deg); } }
+@keyframes cake-example { 50% { transform: translateY(-8px) rotate(-6deg); } }
+@media (min-width: 1100px) {
+  .cake-stage { display: grid; grid-template-columns: minmax(0, 1fr) 244px; column-gap: 24px; }
+  .cake-workspace { grid-column: 1; width: 100%; gap: 20px; }
+  .cake-supply { grid-column: 2; grid-row: 1; margin: 0; }
+  .cake-pantry { grid-template-columns: repeat(2, 112px); }
+  .cake-served { grid-column: 1 / -1; margin-top: 20px; }
+  .cake-tip { grid-column: 1 / -1; }
+  #cake-made { --cake-width: 175px; }
+}
+@media (max-width: 900px) { .cake-workspace { gap: 20px; }.cake-customer { grid-template-columns: 90px minmax(0, 1fr); }.cake-customer > svg { width: 90px; height: 140px; } }
+@media (max-width: 700px) {
+  .cake-stage { padding: 42px 10px 16px; }
+  .cake-workspace { grid-template-columns: 1fr; gap: 22px; }
+  .cake-customer { grid-template-columns: 90px 140px; justify-content: center; gap: 8px; }
+  .cake-customer > p { font-size: 16px; }
+  .cake-order-card { padding: 10px 5px 8px; }
+  .cake-order-card > span { font-size: 14px; }
+  #cake-order { --cake-width: 104px; min-height: 160px; }
+  #cake-made { --cake-width: 180px; min-height: 220px; }
+  .cake-recipe { max-width: 240px; margin: 16px auto; gap: 8px; }
+  .cake-pantry { grid-template-columns: repeat(2, 112px); gap: 12px; }
+  .cake-actions { gap: 10px; }.cake-actions button { padding: 12px 10px; font-size: 17px; }
+  .cake-footer { grid-template-columns: 100px minmax(0, 1fr) 110px; }
+  .cake-footer > .picture-progress { grid-column: 1 / -1; grid-row: 2; }
+  .cake-footer > button { grid-row: 1; }
+  .cake-entry { padding: 24px 18px; }
+  .cake-entry > span:first-child { max-width: calc(100% - 70px); }
+  .cake-entry .cake-entry-art { width: 78px; right: 6px; bottom: 10px; transform: none; }
+  .cake-entry b { font-size: 24px; }
+  .cake-entry em { max-width: 175px; line-height: 1.6; }
+}
+@media (prefers-reduced-motion: reduce) { .cake-stage *, .cake-entry * { animation: none !important; transition: none !important; } }

@@ -1,0 +1,76 @@
+.hideout-entry { width: 100%; background: #e0eccc; border-color: #bdd0a8; min-height: 190px; }
+.hideout-entry > span:first-child { max-width: calc(100% - 110px); }
+.hideout-entry > svg { width: 142px; height: 158px; right: 25px; bottom: -24px; opacity: 1; transform: rotate(7deg); }
+.hideout-entry .hideout-entry-bush { position: absolute; width: 175px; height: 65px; border-radius: 60% 70% 0 0; right: 5px; bottom: -4px; background: #87ad78; z-index: 0; }
+.hideout-screen { background: #f4f6e9; }
+.hideout-mission { width: min(100%, 1040px); align-self: center; display: grid; grid-template-columns: minmax(0, 1fr) 200px 140px; gap: 24px; align-items: center; }
+.hideout-mission .play-heading { text-align: left; }
+.hideout-clue { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border: 3px solid #94ae7f; border-radius: 24px; background: #fffbed; }
+.hideout-clue svg { width: 62px; height: 82px; color: #e7bd71; flex-shrink: 0; }
+.hideout-clue small, .hideout-clue b { display: block; }.hideout-clue small { font-size: 14px; margin-bottom: 6px; color: #758466; }.hideout-clue b { font-size: 20px; }
+.hideout-clue.is-complete { background: #e1edcc; }
+.hideout-stage { flex: initial; background: #dbead8; border-color: #b6caa7; padding: 48px 24px 18px; isolation: isolate; }
+.hideout-sun { position: absolute; left: 7%; top: 25px; width: 58px; height: 58px; border-radius: 50%; background: #f2d387; z-index: -1; }
+.hideout-cloud { position: absolute; right: 12%; top: 30px; width: 130px; height: 26px; border-radius: 60px; background: #fff9; z-index: -1; }
+.hideout-cloud::before { content: ''; position: absolute; left: 24px; bottom: 0; width: 45px; height: 44px; border-radius: 50%; background: #f8fcf3; }
+.hideout-hills { position: absolute; inset: 38% -10% -15%; border-radius: 50% 55% 0 0; background: #b4cca1; z-index: -1; }
+.hideout-stage[data-scene='garden'] { background: #ece9d4; }.hideout-stage[data-scene='garden'] .hideout-hills { background: #c1cea6; }
+.hideout-stage[data-scene='forest'] { background: #d3e0cb; }.hideout-stage[data-scene='forest'] .hideout-hills { background: #9db78e; }
+.hideout-stage[data-scene='pond'] { background: #d4e9e4; }.hideout-stage[data-scene='pond'] .hideout-hills { background: #acd0c5; }
+.hideout-stage[data-scene='sunset'] { background: #f0ded8; }.hideout-stage[data-scene='sunset'] .hideout-hills { background: #c2c5a1; }.hideout-stage[data-scene='sunset'] .hideout-sun { background: #eebc87; }
+.hideout-spots { display: grid; grid-template-columns: repeat(3, 174px); justify-content: center; gap: 12px 40px; margin: auto; }
+.hideout-spots[data-total='4'] { grid-template-columns: repeat(4, 174px); }
+.hideout-spots[data-total='7'], .hideout-spots[data-total='8'] { grid-template-columns: repeat(4, 174px); }
+.hideout-spot { width: 174px; height: 174px; position: relative; padding: 0; border: 3px solid transparent; border-radius: 28px; background: transparent; perspective: 500px; }
+.hideout-spot::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 9px; height: 14px; border-radius: 50%; background: #587d4322; z-index: -1; }
+.hideout-spot:hover:not(:disabled) { border-color: #587d4370; background: #fff2; }
+.hideout-animal { position: absolute; top: 13px; left: 31px; width: 108px; height: 137px; color: #e7bd71; transition: transform .35s ease; }
+.hideout-spot[data-friend='butterfly'] .hideout-animal { top: 19px; height: 115px; }
+.hideout-spot[data-friend='fish'] .hideout-animal { top: 2px; height: 105px; }
+.hideout-spot[data-friend='turtle'] .hideout-animal { top: -5px; }
+.hideout-cover { position: absolute; left: 5px; right: 5px; bottom: 14px; height: 99px; background: #83a873; border: 3px solid #60864f; border-radius: 60% 50% 30% 30%; transform-origin: bottom; transition: transform .35s ease, opacity .35s ease; }
+.hideout-cover::before, .hideout-cover::after { content: ''; position: absolute; background: #a0bc87; border-radius: 50%; width: 35px; height: 18px; top: 26px; left: 25px; transform: rotate(-22deg); }
+.hideout-cover::after { left: auto; right: 20px; top: 17px; background: #70995f; transform: rotate(30deg); }
+.hideout-spot[data-cover='house'] .hideout-cover { border-radius: 10px; background: #e8cda0; border-color: #ac8d65; height: 92px; }
+.hideout-spot[data-cover='house'] .hideout-cover::before { left: -8px; top: -24px; width: calc(100% + 16px); height: 28px; background: #c28e78; border-radius: 5px; transform: none; clip-path: polygon(0 100%, 50% 0, 100% 100%); }
+.hideout-spot[data-cover='house'] .hideout-cover::after { left: 56px; top: 36px; width: 34px; height: 53px; background: #afbf9f; border-radius: 17px 17px 0 0; transform: none; }
+.hideout-spot[data-cover='pot'] .hideout-cover { left: 16px; right: 16px; background: #dba07f; border-color: #a77658; border-radius: 8px 8px 30px 30px; height: 95px; }
+.hideout-spot[data-cover='pot'] .hideout-cover::before { left: -6px; top: -4px; width: calc(100% + 12px); height: 20px; border-radius: 8px; transform: none; background: #e8b591; border: 2px solid #a77658; }
+.hideout-spot[data-cover='pot'] .hideout-cover::after { left: 20px; top: 35px; width: 62%; height: 8px; background: #efc6a3; border-radius: 8px; transform: none; }
+.hideout-spot[data-cover='rock'] .hideout-cover { background: #b6bfb1; border-color: #899886; border-radius: 65% 45% 20% 20%; }
+.hideout-spot[data-cover='rock'] .hideout-cover::before { background: #d2d8c9; }.hideout-spot[data-cover='rock'] .hideout-cover::after { background: #a1ad98; }
+.hideout-spot.is-open .hideout-cover { transform: rotateX(75deg); opacity: .35; }
+.hideout-spot.is-open .hideout-animal { transform: translateY(-9px); }
+.hideout-spot.is-found { background: #fff7; border-color: #6f965c; cursor: var(--cursor-default); }
+.hideout-check { display: none; position: absolute; top: 3px; right: 8px; color: #355e48; font-size: 25px; background: #f4f6e9; width: 31px; height: 31px; border-radius: 50%; }
+.hideout-spot.is-found .hideout-check { display: block; }
+.hideout-spot.is-hint { border: 3px dashed #4b7150; background: #fff7d74d; }
+.hideout-spot.is-hint .hideout-animal { animation: hideout-wiggle .65s ease-in-out 3; }
+.hideout-tip { min-height: 28px; text-align: center; font-size: 19px; font-weight: 800; margin: 18px 0 0; }
+.hideout-demo-friend { position: absolute; right: 24px; top: -5px; width: 47px; height: 72px; }
+.hideout-demo-bush { position: absolute; right: 9px; bottom: 0; width: 83px; height: 39px; background: #83a873; border-radius: 60% 50% 30% 30%; }
+.play-demo[data-demo-panel='hideout'].is-playing .demo-mouse i { animation: help-click 3.4s linear 1; }
+.play-demo[data-demo-panel='hideout'].is-playing .hideout-demo-bush { animation: hideout-example 3.4s ease-in-out 1; }
+@keyframes hideout-wiggle { 30% { transform: rotate(-7deg); } 70% { transform: rotate(7deg); } }
+@keyframes hideout-example { 45%, 80% { transform: translateY(25px); opacity: .3; } }
+@media (max-width: 1050px) { .hideout-spots, .hideout-spots[data-total='4'], .hideout-spots[data-total='7'], .hideout-spots[data-total='8'] { grid-template-columns: repeat(3, 160px); gap: 12px 28px; }.hideout-spot { width: 160px; }.hideout-animal { left: 24px; }.hideout-mission { gap: 16px; grid-template-columns: minmax(0, 1fr) 180px 120px; } }
+@media (max-width: 700px) {
+  .hideout-mission { grid-template-columns: minmax(0, 1fr) 120px; gap: 12px; }
+  .hideout-mission .play-heading { grid-column: 1 / -1; text-align: center; }.hideout-mission h3 { font-size: 24px; }
+  .hideout-clue { padding: 5px 10px; gap: 8px; }.hideout-clue svg { width: 43px; height: 63px; }.hideout-clue b { font-size: 17px; }
+  #hideout-hint { font-size: 16px; padding: 10px; }
+  .hideout-stage { padding: 54px 2px 16px; }
+  .hideout-spots, .hideout-spots[data-total='4'], .hideout-spots[data-total='7'], .hideout-spots[data-total='8'] { grid-template-columns: repeat(2, 128px); gap: 12px 10px; }
+  .hideout-spot { width: 128px; height: 151px; }.hideout-animal { width: 89px; height: 122px; left: 17px; top: 8px; }
+  .hideout-cover { height: 85px; left: 2px; right: 2px; }.hideout-cover::before { left: 12px; width: 28px; }.hideout-cover::after { right: 12px; width: 28px; }
+  .hideout-spot[data-cover='house'] .hideout-cover { height: 81px; }.hideout-spot[data-cover='house'] .hideout-cover::after { left: 36px; height: 42px; }
+  .hideout-spot[data-cover='pot'] .hideout-cover { left: 8px; right: 8px; height: 83px; }
+  .hideout-spot[data-friend='butterfly'] .hideout-animal { height: 104px; top: 7px; }
+  .hideout-spot[data-friend='fish'] .hideout-animal { height: 100px; top: -2px; }
+  .hideout-spot[data-friend='turtle'] .hideout-animal { top: -8px; }
+  .hideout-tip { font-size: 17px; padding: 0 10px; }
+  .hideout-footer { grid-template-columns: 100px minmax(0, 1fr) 110px; }.hideout-footer > .picture-progress { grid-column: 1 / -1; grid-row: 2; }.hideout-footer > button { grid-row: 1; }
+  .hideout-entry { padding: 24px 18px; }.hideout-entry > svg { right: -5px; width: 110px; height: 142px; }.hideout-entry .hideout-entry-bush { width: 120px; right: -7px; }
+  .hideout-entry > span:first-child { max-width: calc(100% - 60px); }.hideout-entry em { max-width: 170px; line-height: 1.6; }
+}
+@media (prefers-reduced-motion: reduce) { .hideout-stage *, .hideout-stage *::before, .hideout-stage *::after { animation: none !important; transition: none !important; } }

@@ -1,0 +1,31 @@
+.adventure-home .discovery-shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.link-entry { background: #e7efde; border-color: #c5d4b9; }
+.link-entry > svg { transform: rotate(8deg); }
+.link-screen { background: #f3f6eb; }
+.link-stage { display: grid; place-items: center; padding: 116px 0 76px; background: #e4eddd; border-color: #c3d1b7; }
+.link-board { position: relative; padding: 18px; }
+.link-cards { display: grid; grid-template-columns: repeat(var(--link-columns, 2), 100px); gap: 12px; }
+.link-card { position: relative; width: 100px; height: 100px; padding: 12px; border: 3px solid #b9c9ab; border-radius: 22px; background: #fffdf5; color: #e7bd71; }
+.link-card svg { width: 100%; height: 100%; pointer-events: none; }
+.link-card:hover:not(:disabled) { background: #fff8dc; border-color: #547959; }
+.link-card.is-selected { border-color: #355e48; background: #fff2c5; box-shadow: 0 0 0 4px #355e4824; }
+.link-card.is-hint { border-color: #b58930; border-style: dashed; background: #fff7da; }
+.link-card.is-matched { background: transparent; border-color: #b9c9ab66; border-style: dashed; cursor: var(--cursor-default); }
+.link-card.is-matched svg { opacity: .18; }
+.link-check { display: none; position: absolute; right: 8px; bottom: 2px; font-size: 22px; color: #355e48; }
+.link-card.is-matched .link-check { display: block; }
+.link-line { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.link-line polyline { fill: none; stroke: #355e48; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.link-hint { position: absolute; top: 16px; right: 16px; }
+.link-footer .picture-progress { flex-wrap: wrap; }
+.link-demo-pair { display: flex; gap: 22px; position: absolute; right: 0; top: 0; }
+.link-demo-pair svg { width: 48px; height: 64px; }
+.link-demo-pair::after { content: ''; position: absolute; left: 22px; right: 22px; top: 50%; border-top: 3px dashed #547959; }
+.play-demo[data-demo-panel='link'].is-playing .demo-mouse i { animation: help-click 3.4s linear 1; }
+@media (max-width: 640px) {
+  .adventure-home .discovery-shelf { grid-template-columns: 1fr; }
+  .link-footer { grid-template-columns: 100px 1fr 110px; }
+  .link-footer .picture-progress { grid-column: 1 / -1; grid-row: 1; }
+  .link-footer > button { grid-row: 2; }
+  .link-stage .discovery-tip { font-size: 16px; }
+}

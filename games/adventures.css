@@ -1,0 +1,80 @@
+/* More involved games retain the existing large controls and quiet storybook palette. */
+.adventure-home { margin-top: 28px; }
+.maze-entry { background: #e9edd6; border-color: #ccd2b2; }
+.maze-entry > svg { transform: rotate(16deg); }
+.maze-screen { background: #f3f5e9; }
+.maze-stage { background: #e3ecd8; border-color: #c6d3b5; padding: 14px; display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.maze-viewport { width: 100%; max-height: min(60dvh, 640px); overflow: auto; overscroll-behavior: contain; border-radius: 20px; background: #d6e3c8; }
+.maze-board { display: grid; grid-template-columns: repeat(9, 100px); gap: 6px; padding: 8px; width: max-content; margin: 0 auto; }
+.maze-cell { width: 100px; height: 80px; border: 3px solid #d2ccb3; border-radius: 16px; background: #f7edd5; display: grid; place-items: center; color: #69846c; position: relative; }
+.maze-cell svg { width: 66px; height: 68px; pointer-events: none; }
+.maze-stage .discovery-tip { position: static; margin: 12px 0 0; min-height: 28px; }
+.maze-stage.is-finished { border-color: #7d9c69; }
+.maze-cell > span { font-size: 56px; line-height: 1; }
+.maze-cell.is-visited { background: #e8ddbd; }
+.maze-cell.is-near { border-color: #64947a; box-shadow: inset 0 0 0 3px #fff8; }
+.maze-cell.is-current { background: #fffdf4; border-color: #cf9e61; }
+.maze-cell.is-wall { background: #adc394; border-color: #9cb487; color: #617d58; cursor: var(--cursor-default); }
+.maze-cell.is-ready { background: #fff3bb; }
+.maze-cell.is-near:hover { border-color: #355e48; }
+
+.maze-cell.is-collecting::before,
+.maze-cell.is-collecting::after { content: ''; position: absolute; pointer-events: none; z-index: 1; }
+.maze-cell.is-collecting::before { inset: 5px; border: 3px solid #e9ad35; border-radius: 50%; animation: carrot-ring .5s ease-out forwards; }
+.maze-cell.is-collecting::after { width: 6px; height: 6px; left: calc(50% - 3px); top: calc(50% - 3px); border-radius: 50%; background: #ffcf59; box-shadow: -31px -20px #ffcf59, 0 -29px #f5b548, 31px -20px #ffcf59, -31px 20px #f5b548, 0 29px #ffcf59, 31px 20px #f5b548; animation: carrot-sparkles .5s ease-out forwards; }
+@keyframes carrot-ring { from { opacity: 1; transform: scale(.65); } to { opacity: 0; transform: scale(1.08); } }
+@keyframes carrot-sparkles { from { opacity: 1; transform: scale(.65); } to { opacity: 0; transform: scale(1.15); } }
+.play-demo[data-demo-panel='maze'].is-playing .demo-mouse i { animation: help-click 3.4s linear 1; }
+.puzzle-entry { background: #f4e7d7; border-color: #d9c9b1; }
+.puzzle-screen { background: #f7f2e9; }
+.puzzle-stage { background: #efe6d5; border-color: #dbceb7; padding: 24px 18px 66px; min-height: 470px; }
+.puzzle-workspace { display: flex; align-items: flex-start; justify-content: center; gap: clamp(32px, 8vw, 110px); }
+.puzzle-workspace p { font-size: 17px; text-align: center; margin: 0 0 14px; color: #776c50; }
+.puzzle-board, .puzzle-pieces { display: grid; grid-template-columns: repeat(2, 120px); gap: 4px; }
+.puzzle-board { padding: 8px; border: 3px solid #a99571; border-radius: 12px; background: #fffdf7; box-shadow: 0 5px 0 #a9957118; }
+.puzzle-pieces { gap: 12px; }
+.puzzle-slot, .puzzle-piece { width: 120px; height: 120px; border: 2px dashed #c3b79d; background: #e8deca; padding: 0; overflow: hidden; }
+.puzzle-slot svg, .puzzle-piece svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.puzzle-slot svg { opacity: 0; }
+.puzzle-board.show-picture .puzzle-slot svg { opacity: .35; }
+.puzzle-slot.is-filled svg { opacity: 1 !important; }
+.puzzle-slot.is-filled { border: 2px solid transparent; }
+.puzzle-slot.is-target { border-style: solid; border-color: #355e48; background: #fff9cc; box-shadow: inset 0 0 0 3px #355e48; }
+.puzzle-piece { border: 2px solid #fff9ec; border-radius: 9px; box-shadow: 0 4px 0 #ac9b7624; touch-action: none; cursor: var(--cursor-grab); }
+.puzzle-piece.is-dragging { position: relative; z-index: 5; box-shadow: 0 8px 18px #57482b38; cursor: var(--cursor-grabbing); }
+.puzzle-piece.is-placed { visibility: hidden; }
+.puzzle-frame > button { display: block; margin: 16px auto 0; }
+.puzzle-stage[data-rows='3'] .puzzle-slot, .puzzle-stage[data-rows='3'] .puzzle-piece { height: 80px; }
+.play-demo[data-demo-panel='puzzle'].is-playing .demo-mouse i { animation: help-press 3.4s linear 1; }
+.music-entry { background: #e9e4ee; border-color: #d2c6da; }
+.music-screen { background: #f4f0f5; }
+.music-stage { background: #ece5ef; border-color: #d6c8dc; min-height: 500px; padding: 30px 18px 68px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+.music-score { display: flex; justify-content: center; align-items: center; gap: 8px; }
+.music-step { position: relative; width: 60px; height: 66px; border: 2px solid #c7b8cd; border-radius: 14px; background: #fffaf1; display: grid; place-items: center; }
+.music-step svg { width: 46px; height: 42px; }
+.music-step b { position: absolute; bottom: -18px; left: 0; right: 0; text-align: center; font-size: 13px; font-weight: 500; color: #877a8a; }
+.music-step i { display: none; font-style: normal; position: absolute; right: -5px; top: -9px; color: #355e48; background: #f2f8e8; border-radius: 50%; padding: 0 4px; }
+.music-step.is-played { background: #edf3df; border-color: #86a078; }.music-step.is-played i { display: block; }
+.music-step.is-next { box-shadow: 0 0 0 4px #9880a02b; border-color: #8f7896; }
+.music-step.is-listening { background: var(--note-color); border-color: #685174; }
+.music-score.is-covered .music-step svg { visibility: hidden; }
+.music-score.is-covered .music-step::after { content: '♪'; color: #aa96b1; position: absolute; font-size: 30px; }
+.music-actions { display: flex; justify-content: center; gap: 14px; margin-top: 6px; }
+.music-instruments { display: grid; grid-template-columns: repeat(4, 148px); gap: 18px; justify-content: center; }
+.music-instrument { width: 148px; height: 142px; border: 3px solid #b3a1ba; border-radius: 26px; background: #fffaf3; box-shadow: 0 6px 0 #b3a1ba26; color: #5c4c66; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; }
+.music-instrument svg { width: 106px; height: 88px; pointer-events: none; }
+.music-instrument span { font-size: 18px; font-weight: 800; }
+.music-instrument:hover:not(:disabled) { border-color: #695276; }
+.music-instrument.is-sounding { background: var(--note-color); border-color: #6b5175; box-shadow: 0 0 0 6px #fff9; }
+.music-instrument:disabled { cursor: var(--cursor-default); }
+.play-demo[data-demo-panel='music'].is-playing .demo-mouse i { animation: help-click 3.4s linear 1; }
+@media (max-width: 640px) { .maze-stage { padding: 8px; } .maze-viewport { max-height: 54dvh; } }
+@media (max-width: 700px) { .puzzle-workspace { flex-direction: column; align-items: center; gap: 26px; } .puzzle-stage { padding: 20px 0 66px; } }
+@media (max-width: 800px) { .music-instruments { grid-template-columns: repeat(2, 128px); gap: 16px; } .music-instrument { width: 128px; height: 128px; } }
+@media (max-width: 640px) { .music-stage { padding-left: 4px; padding-right: 4px; } .music-step { width: 44px; height: 58px; } .music-step svg { width: 34px; } .music-instruments { gap: 12px; } .music-actions { gap: 10px; } .music-actions .play-control { font-size: 17px; padding: 12px; } }
+@media (max-width: 640px) {
+  :is(.maze-screen, .puzzle-screen, .music-screen) .play-footer { grid-template-columns: 100px minmax(0, 1fr) 110px; }
+  :is(.maze-screen, .puzzle-screen, .music-screen) .play-footer > .picture-progress { grid-column: 1 / -1; grid-row: 2; margin-top: 8px; }
+  :is(.maze-screen, .puzzle-screen, .music-screen) .play-footer > button { grid-row: 1; }
+}
+@media (prefers-reduced-motion: reduce) { .adventure-home *, .maze-stage *, .puzzle-stage *, .music-stage * { animation: none !important; transition: none !important; } .maze-cell.is-collecting::before, .maze-cell.is-collecting::after { animation: none; } }

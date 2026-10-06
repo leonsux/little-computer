@@ -7,6 +7,15 @@ const screens = {
   bubbles: document.querySelector('#bubbles-screen'),
   memory: document.querySelector('#memory-screen'),
   train: document.querySelector('#train-screen'),
+  maze: document.querySelector('#maze-screen'),
+  puzzle: document.querySelector('#puzzle-screen'),
+  music: document.querySelector('#music-screen'),
+  link: document.querySelector('#link-screen'),
+  icecream: document.querySelector('#icecream-screen'),
+  hideout: document.querySelector('#hideout-screen'),
+  builder: document.querySelector('#builder-screen'),
+  cake: document.querySelector('#cake-screen'),
+  carwash: document.querySelector('#carwash-screen'),
   'drawing-finish': document.querySelector('#drawing-finish-screen'),
   parent: document.querySelector('#parent-screen'),
 };
@@ -68,6 +77,15 @@ function refreshParentPage() {
   document.querySelector('#stat-bubble-scenes').textContent = String(readNumber('littleComputer.bubbleScenes'));
   document.querySelector('#stat-memory-boards').textContent = String(readNumber('littleComputer.memoryBoards'));
   document.querySelector('#stat-train-trips').textContent = String(readNumber('littleComputer.trainTrips'));
+  document.querySelector('#stat-maze-trips').textContent = String(readNumber('littleComputer.mazeTrips'));
+  document.querySelector('#stat-puzzle-pictures').textContent = String(readNumber('littleComputer.puzzlePictures'));
+  document.querySelector('#stat-music-songs').textContent = String(readNumber('littleComputer.musicSongs'));
+  document.querySelector('#stat-link-boards').textContent = String(readNumber('littleComputer.linkBoards'));
+  document.querySelector('#stat-icecream-orders').textContent = String(readNumber('littleComputer.icecreamOrders'));
+  document.querySelector('#stat-hideout-scenes').textContent = String(readNumber('littleComputer.hideoutScenes'));
+  document.querySelector('#stat-builder-models').textContent = String(readNumber('littleComputer.builderModels'));
+  document.querySelector('#stat-cake-orders').textContent = String(readNumber('littleComputer.cakeOrders'));
+  document.querySelector('#stat-carwash-cars').textContent = String(readNumber('littleComputer.carwashCars'));
   document.querySelector('#fruit-level-setting').value = String(settings.fruitLevels);
 }
 
@@ -122,19 +140,23 @@ window.GameProgress = {
   },
 };
 
+function prepareGameAudio() {
+  audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+  if (!masterGain) {
+    masterGain = audioContext.createGain();
+    masterGain.connect(audioContext.destination);
+  }
+  masterGain.gain.value = soundEnabled ? 1 : 0;
+  if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+}
+
 window.GameAudio = {
-  play(complete = false) {
+  play(complete = false, pitch = null) {
     if (!soundEnabled) return;
     try {
-      audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
-      if (!masterGain) {
-        masterGain = audioContext.createGain();
-        masterGain.connect(audioContext.destination);
-      }
-      masterGain.gain.value = soundEnabled ? 1 : 0;
-      if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+      prepareGameAudio();
       const now = audioContext.currentTime;
-      (complete ? [523, 659, 784] : [659, 784]).forEach((frequency, index) => {
+      (complete ? [523, 659, 784] : pitch === null ? [659, 784] : [pitch]).forEach((frequency, index) => {
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
         const start = now + index * .1;
@@ -148,6 +170,65 @@ window.GameAudio = {
         oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
       });
     } catch (_) { /* All sound has an equivalent visual response. */ }
+  },
+  playInstrument(instrument) {
+    if (!soundEnabled || !['drum', 'bell', 'keys', 'shaker'].includes(instrument)) return;
+    try {
+      prepareGameAudio();
+      const now = audioContext.currentTime;
+      const tone = (frequency, volume, duration, endFrequency = null) => {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.frequency.setValueAtTime(frequency, now);
+        if (endFrequency !== null) oscillator.frequency.exponentialRampToValueAtTime(endFrequency, now + duration);
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.exponentialRampToValueAtTime(volume, now + .003);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+        oscillator.connect(gain).connect(masterGain);
+        oscillator.start(now);
+        oscillator.stop(now + duration + .015);
+        oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
+      };
+      const noise = (duration, volume, cutoff, delay = 0) => {
+        const buffer = audioContext.createBuffer(1, Math.ceil(audioContext.sampleRate * duration), audioContext.sampleRate);
+        const samples = buffer.getChannelData(0);
+        for (let index = 0; index < samples.length; index++) samples[index] = Math.random() * 2 - 1;
+        const source = audioContext.createBufferSource();
+        const filter = audioContext.createBiquadFilter();
+        const gain = audioContext.createGain();
+        const start = now + delay;
+        source.buffer = buffer;
+        filter.type = 'highpass';
+        filter.frequency.value = cutoff;
+        filter.Q.value = .7;
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(volume, start + .003);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        source.connect(filter).connect(gain).connect(masterGain);
+        source.start(start);
+        source.stop(start + duration);
+        source.onended = () => { source.disconnect(); filter.disconnect(); gain.disconnect(); };
+      };
+      if (instrument === 'drum') {
+        // A falling bass pitch with a brief noisy stick attack.
+        tone(160, .075, .3, 55);
+        noise(.035, .025, 800);
+      } else if (instrument === 'bell') {
+        // Inharmonic metal partials ring longer than the wooden bars.
+        tone(880, .035, .62);
+        tone(2440, .02, .38);
+        tone(4660, .008, .18);
+      } else if (instrument === 'keys') {
+        tone(523, .065, .34);
+        tone(1570, .015, .12);
+        tone(2630, .006, .07);
+      } else {
+        // Two short bursts of filtered noise make a shake, without a fixed pitch.
+        noise(.12, .065, 3200);
+        noise(.12, .05, 3200, .085);
+      }
+    } catch (_) { /* Playing and visual cues remain available without audio. */ }
   },
 };
 document.querySelectorAll('[data-sound]').forEach((button) => button.addEventListener('click', () => {
@@ -220,6 +301,15 @@ function showScreen(name) {
   if (name !== 'bubbles') window.BubblesGame?.stop();
   if (name !== 'memory') window.MemoryGame?.stop();
   if (name !== 'train') window.TrainGame?.stop();
+  if (name !== 'maze') window.MazeGame?.stop();
+  if (name !== 'puzzle') window.PuzzleGame?.stop();
+  if (name !== 'music') window.MusicGame?.stop();
+  if (name !== 'link') window.LinkGame?.stop();
+  if (name !== 'icecream') window.IcecreamGame?.stop();
+  if (name !== 'hideout') window.HideoutGame?.stop();
+  if (name !== 'builder') window.BuilderGame?.stop();
+  if (name !== 'cake') window.CakeGame?.stop();
+  if (name !== 'carwash') window.CarwashGame?.stop();
   window.GameHelp.hide();
   Object.values(screens).forEach((screen) => screen.classList.add('hidden'));
   screens[name].classList.remove('hidden');
@@ -228,7 +318,7 @@ function showScreen(name) {
     const entry = screens.home.querySelector('[data-game="' + showScreen.previousGame + '"]');
     entry?.focus({ preventScroll: true });
     entry?.scrollIntoView({ block: 'nearest' });
-  } else if (['garden', 'stars', 'fruit', 'drawing', 'bubbles', 'memory', 'train'].includes(name)) {
+  } else if (['garden', 'stars', 'fruit', 'drawing', 'bubbles', 'memory', 'train', 'maze', 'puzzle', 'music', 'link', 'icecream', 'hideout', 'builder', 'cake', 'carwash'].includes(name)) {
     showScreen.previousGame = name;
     const title = screens[name].querySelector('h2');
     title.tabIndex = -1;
@@ -268,10 +358,19 @@ document.querySelector('[data-game="fruit"]').addEventListener('click', () => wi
 document.querySelector('[data-game="bubbles"]').addEventListener('click', () => window.BubblesGame.start());
 document.querySelector('[data-game="memory"]').addEventListener('click', () => window.MemoryGame.start());
 document.querySelector('[data-game="train"]').addEventListener('click', () => window.TrainGame.start());
+document.querySelector('[data-game="maze"]').addEventListener('click', () => window.MazeGame.start());
+document.querySelector('[data-game="puzzle"]').addEventListener('click', () => window.PuzzleGame.start());
+document.querySelector('[data-game="music"]').addEventListener('click', () => window.MusicGame.start());
+document.querySelector('[data-game="link"]').addEventListener('click', () => window.LinkGame.start());
+document.querySelector('[data-game="icecream"]').addEventListener('click', () => window.IcecreamGame.start());
+document.querySelector('[data-game="hideout"]').addEventListener('click', () => window.HideoutGame.start());
+document.querySelector('[data-game="builder"]').addEventListener('click', () => window.BuilderGame.start());
+document.querySelector('[data-game="cake"]').addEventListener('click', () => window.CakeGame.start());
+document.querySelector('[data-game="carwash"]').addEventListener('click', () => window.CarwashGame.start());
 document.querySelectorAll('[data-game="drawing"], [data-drawing-replay]').forEach((button) => button.addEventListener('click', () => window.DrawingGame?.start()));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.querySelectorAll('[data-replay]').forEach((button) => button.addEventListener('click', () => {
-  const game = { stars: window.StarsGame, fruit: window.FruitGame, bubbles: window.BubblesGame, memory: window.MemoryGame, train: window.TrainGame }[button.dataset.replay];
+  const game = { stars: window.StarsGame, fruit: window.FruitGame, bubbles: window.BubblesGame, memory: window.MemoryGame, train: window.TrainGame, maze: window.MazeGame, puzzle: window.PuzzleGame, music: window.MusicGame, link: window.LinkGame, icecream: window.IcecreamGame, hideout: window.HideoutGame, builder: window.BuilderGame, cake: window.CakeGame, carwash: window.CarwashGame }[button.dataset.replay];
   game.start();
 }));
 document.querySelector('[data-parent]').addEventListener('click', openParentModal);
