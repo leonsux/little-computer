@@ -20,12 +20,31 @@ const { chromium } = require('playwright');
     const record = () => page.evaluate(() => Number(localStorage.getItem('littleComputer.icecreamOrders')) || 0);
     const order = () => page.locator('#icecream-order .icecream-scoop').evaluateAll(balls => balls.map(ball => ball.dataset.flavor));
     const settle = () => page.waitForTimeout(1650);
-    const fill = async () => { for (const name of await order()) await flavor(name).click(); };
+    const seenGuests = new Set();
+    const checkWorkbench = async () => {
+      seenGuests.add(await page.locator('#icecream-guest use').getAttribute('href'));
+      const layout = await page.evaluate(() => {
+        const rect = selector => document.querySelector(selector).getBoundingClientRect();
+        const sample = rect('#icecream-order'), made = rect('#icecream-made'), table = rect('.icecream-workbench');
+        const sampleCone = rect('#icecream-order .icecream-cone'), madeCone = rect('#icecream-made .icecream-cone');
+        const pictures = ['#icecream-order', '#icecream-made'].map(selector => [...document.querySelectorAll(selector + ' .icecream-scoop')].map(node => {
+          const r = node.getBoundingClientRect(); return { top: r.top, width: r.width, height: r.height };
+        }));
+        return { aligned: Math.abs(sample.top - made.top) < 1 && Math.abs(sample.bottom - made.bottom) < 1,
+          sideBySide: sample.right < made.left,
+          onTable: Math.abs(sampleCone.bottom - table.top) < 1 && Math.abs(madeCone.bottom - table.top) < 1,
+          sameCone: sampleCone.width === madeCone.width && sampleCone.height === madeCone.height, pictures };
+      });
+      assert.ok(layout.aligned && layout.sideBySide && layout.onTable && layout.sameCone, 'Sample and icecream share a baseline on the workbench');
+      if (layout.pictures[0].length === layout.pictures[1].length) assert.deepEqual(layout.pictures[1], layout.pictures[0], 'Matching icecreams have the same size and height');
+    };
+    const fill = async () => { for (const name of await order()) { await flavor(name).click(); await checkWorkbench(); } };
 
     await page.screenshot({ path: '.tmp/icecream-game/home.png', fullPage: true });
     await enter();
     assert.equal(await page.locator('[data-demo-panel="icecream"]').isVisible(), true);
     await page.locator('[data-demo="icecream"]').click();
+    await checkWorkbench();
     await flavor('strawberry').hover();
     assert.equal(await made(), 0, 'Demonstration and hovering cannot make a scoop');
     assert.equal(await record(), 0);
@@ -63,10 +82,11 @@ const { chromium } = require('playwright');
         assert.deepEqual(await page.locator('#icecream-made .icecream-scoop').evaluateAll(balls => balls.map(ball => ball.dataset.flavor)), names);
         assert.equal(await page.locator('#icecream-recipe .is-done').count(), names.length);
         if (round === 3 && guest === 0) {
-          for (const width of [1920, 1366, 768, 390, 320]) {
+          for (const width of [1920, 1366, 1100, 1099, 768, 701, 700, 390, 320]) {
             await page.setViewportSize({ width, height: 900 });
             await page.waitForTimeout(100);
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'No horizontal overflow at ' + width);
+            await checkWorkbench();
             const clipped = await page.locator('#icecream-screen button:visible').evaluateAll(buttons => buttons.filter(button => {
               const r = button.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1;
             }).map(button => button.textContent));
@@ -97,6 +117,7 @@ const { chromium } = require('playwright');
     }
     assert.equal(await page.locator('#icecream-level').textContent(), '小店开张啦', 'All five rounds cycle');
     assert.equal(await record(), 13);
+    for (const animal of ['elephant', 'panda', 'polarBear', 'giraffe']) assert.ok(seenGuests.has('#animal-' + animal), animal + ' orders icecream');
     await page.evaluate(() => refreshParentPage());
     assert.equal(await page.locator('#stat-icecream-orders').textContent(), '13');
 

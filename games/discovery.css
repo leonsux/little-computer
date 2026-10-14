@@ -1,13 +1,4 @@
 /* Additional games share play.css controls and the existing vector art system. */
-.discovery-home h2 { margin: 4px 0 16px; font-size: 23px; color: #304e42; }
-.discovery-shelf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.discovery-entry { position: relative; min-height: 180px; min-width: 0; padding: 24px; display: flex; text-align: left; align-items: center; overflow: hidden; border: 2px solid #bdd4cf; border-radius: 32px; background: #deeff0; color: #304e42; transition: transform .2s; }
-.discovery-entry:hover { transform: translateY(-4px); }
-.discovery-entry > span { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 8px; }
-.discovery-entry small { font-size: 14px; color: #536e67; }
-.discovery-entry b { font-size: 29px; white-space: nowrap; }
-.discovery-entry em { font-size: 15px; font-style: normal; }
-.discovery-entry > svg { position: absolute; right: -6px; bottom: -2px; width: 125px; height: 112px; color: #eab978; transform: rotate(-14deg); opacity: .8; }
 .discovery-stage { position: relative; flex: 1; min-height: 420px; border: 2px solid #b6d5d6; border-radius: 32px; overflow: hidden; isolation: isolate; }
 .discovery-tip { position: absolute; bottom: 14px; left: 12px; right: 12px; margin: 0; font-size: 20px; font-weight: 800; color: #365c60; text-align: center; pointer-events: none; }
 .bubbles-screen { background: #eef6f1; }
@@ -73,14 +64,10 @@
 .play-demo[data-demo-panel='train'].is-playing .demo-mouse i { animation: help-press 3.4s linear 1; }
 @keyframes train-ready { 50% { transform: translateX(12px); } }
 @keyframes fish-hello { from { opacity: .2; transform: scale(.7) rotate(-8deg); } to { opacity: 1; transform: scale(1); } }
-@media (max-width: 900px) { .discovery-entry { padding: 18px; } .discovery-entry b { font-size: 24px; } .discovery-entry > svg { width: 90px; opacity: .55; } }
 @media (max-width: 1000px) { .memory-stage { padding: 116px 18px 64px; } }
 @media (max-width: 1000px) { .train-engine { display: none; } }
 @media (max-width: 800px) { .train-slots, .train-slots[data-total='4'] { grid-template-columns: repeat(3, 120px); gap: 12px; } .train-slots[data-total='4'] { grid-template-columns: repeat(4, 120px); } .train-slot { width: 120px; height: 136px; } .train-slot::after { box-shadow: 50px 0 0 -6px #dce3cd, 50px 0 0 0 #6c8374; } }
 @media (max-width: 640px) {
-  .discovery-shelf { grid-template-columns: 1fr; gap: 14px; }
-  .discovery-entry { min-height: 150px; padding: 24px; }
-  .discovery-entry b { font-size: 29px; }.discovery-entry > svg { width: 125px; opacity: .8; }
   .ocean-stage { min-height: 490px; padding: 32px 12px 60px; }
   .bubble-buttons, .bubble-buttons[data-total='4'] { grid-template-columns: repeat(2, 112px); gap: 18px; }
   .bubble-button { width: 112px; height: 112px; }
@@ -94,4 +81,4 @@
   .train-slot { height: 124px; padding: 14px; }
   .train-pieces { left: 10px; right: 10px; bottom: 60px; display: grid; grid-template-columns: repeat(2, 112px); gap: 16px; }
 }
-@media (prefers-reduced-motion: reduce) { .discovery-entry, .discovery-stage *, .discovery-stage *::before, .discovery-stage *::after { animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) { .discovery-stage *, .discovery-stage *::before, .discovery-stage *::after { animation: none !important; transition: none !important; } }

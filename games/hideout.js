@@ -6,13 +6,14 @@
     fox: { name: '小狐狸', symbol: 'hideout-fox', clue: '尖尖的橘色耳朵' },
     owl: { name: '猫头鹰', symbol: 'hideout-owl', clue: '紫色的小耳尖' },
     fish: { name: '小鱼', symbol: 'mini-fish', clue: '金色的小鱼鳍' },
+    ...Object.fromEntries(window.GameAnimals.friends.map(friend => [friend.key, friend])),
   };
   const scenes = [
     { name: '草地上的悄悄话', theme: 'meadow', friends: ['rabbit', 'butterfly', 'turtle'], extras: ['flower'] },
-    { name: '小狐狸来玩啦', theme: 'garden', friends: ['fox', 'rabbit', 'turtle', 'butterfly'], extras: ['star'] },
-    { name: '森林里的新朋友', theme: 'forest', friends: ['owl', 'fox', 'butterfly', 'rabbit', 'turtle'], extras: ['flower', 'star'] },
-    { name: '池塘边的聚会', theme: 'pond', friends: ['fish', 'turtle', 'rabbit', 'owl', 'butterfly', 'fox'], extras: ['flower', 'star'] },
-    { name: '晚霞里的捉迷藏', theme: 'sunset', friends: ['fox', 'owl', 'fish', 'butterfly', 'turtle', 'rabbit'], extras: ['flower', 'star', 'flower'] },
+    { name: '大个子的朋友来玩啦', theme: 'garden', friends: ['elephant', 'panda', 'polarBear', 'giraffe'], extras: ['star'] },
+    { name: '森林里的新朋友', theme: 'forest', friends: ['owl', 'fox', 'butterfly', 'rabbit', 'panda'], extras: ['flower', 'star'] },
+    { name: '池塘边的聚会', theme: 'pond', friends: ['fish', 'turtle', 'elephant', 'polarBear', 'butterfly', 'giraffe'], extras: ['flower', 'star'] },
+    { name: '晚霞里的捉迷藏', theme: 'sunset', friends: ['fox', 'owl', 'panda', 'giraffe', 'polarBear', 'elephant'], extras: ['flower', 'star', 'flower'] },
   ];
   const covers = { bush: '树丛', house: '小屋', pot: '花盆', rock: '小石头' };
   const spots = document.querySelector('#hideout-spots');
@@ -25,10 +26,10 @@
   let hintTimer;
   const peekTimers = new Map();
 
-  function clearHint() { clearTimeout(hintTimer); highlighted = -1; }
+  function clearHint() { window.GameClock.clearTimeout(hintTimer); highlighted = -1; }
   function clearTimers() {
     clearHint();
-    peekTimers.forEach(timer => clearTimeout(timer));
+    peekTimers.forEach(timer => window.GameClock.clearTimeout(timer));
     peekTimers.clear();
     opened.clear();
   }
@@ -55,7 +56,7 @@
     if (!active || transitioning || matched.has(index)) return;
     window.GameHelp.hide();
     clearHint();
-    clearTimeout(peekTimers.get(index));
+    window.GameClock.clearTimeout(peekTimers.get(index));
     peekTimers.delete(index);
     const friend = deck[index];
     if (friend !== currentFriend()) {
@@ -64,7 +65,7 @@
       window.GameAudio.play(false, friends[friend] ? 392 : 523);
       // Surprises remain visible. Other friends hide again and can still be found later.
       if (friends[friend]) {
-        peekTimers.set(index, setTimeout(() => {
+        peekTimers.set(index, window.GameClock.setTimeout(() => {
           peekTimers.delete(index);
           if (!active) return;
           opened.delete(index);
@@ -129,7 +130,7 @@
     highlighted = deck.indexOf(currentFriend());
     tip.textContent = '这里有小动静，点开看看吧！';
     render();
-    hintTimer = setTimeout(() => { highlighted = -1; if (active) render(); }, 2200);
+    hintTimer = window.GameClock.setTimeout(() => { highlighted = -1; if (active) render(); }, 2200);
   });
   function start() {
     window.showScreen('hideout');

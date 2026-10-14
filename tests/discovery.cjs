@@ -85,8 +85,9 @@ const { chromium } = require('playwright');
     assert.equal(await page.locator('.memory-card.is-open').count(), 0, 'Mismatches close gently');
     await page.locator('#memory-hint').click();
     await page.screenshot({ path: '.tmp/new-games/memory.png', fullPage: true });
-    for (const pairs of [2, 3, 4]) {
+    for (const pairs of [2, 3, 4, 4]) {
       assert.equal(await page.locator('.memory-card').count(), pairs * 2);
+      if ((await page.locator('#memory-level').textContent()) === '动物朋友的聚会') assert.deepEqual(await page.locator('.memory-card').evaluateAll(cards => [...new Set(cards.map(card => card.dataset.picture))].sort()), ['elephant', 'giraffe', 'panda', 'polarBear']);
       if (pairs === 4) {
         for (const width of [768, 390, 320]) {
           await page.setViewportSize({ width, height: 900 });
@@ -104,7 +105,7 @@ const { chromium } = require('playwright');
       await settle();
     }
     assert.equal(await page.locator('.memory-card').count(), 4);
-    assert.equal(await page.evaluate(() => localStorage.getItem('littleComputer.memoryBoards')), '3');
+    assert.equal(await page.evaluate(() => localStorage.getItem('littleComputer.memoryBoards')), '4');
     for (const kind of await page.locator('.memory-card').evaluateAll(cards => [...new Set(cards.map(card => card.dataset.picture))])) {
       for (const card of await page.locator('.memory-card[data-picture="' + kind + '"]').all()) {
         await card.focus();
@@ -219,7 +220,7 @@ const { chromium } = require('playwright');
     const numbers = question.match(/\d+/g).map(Number);
     await page.locator('#math-answer').fill(String(question.includes('+') ? numbers[0] + numbers[1] : numbers[0] - numbers[1]));
     await page.locator('[data-submit-parent]').click();
-    for (const [id, value] of [['stat-bubble-scenes', '4'], ['stat-memory-boards', '4'], ['stat-train-trips', '3']]) {
+    for (const [id, value] of [['stat-bubble-scenes', '4'], ['stat-memory-boards', '5'], ['stat-train-trips', '3']]) {
       assert.equal(await page.locator('#' + id).textContent(), value, 'Parent page reads completed scenes');
     }
     await page.locator('#parent-screen [data-home]').click();

@@ -1,0 +1,41 @@
+.juice-screen { background: #fff8ed; }
+#home-screen .juice-entry { background: #f7e9ce; }
+.juice-stage { position: relative; display: grid; grid-template-columns: 200px minmax(240px, 1fr) 280px; align-items: center; gap: 24px; padding: 28px; border: 2px solid #dfcfb2; border-radius: 32px; background: #f3e8d8; }
+.juice-customer { text-align: center; }
+#juice-guest { width: 150px; height: 180px; }
+#juice-greeting { margin: 8px 0 16px; font-size: 19px; font-weight: 800; }
+.juice-recipe { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 14px 8px; border-radius: 22px; background: #fffdf2; border: 2px solid #d5c4aa; }
+.juice-order-fruit { position: relative; width: 48px; height: 60px; }
+.juice-order-fruit svg { width: 48px; height: 52px; }
+.juice-order-fruit i { display: none; position: absolute; right: -4px; top: -10px; font-size: 23px; color: #355e48; font-style: normal; }
+.juice-order-fruit.is-done i { display: block; }
+.juice-workbench { text-align: center; min-width: 0; }
+.juice-machine { position: relative; width: 240px; height: 290px; margin: 0 auto; }
+.juice-lid { position: absolute; top: 12px; left: 26px; width: 165px; height: 25px; background: #83aba5; border: 3px solid #64857e; border-radius: 14px; z-index: 2; }
+.juice-jar { position: absolute; top: 31px; left: 32px; width: 153px; height: 185px; border: 4px solid #80988e; border-radius: 5px 5px 32px 32px; background: #fffef699; }
+.juice-jar::after { content: ''; position: absolute; top: 24px; left: 146px; width: 30px; height: 92px; border: 7px solid #91ada3; border-left: 0; border-radius: 0 22px 22px 0; }
+#juice-contents { position: absolute; inset: 6px; display: flex; align-items: flex-end; justify-content: center; flex-wrap: wrap; align-content: flex-end; padding-bottom: 7px; gap: 3px; }
+.juice-chunk svg { width: 60px; height: 65px; display: block; }
+.juice-base { position: absolute; bottom: 15px; left: 19px; width: 180px; height: 72px; border: 3px solid #64857e; border-radius: 18px; background: #95b9b2; box-shadow: 0 7px 0 #b8a48544; }
+.juice-base i { display: block; width: 25px; height: 25px; margin: 16px auto; border: 3px solid #63877e; border-radius: 50%; background: #f6df9d; }
+.juice-workbench > .play-primary { min-width: 180px; background: #bd765c; border-color: #bd765c; }
+.juice-fruits { display: grid; grid-template-columns: repeat(2, minmax(100px, 1fr)); gap: 12px; }
+.juice-fruit { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 100px; min-height: 115px; padding: 8px; border: 2px solid #cdbba0; border-radius: 23px; background: #fffdf2; color: #405d4d; font-size: 18px; font-weight: 800; }
+.juice-fruit svg { width: 64px; height: 65px; }
+.juice-fruit:disabled { opacity: .45; }
+.juice-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.juice-tip { grid-column: 1 / -1; text-align: center; margin: 0; min-height: 28px; font-size: 18px; font-weight: 700; }
+.juice-shelf { grid-column: 1 / -1; display: flex; justify-content: center; gap: 12px; min-height: 84px; padding-top: 10px; border-bottom: 8px solid #c6ae85; }
+.juice-gift { display: inline-flex; }
+.juice-gift svg { width: 60px; height: 75px; }
+.juice-drink { width: 125px; height: 156px; }
+.juice-demo-art { display: flex; align-items: center; justify-content: center; gap: 16px; }
+.juice-demo-art svg { width: 90px; height: 110px; }
+.juice-demo-art span { font-size: 34px; }
+.juice-screen .play-footer { grid-template-columns: 130px minmax(0, 1fr) 160px; }
+.juice-stage.is-blended #juice-contents { animation: juice-swirl .55s ease-out; }
+@keyframes juice-swirl { 25% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+@media (max-width: 1000px) { .juice-stage { grid-template-columns: minmax(170px, 1fr) minmax(240px, 1fr); padding: 20px; gap: 20px; } .juice-supplies { grid-column: 1 / -1; } .juice-fruits { grid-template-columns: repeat(4, minmax(100px, 1fr)); } }
+@media (max-width: 640px) { .juice-stage { grid-template-columns: minmax(0, 1fr); padding: 16px 10px; gap: 16px; } .juice-customer { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 4px 8px; align-items: center; } #juice-guest { width: 90px; height: 110px; grid-row: 1 / 3; } #juice-greeting { margin: 0; font-size: 16px; } .juice-recipe { padding: 10px 5px; gap: 4px; } .juice-order-fruit { width: 42px; height: 48px; } .juice-order-fruit svg { width: 42px; height: 48px; } .juice-fruits { grid-template-columns: repeat(2, minmax(100px, 1fr)); } .juice-actions { flex-direction: column; } .juice-shelf { gap: 2px; } .juice-gift svg { width: 46px; height: 65px; } }
+@media (prefers-reduced-motion: reduce) { .juice-stage.is-blended #juice-contents { animation: none; } }
+@media (max-width: 640px) { .juice-screen .play-footer { grid-template-columns: 100px minmax(0, 1fr) 110px; } #juice-trail { grid-column: 1 / -1; grid-row: 2; } }

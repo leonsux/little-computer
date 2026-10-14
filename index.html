@@ -16,15 +16,64 @@
     <link rel="stylesheet" href="games/builder.css" />
     <link rel="stylesheet" href="games/cake.css" />
     <link rel="stylesheet" href="games/carwash.css" />
+    <link rel="stylesheet" href="games/dressup.css" />
+    <link rel="stylesheet" href="games/home.css" />
+    <link rel="stylesheet" href="games/animals.css" />
+    <link rel="stylesheet" href="games/juice.css" />
+    <link rel="stylesheet" href="games/mail.css" />
+    <link rel="stylesheet" href="games/pipes.css" />
+    <link rel="stylesheet" href="games/beads.css" />
+    <link rel="stylesheet" href="games/boxes.css" />
   </head>
   <body>
+    <aside id="play-time-bar" class="play-time-bar" aria-label="游玩时间">
+      <div class="play-time-readout"><span id="play-time-label">今日剩余</span><strong id="play-time-value" role="timer">时间不限</strong></div>
+      <button id="pause-play" type="button" aria-haspopup="dialog">Ⅱ 暂停</button>
+    </aside>
+    <dialog id="pause-dialog" class="pause-dialog" aria-labelledby="pause-title" aria-describedby="pause-note">
+      <div class="pause-card">
+        <svg class="pause-friend" viewBox="0 0 200 240" aria-hidden="true"><use href="#animal-polarBear"/></svg>
+        <h2 id="pause-title">休息一下吧</h2>
+        <p id="pause-note">游戏已暂停，时间也停住啦。</p>
+        <button id="resume-play" class="primary-button" type="button" autofocus>▶ 继续玩</button>
+      </div>
+    </dialog>
     <main id="app" class="app-shell">
       <svg class="garden-symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
+          <symbol id="boxes-crate" viewBox="0 0 100 100"><rect x="10" y="13" width="80" height="76" rx="9" fill="#cfa66e" stroke="#846849" stroke-width="4"/><path d="M13 35H87M13 67H87M31 17V85M69 17V85" stroke="#ae844f" stroke-width="3"/><path d="M17 21L82 81M82 21L17 81" stroke="#e6c694" stroke-width="9"/><path d="M17 21L82 81M82 21L17 81" stroke="#96724b" stroke-width="2"/><circle cx="20" cy="24" r="3" fill="#846849"/><circle cx="80" cy="79" r="3" fill="#846849"/></symbol>
+          <symbol id="boxes-home" viewBox="0 0 180 140"><rect x="8" y="8" width="164" height="124" rx="24" fill="#e7ecd3"/><path d="M38 106H151" stroke="#b8c49c" stroke-width="7" stroke-linecap="round"/><svg x="8" y="20" width="85" height="104"><use href="#animal-polarBear"/></svg><path d="M105 38L113 54L132 56L118 70L121 89L105 80L89 89L92 70L78 56L97 54Z" fill="#e2c671"/><svg x="86" y="65" width="73" height="73"><use href="#boxes-crate"/></svg></symbol>
+          <symbol id="beads-circle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#df9481" stroke="#a76359" stroke-width="4"/><path d="M29 37Q33 27 43 26" fill="none" stroke="#ffe6cf" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="50" r="5" fill="#fff8e8" stroke="#a76359" stroke-width="2"/></symbol>
+          <symbol id="beads-star" viewBox="0 0 100 100"><path d="M50 9L62 35L91 39L70 60L75 90L50 76L25 90L30 60L9 39L38 35Z" fill="#efcc72" stroke="#ad8745" stroke-width="4" stroke-linejoin="round"/><path d="M47 29L42 43L29 45" fill="none" stroke="#fff1ba" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="54" r="5" fill="#fff8e8" stroke="#ad8745" stroke-width="2"/></symbol>
+          <symbol id="beads-flower" viewBox="0 0 100 100"><path d="M50 25C27 -7 4 28 25 48C-6 65 26 98 47 78C62 109 99 78 78 55C110 34 77 2 56 26Z" fill="#d5a6c5" stroke="#956d96" stroke-width="4"/><circle cx="51" cy="52" r="16" fill="#f4d788"/><circle cx="51" cy="52" r="5" fill="#fff8e8" stroke="#ad8745" stroke-width="2"/></symbol>
+          <symbol id="beads-leaf" viewBox="0 0 100 100"><path d="M17 80C4 30 41 14 85 14C88 62 64 93 17 80Z" fill="#94b99b" stroke="#5f876d" stroke-width="4"/><path d="M20 78L69 30M36 62L34 40M52 46L71 48" fill="none" stroke="#d8e8bc" stroke-width="5" stroke-linecap="round"/><circle cx="51" cy="49" r="5" fill="#fff8e8" stroke="#5f876d" stroke-width="2"/></symbol>
+          <symbol id="beads-wreath" viewBox="0 0 100 100"><circle cx="50" cy="50" r="29" fill="none" stroke="#a0ba8d" stroke-width="9"/><circle cx="25" cy="35" r="12" fill="#df9481"/><circle cx="74" cy="35" r="12" fill="#efcc72"/><circle cx="27" cy="69" r="12" fill="#d5a6c5"/><circle cx="73" cy="69" r="12" fill="#94b99b"/><path d="M50 17L32 6V26L50 17L68 6V26Z" fill="#c57e70"/><path d="M43 83L39 97M57 83L62 97" stroke="#c57e70" stroke-width="6"/></symbol>
+          <symbol id="beads-home" viewBox="0 0 180 140"><rect x="8" y="8" width="164" height="124" rx="24" fill="#fff1df"/><path d="M28 96Q90 135 150 82" fill="none" stroke="#b69574" stroke-width="3"/><svg x="40" y="2" width="98" height="98"><use href="#beads-wreath"/></svg><svg x="12" y="79" width="42" height="42"><use href="#beads-circle"/></svg><svg x="51" y="92" width="42" height="42"><use href="#beads-star"/></svg><svg x="91" y="90" width="42" height="42"><use href="#beads-circle"/></svg><svg x="128" y="74" width="42" height="42"><use href="#beads-star"/></svg></symbol>
+          <symbol id="pipes-faucet" viewBox="0 0 60 100"><path d="M6 90V38H34V50H60" fill="none" stroke="#70938d" stroke-width="20" stroke-linejoin="round"/><path d="M6 90V38H34V50H60" fill="none" stroke="#d1e2dc" stroke-width="11" stroke-linejoin="round"/><path d="M26 34V20M15 20H39" fill="none" stroke="#b99059" stroke-width="7" stroke-linecap="round"/><path d="M44 47L53 50L44 53" fill="none" stroke="#559db5" stroke-width="3"/></symbol>
+          <symbol id="pipes-home" viewBox="0 0 180 140"><rect x="8" y="8" width="164" height="124" rx="22" fill="#ebf3de"/><path d="M14 78H60V40H120V96H166" fill="none" stroke="#70938d" stroke-width="23" stroke-linejoin="round"/><path d="M14 78H60V40H120V96H166" fill="none" stroke="#86c2d1" stroke-width="13" stroke-linejoin="round"/><svg x="125" y="5" width="42" height="62"><use href="#garden-flower-art"/></svg><path d="M21 35V54M10 35H32" stroke="#b99059" stroke-width="7" stroke-linecap="round"/></symbol>
+          <symbol id="mail-envelope" viewBox="0 0 140 100"><rect x="4" y="8" width="132" height="84" rx="12" fill="#fff4da" stroke="#a48c68" stroke-width="4"/><path d="M7 13L70 51L133 13M8 87L53 51M132 87L87 51" fill="none" stroke="#cbb18a" stroke-width="3"/><rect x="109" y="17" width="15" height="18" rx="3" fill="#a8c4b8"/><path d="M113 22L120 30M120 22L113 30" stroke="#f4f7e9" stroke-width="2"/></symbol>
+          <symbol id="juice-orange" viewBox="0 0 100 100"><circle cx="50" cy="55" r="34" fill="#efb967" stroke="#ad8655" stroke-width="4"/><circle cx="50" cy="55" r="25" fill="#f5cf8b" stroke="#fff2cb" stroke-width="3"/><path d="M50 30V80M25 55H75M32 37L68 73M32 73L68 37" stroke="#fff2cb" stroke-width="3"/><path d="M52 19Q57 3 77 10Q69 25 52 19Z" fill="#85aa7b"/></symbol>
+          <symbol id="juice-glass" viewBox="0 0 120 150"><path d="M24 35H96L87 131Q60 140 33 131Z" fill="#eda59d" stroke="#7b9586" stroke-width="4"/><path d="M28 51H92M42 64V110" stroke="#fff7" stroke-width="7" stroke-linecap="round"/><path d="M69 89L82 12H101" fill="none" stroke="#7ab5b3" stroke-width="7" stroke-linecap="round"/></symbol>
+          <symbol id="animal-elephant-head" viewBox="0 0 200 160">
+            <g stroke="#667f8a" stroke-width="4" stroke-linejoin="round"><ellipse cx="45" cy="78" rx="36" ry="48" fill="#9dc4ce"/><ellipse cx="155" cy="78" rx="36" ry="48" fill="#9dc4ce"/><ellipse cx="45" cy="81" rx="23" ry="32" fill="#cadfe1"/><ellipse cx="155" cy="81" rx="23" ry="32" fill="#cadfe1"/><ellipse cx="100" cy="76" rx="47" ry="47" fill="#aacbd2"/><path d="M88 92V128Q88 158 117 149Q133 142 121 131Q120 141 109 134V92" fill="#aacbd2"/><path d="M88 112H108M92 124H108" fill="none" stroke="#7d9ca8" stroke-width="3"/></g><g fill="#43555c"><circle cx="78" cy="75" r="5"/><circle cx="122" cy="75" r="5"/></g><ellipse cx="68" cy="92" rx="10" ry="6" fill="#e4b3a5"/><ellipse cx="132" cy="92" rx="10" ry="6" fill="#e4b3a5"/>
+          </symbol>
+          <symbol id="animal-panda-head" viewBox="0 0 200 160">
+            <circle cx="61" cy="35" r="23" fill="#536366"/><circle cx="139" cy="35" r="23" fill="#536366"/><ellipse cx="100" cy="85" rx="62" ry="56" fill="#fff9ed" stroke="#76857d" stroke-width="4"/><ellipse cx="74" cy="76" rx="17" ry="23" transform="rotate(22 74 76)" fill="#536366"/><ellipse cx="126" cy="76" rx="17" ry="23" transform="rotate(-22 126 76)" fill="#536366"/><circle cx="77" cy="73" r="6" fill="#fff9ed"/><circle cx="123" cy="73" r="6" fill="#fff9ed"/><circle cx="78" cy="75" r="3" fill="#43555c"/><circle cx="122" cy="75" r="3" fill="#43555c"/><path d="M92 100Q100 93 108 100L100 107Z" fill="#536366"/><path d="M100 106V115M89 114Q100 126 111 114" fill="none" stroke="#536366" stroke-width="3" stroke-linecap="round"/><ellipse cx="59" cy="102" rx="10" ry="6" fill="#eab9ab"/><ellipse cx="141" cy="102" rx="10" ry="6" fill="#eab9ab"/>
+          </symbol>
+          <symbol id="animal-polarBear-head" viewBox="0 0 200 160">
+            <g fill="#fffaf0" stroke="#94aaa9" stroke-width="4"><circle cx="62" cy="41" r="22"/><circle cx="138" cy="41" r="22"/><ellipse cx="100" cy="88" rx="60" ry="53"/></g><circle cx="62" cy="40" r="11" fill="#dce7e2"/><circle cx="138" cy="40" r="11" fill="#dce7e2"/><ellipse cx="100" cy="105" rx="28" ry="22" fill="#e7ece5"/><g fill="#526568"><circle cx="77" cy="78" r="5"/><circle cx="123" cy="78" r="5"/><path d="M89 98Q100 92 111 98L100 108Z"/></g><path d="M100 106V114M90 114Q100 124 110 114" fill="none" stroke="#526568" stroke-width="3" stroke-linecap="round"/><ellipse cx="58" cy="101" rx="10" ry="6" fill="#eabdaf"/><ellipse cx="142" cy="101" rx="10" ry="6" fill="#eabdaf"/>
+          </symbol>
+          <symbol id="animal-giraffe-head" viewBox="0 0 200 160">
+            <g stroke="#a88759" stroke-width="4" stroke-linejoin="round"><path d="M80 75L76 157H124L120 75" fill="#eccb82"/><path d="M70 40Q35 15 42 51Q53 69 76 56M130 40Q165 15 158 51Q147 69 124 56" fill="#eccb82"/><path d="M86 34V13M114 34V13" fill="none" stroke-width="7"/><ellipse cx="100" cy="59" rx="39" ry="32" fill="#eccb82"/><ellipse cx="100" cy="79" rx="34" ry="20" fill="#f6dfaa"/></g><circle cx="86" cy="12" r="8" fill="#a88759"/><circle cx="114" cy="12" r="8" fill="#a88759"/><g fill="#ad8b5c"><circle cx="93" cy="111" r="8"/><circle cx="114" cy="136" r="8"/><circle cx="86" cy="148" r="6"/><path d="M86 30L94 42L83 44Z M112 30L122 43L110 43Z"/></g><g fill="#665940"><circle cx="83" cy="57" r="4"/><circle cx="117" cy="57" r="4"/><circle cx="90" cy="78" r="3"/><circle cx="110" cy="78" r="3"/></g><path d="M90 88Q100 95 110 88" fill="none" stroke="#846945" stroke-width="3" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="animal-elephant" viewBox="0 0 200 240"><ellipse cx="100" cy="229" rx="69" ry="8" fill="#627d6d22"/><g fill="#aacbd2" stroke="#667f8a" stroke-width="4"><ellipse cx="100" cy="183" rx="49" ry="44"/><ellipse cx="45" cy="187" rx="14" ry="30" transform="rotate(15 45 187)"/><ellipse cx="155" cy="187" rx="14" ry="30" transform="rotate(-15 155 187)"/><ellipse cx="71" cy="222" rx="24" ry="12"/><ellipse cx="129" cy="222" rx="24" ry="12"/></g><use href="#animal-elephant-head" width="200" height="160"/></symbol>
+          <symbol id="animal-panda" viewBox="0 0 200 240"><ellipse cx="100" cy="229" rx="69" ry="8" fill="#627d6d22"/><g fill="#536366"><ellipse cx="48" cy="185" rx="17" ry="32" transform="rotate(15 48 185)"/><ellipse cx="152" cy="185" rx="17" ry="32" transform="rotate(-15 152 185)"/><ellipse cx="72" cy="219" rx="25" ry="16"/><ellipse cx="128" cy="219" rx="25" ry="16"/></g><ellipse cx="100" cy="179" rx="45" ry="47" fill="#fff9ed" stroke="#76857d" stroke-width="4"/><path d="M60 149Q100 169 140 149" fill="none" stroke="#536366" stroke-width="18"/><use href="#animal-panda-head" width="200" height="160"/></symbol>
+          <symbol id="animal-polarBear" viewBox="0 0 200 240"><ellipse cx="100" cy="229" rx="69" ry="8" fill="#627d6d22"/><g fill="#fffaf0" stroke="#94aaa9" stroke-width="4"><ellipse cx="100" cy="183" rx="48" ry="43"/><ellipse cx="45" cy="186" rx="15" ry="30" transform="rotate(15 45 186)"/><ellipse cx="155" cy="186" rx="15" ry="30" transform="rotate(-15 155 186)"/><ellipse cx="71" cy="221" rx="24" ry="13"/><ellipse cx="129" cy="221" rx="24" ry="13"/></g><ellipse cx="100" cy="185" rx="28" ry="26" fill="#e7ece5"/><use href="#animal-polarBear-head" width="200" height="160"/></symbol>
+          <symbol id="animal-giraffe" viewBox="0 0 200 240"><ellipse cx="100" cy="229" rx="69" ry="8" fill="#627d6d22"/><g fill="#eccb82" stroke="#a88759" stroke-width="4"><ellipse cx="100" cy="184" rx="39" ry="40"/><path d="M72 209L70 229H88L89 211M111 211L112 229H130L128 209"/><path d="M62 173L48 197M138 173L152 197" fill="none" stroke-width="13" stroke-linecap="round"/></g><g fill="#ad8b5c"><circle cx="86" cy="178" r="9"/><circle cx="113" cy="198" r="10"/><circle cx="126" cy="168" r="7"/></g><use href="#animal-giraffe-head" width="200" height="160"/></symbol>
           <symbol id="wash-car" viewBox="0 0 180 120"><path d="M16 65L42 58L61 28H116L139 58L163 67V95H16Z" fill="#dc929e" stroke="#687f75" stroke-width="4" stroke-linejoin="round"/><path d="M67 34H86V57H53Z M94 34H110L127 57H94Z" fill="#d5e9e5" stroke="#687f75" stroke-width="3"/><circle cx="46" cy="96" r="15" fill="#637269"/><circle cx="136" cy="96" r="15" fill="#637269"/><circle cx="46" cy="96" r="6" fill="#e7d6b1"/><circle cx="136" cy="96" r="6" fill="#e7d6b1"/><path d="M150 15L153 25L164 28L153 31L150 42L147 31L137 28L147 25Z" fill="#fff0b5" stroke="#bca26b" stroke-width="2"/></symbol>
           <symbol id="wash-brush" viewBox="0 0 100 100"><path d="M47 10H61V48H47Z" fill="#d7b581" stroke="#9f8059" stroke-width="4"/><rect x="18" y="44" width="70" height="20" rx="9" fill="#d993a0" stroke="#a06d78" stroke-width="4"/><path d="M24 65V83M38 65V87M52 65V87M66 65V87M80 65V83" stroke="#f7ead0" stroke-width="9" stroke-linecap="round"/><circle cx="18" cy="21" r="9" fill="#e7f6f5" stroke="#88b9c3" stroke-width="3"/><circle cx="79" cy="18" r="6" fill="#e7f6f5" stroke="#88b9c3" stroke-width="3"/></symbol>
           <symbol id="wash-shower" viewBox="0 0 100 100"><path d="M22 81V29Q23 12 40 12H54" fill="none" stroke="#7d9c95" stroke-width="10" stroke-linecap="round"/><path d="M45 24Q66 0 82 29Z" fill="#a8c8c5" stroke="#648981" stroke-width="4"/><path d="M52 42L48 54M65 43V59M78 42L82 54M46 70L42 81M66 74V88M86 69L90 81" stroke="#78b5c7" stroke-width="6" stroke-linecap="round"/></symbol>
-          <symbol id="wash-cloth" viewBox="0 0 100 100"><path d="M16 28L69 15L90 72L35 88Z" fill="#ebce7f" stroke="#ab9356" stroke-width="4" stroke-linejoin="round"/><path d="M26 35L72 24M33 72L78 60M32 33L48 78M53 26L68 71" stroke="#f9e9b8" stroke-width="5"/><path d="M82 0L86 10L97 14L86 18L82 29L78 18L67 14L78 10Z" fill="#fff1b5" stroke="#bca26b" stroke-width="2"/></symbol>
+          <symbol id="wash-strawberry" viewBox="0 0 100 100"><path d="M17 34Q12 13 48 24Q86 11 83 34Q75 73 50 93Q25 77 17 34Z" fill="#e27583" stroke="#a45966" stroke-width="4"/><path d="M28 26L49 8L72 25L55 32L49 25L41 34Z" fill="#80a970" stroke="#5e8254" stroke-width="3"/><path d="M30 44L32 48M53 43L55 47M69 47L67 51M41 61L43 65M58 65L57 69M49 80L51 83" stroke="#fff1b9" stroke-width="4" stroke-linecap="round"/></symbol>
           <symbol id="wash-cone" viewBox="0 0 100 160"><path d="M20 74H80L50 149Z" fill="#dab178" stroke="#a8875f" stroke-width="4"/><path d="M28 90L64 120M70 91L39 120" stroke="#c19b6b" stroke-width="3"/><circle cx="50" cy="55" r="34" fill="#efc8d4" stroke="#ab8790" stroke-width="4"/><path d="M23 66Q34 75 44 66Q57 77 68 66Q81 77 83 64" fill="none" stroke="#fff3dc" stroke-width="9" stroke-linecap="round"/></symbol>
           <symbol id="builder-cube" viewBox="0 0 100 100"><rect x="3" y="3" width="94" height="94" rx="8" fill="currentColor" stroke="#7a6954" stroke-width="4"/><path d="M14 17H85M14 25H62" stroke="#fff5" stroke-width="5" stroke-linecap="round"/><path d="M15 83H86" stroke="#745d3d22" stroke-width="5" stroke-linecap="round"/></symbol>
           <symbol id="builder-beam" viewBox="0 0 200 100"><rect x="3" y="3" width="194" height="94" rx="9" fill="currentColor" stroke="#7a6954" stroke-width="4"/><path d="M16 17H184M16 25H108" stroke="#fff5" stroke-width="5" stroke-linecap="round"/><path d="M15 83H185" stroke="#745d3d22" stroke-width="5" stroke-linecap="round"/></symbol>
@@ -43,7 +92,7 @@
           <symbol id="adventure-puzzle" viewBox="0 0 120 120"><rect x="10" y="10" width="100" height="100" rx="16" fill="#f3d09b" stroke="#9c805b" stroke-width="4"/><path d="M60 10V38Q80 25 80 44Q80 61 60 50V78Q39 66 39 85Q39 103 60 91V110M10 60H38Q26 40 44 40Q62 40 50 60H78Q67 80 85 80Q104 80 91 60H110" fill="none" stroke="#9c805b" stroke-width="4"/></symbol>
           <symbol id="puzzle-garden" viewBox="0 0 600 600"><rect width="600" height="600" fill="#c8e1df"/><circle cx="475" cy="115" r="65" fill="#f4d078"/><path d="M0 390Q180 240 330 390Q470 320 600 390V600H0Z" fill="#a7c68c"/><path d="M0 490Q300 390 600 510V600H0Z" fill="#81a473"/><use href="#garden-flower-art" x="55" y="205" width="200" height="370"/><use href="#garden-rabbit-art" x="340" y="285" width="170" height="260"/><use href="#garden-butterfly-art" x="210" y="145" width="150" height="100"/></symbol>
           <symbol id="puzzle-ocean" viewBox="0 0 600 600"><rect width="600" height="600" fill="#b9dfe1"/><path d="M0 165Q75 125 150 165T300 165T450 165T600 165" fill="none" stroke="#e5f5ed" stroke-width="18"/><path d="M0 535Q230 480 600 540V600H0Z" fill="#eedbad"/><use href="#mini-fish" x="55" y="35" width="180" height="120" style="color:#edbe79"/><use href="#mini-fish" x="345" y="230" width="180" height="120" style="color:#dca2b4"/><use href="#mini-fish" x="70" y="250" width="130" height="90" style="color:#95b18a"/><circle cx="435" cy="70" r="25" fill="none" stroke="#fff9" stroke-width="8"/><circle cx="495" cy="135" r="15" fill="none" stroke="#fff9" stroke-width="6"/><path d="M98 565Q43 466 99 419M129 555Q201 460 162 402M438 565Q404 487 445 436M471 565Q531 480 507 423" fill="none" stroke="#78a990" stroke-width="22" stroke-linecap="round"/><path d="M210 570Q235 478 263 554Q283 488 308 568" fill="#e5ab87" stroke="#b67f65" stroke-width="8"/></symbol>
-          <symbol id="puzzle-house" viewBox="0 0 600 600"><rect width="600" height="600" fill="#d9e7da"/><circle cx="505" cy="65" r="48" fill="#f5d47d"/><path d="M0 450Q320 350 600 450V600H0Z" fill="#a9c496"/><path d="M255 420L345 420L420 600H170Z" fill="#e2ccaa"/><use href="#adventure-house" x="90" y="35" width="420" height="460"/><use href="#garden-flower-art" x="30" y="380" width="160" height="205"/><use href="#garden-rabbit-art" x="415" y="410" width="105" height="170"/></symbol>
+          <symbol id="puzzle-house" viewBox="0 0 600 600"><rect width="600" height="600" fill="#d9e7da"/><circle cx="505" cy="65" r="48" fill="#f5d47d"/><path d="M0 450Q320 350 600 450V600H0Z" fill="#a9c496"/><path d="M255 420L345 420L420 600H170Z" fill="#e2ccaa"/><use href="#adventure-house" x="90" y="35" width="420" height="460"/><use href="#garden-flower-art" x="30" y="380" width="160" height="205"/><use href="#animal-elephant" x="20" y="415" width="110" height="165"/><use href="#animal-panda" x="145" y="415" width="110" height="165"/><use href="#animal-polarBear" x="270" y="415" width="110" height="165"/><use href="#animal-giraffe" x="395" y="415" width="110" height="165"/><use href="#garden-rabbit-art" x="515" y="450" width="75" height="130"/></symbol>
           <symbol id="shape-circle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="36" fill="currentColor" stroke="#577574" stroke-width="4"/></symbol>
           <symbol id="shape-square" viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="7" fill="currentColor" stroke="#577574" stroke-width="4"/></symbol>
           <symbol id="shape-triangle" viewBox="0 0 100 100"><path d="M50 12L91 86H9Z" fill="currentColor" stroke="#577574" stroke-width="4" stroke-linejoin="round"/></symbol>
@@ -177,52 +226,30 @@
           <div class="home-controls"><button data-sound class="garden-control" type="button" aria-pressed="true">声音：开</button><button class="parent-button" data-parent type="button">家长</button></div>
         </header>
         <div class="home-welcome"><h2>今天想去哪里玩？</h2><p>小手动一动，发现大世界。</p></div>
-        <nav class="world-map" aria-label="选择一个游戏">
-        <button class="garden-entry" data-game="garden" type="button" aria-label="进入鼠标小花园，练习移动、定位、点击和拖放">
-          <span class="garden-entry-copy">
-            <span class="game-skill">移动 · 停稳 · 点击 · 拖放</span>
-            <span class="garden-entry-title">鼠标小花园</span>
-            <span class="garden-entry-note">陪一颗小种子，慢慢开花。</span>
-            <span class="portal-go" aria-hidden="true">去玩吧 ↗</span>
-          </span>
-          <span class="garden-entry-art" aria-hidden="true">
-            <span class="garden-sun"></span><span class="garden-cloud"></span>
-            <span class="garden-hill"></span>
-            <svg class="entry-flower flower-peach"><use href="#garden-flower-art"/></svg>
-            <svg class="entry-flower flower-gold"><use href="#garden-flower-art"/></svg>
-            <svg class="entry-flower flower-blue"><use href="#garden-flower-art"/></svg>
-            <svg class="entry-rabbit"><use href="#garden-rabbit-art"/></svg>
-            <svg class="entry-can"><use href="#garden-can-art"/></svg>
-          </span>
-        </button>
-        <button class="world-entry stars-entry" data-game="stars" type="button"><span class="portal-copy"><span class="game-skill">找一找 · 点一点</span><b>点星星</b><small>一颗一颗，点亮夜空。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art sky-art" aria-hidden="true"><span class="portal-moon"></span><svg viewBox="0 0 300 220"><path d="M150 30L60 160H240Z" fill="#ffdf7830" stroke="#f3da9b" stroke-width="3" stroke-dasharray="6 9"/><g fill="#ffe59a"><path d="m150 7 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m60 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m240 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/></g></svg></span></button>
-        <button class="world-entry fruit-entry" data-game="fruit" type="button"><span class="portal-copy"><span class="game-skill">按住 · 移动 · 松开</span><b>水果篮</b><small>装好水果，去野餐。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art picnic-art" aria-hidden="true"><span class="picnic-cloth"></span><svg class="portal-basket"><use href="#garden-basket-art"/></svg><svg class="portal-apple"><use href="#play-apple"/></svg><svg class="portal-pear"><use href="#play-pear"/></svg></span></button>
-        <button class="world-entry drawing-entry" data-game="drawing" type="button"><span class="portal-copy"><span class="game-skill">按住画线 · 自由创作</span><b>小画家</b><small>把脑袋里的世界画出来。</small><span class="portal-go" aria-hidden="true">去玩吧 ↗</span></span><span class="portal-art studio-art" aria-hidden="true"><svg class="portal-paper" viewBox="0 0 300 210"><rect x="20" y="15" width="260" height="180" rx="8" fill="#fffdf7"/><circle cx="216" cy="54" r="22" fill="#f3cc64"/><path d="M40 162Q80 96 122 144Q158 83 241 158" fill="none" stroke="#85b781" stroke-width="13" stroke-linecap="round"/><path d="M64 64q28-30 55 0m25 14q28-30 55 0" fill="none" stroke="#81bac8" stroke-width="8" stroke-linecap="round"/></svg><svg class="portal-pencil"><use href="#garden-pencil-art"/></svg></span></button>
+        <nav class="home-games" aria-label="选择一个游戏">
+          <button class="home-game garden-entry flower-peach" data-game="garden" type="button"><span class="home-game-copy"><b>鼠标小花园</b><small>移动 · 停稳 · 点击 · 拖放</small></span><svg aria-hidden="true"><use href="#garden-flower-art"/></svg></button>
+          <button class="home-game stars-entry" data-game="stars" type="button"><span class="home-game-copy"><b>点星星</b><small>找一找 · 点一点</small></span><svg aria-hidden="true" viewBox="0 0 300 220"><path d="M150 30L60 160H240Z" fill="#ffdf7830" stroke="#f3da9b" stroke-width="3" stroke-dasharray="6 9"/><g fill="#ffe59a"><path d="m150 7 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m60 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/><path d="m240 137 8 16 18 3-13 13 3 18-16-8-16 8 3-18-13-13 18-3z"/></g></svg></button>
+          <button class="home-game fruit-entry" data-game="fruit" type="button"><span class="home-game-copy"><b>水果篮</b><small>按住 · 移动 · 松开</small></span><svg aria-hidden="true"><use href="#garden-basket-art"/></svg></button>
+          <button class="home-game drawing-entry" data-game="drawing" type="button"><span class="home-game-copy"><b>小画家</b><small>按住画线 · 自由创作</small></span><svg aria-hidden="true" viewBox="0 0 300 210"><rect x="20" y="15" width="260" height="180" rx="8" fill="#fffdf7"/><circle cx="216" cy="54" r="22" fill="#f3cc64"/><path d="M40 162Q80 96 122 144Q158 83 241 158" fill="none" stroke="#85b781" stroke-width="13" stroke-linecap="round"/><path d="M64 64q28-30 55 0m25 14q28-30 55 0" fill="none" stroke="#81bac8" stroke-width="8" stroke-linecap="round"/></svg></button>
+          <button class="home-game bubbles-entry" data-game="bubbles" type="button"><span class="home-game-copy"><b>泡泡海洋</b><small>点一点 · 小惊喜</small></span><svg aria-hidden="true"><use href="#mini-fish"/></svg></button>
+          <button class="home-game memory-entry" data-game="memory" type="button"><span class="home-game-copy"><b>翻翻乐</b><small>翻一翻 · 找朋友</small></span><svg aria-hidden="true"><use href="#garden-butterfly-art"/></svg></button>
+          <button class="home-game train-entry" data-game="train" type="button"><span class="home-game-copy"><b>形状小火车</b><small>拖一拖 · 认形状</small></span><svg aria-hidden="true"><use href="#mini-train"/></svg></button>
+          <button class="home-game maze-entry" data-game="maze" type="button"><span class="home-game-copy"><b>小兔寻宝</b><small>方向键 · 随机地图</small></span><svg aria-hidden="true"><use href="#adventure-carrot"/></svg></button>
+          <button class="home-game puzzle-entry" data-game="puzzle" type="button"><span class="home-game-copy"><b>拼图小屋</b><small>看线索 · 拼画面</small></span><svg aria-hidden="true"><use href="#adventure-puzzle"/></svg></button>
+          <button class="home-game music-entry" data-game="music" type="button"><span class="home-game-copy"><b>节奏小乐队</b><small>跟顺序 · 奏乐句</small></span><svg aria-hidden="true"><use href="#music-drum"/></svg></button>
+          <button class="home-game link-entry" data-game="link" type="button"><span class="home-game-copy"><b>连连看</b><small>找相同 · 连朋友</small></span><svg aria-hidden="true"><use href="#garden-rabbit-art"/></svg></button>
+          <button class="home-game icecream-entry" data-game="icecream" type="button"><span class="home-game-copy"><b>冰淇淋小店</b><small>看订单 · 做点心</small></span><span class="icecream-entry-art" aria-hidden="true"><i></i><i></i><i></i><b></b></span></button>
+          <button class="home-game cake-entry" data-game="cake" type="button"><span class="home-game-copy"><b>小动物蛋糕店</b><small>抹奶油 · 过生日</small></span><span class="cake-entry-art" aria-hidden="true"><svg viewBox="0 0 180 150"><ellipse cx="90" cy="133" rx="83" ry="10" fill="#c5d6c8" stroke="#91a899" stroke-width="2"/><rect x="18" y="90" width="144" height="40" rx="10" fill="#ab7962" stroke="#8d6955" stroke-width="3"/><path d="M18 90Q18 81 30 81H150Q162 81 162 90V101Q151 115 140 100Q128 85 115 101Q103 115 90 100Q77 85 65 101Q52 115 40 100Q28 85 18 101Z" fill="#fff6db" stroke="#b78c77" stroke-width="2"/><rect x="27" y="48" width="126" height="36" rx="9" fill="#e5be77" stroke="#8d6955" stroke-width="3"/><path d="M27 48Q27 39 39 39H141Q153 39 153 48V59Q140 71 128 58Q115 46 102 59Q90 73 76 59Q62 45 49 59Q37 70 27 59Z" fill="#efb4c3" stroke="#b78c77" stroke-width="2"/><path d="M44 28Q40 17 57 23Q74 17 70 28Q64 44 57 46Q49 43 44 28ZM110 28Q106 17 123 23Q140 17 136 28Q130 44 123 46Q115 43 110 28Z" fill="#dd8085" stroke="#a45d61" stroke-width="2"/><path d="M49 22L57 15L65 22L57 26ZM115 22L123 15L131 22L123 26Z" fill="#7eab78"/><rect x="84" y="20" width="12" height="23" rx="3" fill="#92b8be"/><path d="M90 3Q77 21 90 18Q103 19 90 3Z" fill="#e6b85c"/></svg></span></button>
+          <button class="home-game hideout-entry" data-game="hideout" type="button"><span class="home-game-copy"><b>动物捉迷藏</b><small>看线索 · 找朋友</small></span><svg aria-hidden="true"><use href="#hideout-fox"/></svg></button>
+          <button class="home-game builder-entry" data-game="builder" type="button"><span class="home-game-copy"><b>小小建筑师</b><small>拖积木 · 搭作品</small></span><svg aria-hidden="true"><use href="#adventure-house"/></svg></button>
+          <button class="home-game carwash-entry" data-game="carwash" type="button"><span class="home-game-copy"><b>小小洗车店</b><small>按住刷洗 · 选工具</small></span><svg aria-hidden="true"><use href="#wash-car"/></svg></button>
+          <button class="home-game dress-entry dress-home" data-game="dressup" type="button"><span class="home-game-copy"><b>小动物换装屋</b><small>看愿望 · 换新装</small></span><svg aria-hidden="true" viewBox="0 0 160 210"><use href="#garden-rabbit-art"/><path d="M39 68L47 43Q80 29 110 43L118 68Z" fill="#dfbf7a" stroke="#947c65" stroke-width="2"/><ellipse cx="79" cy="70" rx="57" ry="10" fill="#dfbf7a" stroke="#947c65" stroke-width="2"/><path d="M46 60H112" stroke="#b68a61" stroke-width="8"/><rect x="115" y="132" width="32" height="38" rx="10" fill="#e5ae75" stroke="#866d5d" stroke-width="2"/><svg x="121" y="140" width="20" height="24"><use href="#adventure-carrot"/></svg></svg></button>
+          <button class="home-game juice-entry" data-game="juice" type="button"><span class="home-game-copy"><b>彩虹果汁屋</b><small>选水果 · 打果汁</small></span><svg aria-hidden="true"><use href="#juice-glass"/></svg></button>
+          <button class="home-game mail-entry" data-game="mail" type="button"><span class="home-game-copy"><b>动物小邮局</b><small>看头像 · 送封信</small></span><svg aria-hidden="true"><use href="#mail-envelope"/></svg></button>
+          <button class="home-game pipes-entry" data-game="pipes" type="button"><span class="home-game-copy"><b>小小水管工</b><small>转水管 · 浇小花</small></span><svg aria-hidden="true"><use href="#pipes-home"/></svg></button>
+          <button class="home-game beads-entry" data-game="beads" type="button"><span class="home-game-copy"><b>彩虹花环坊</b><small>找规律 · 串花环</small></span><svg aria-hidden="true"><use href="#beads-home"/></svg></button>
+          <button class="home-game boxes-entry" data-game="boxes" type="button"><span class="home-game-copy"><b>小熊搬箱子</b><small>想路线 · 推箱子</small></span><svg aria-hidden="true"><use href="#boxes-home"/></svg></button>
         </nav>
-        <section class="discovery-home" aria-labelledby="discovery-title"><h2 id="discovery-title">再去探索一下</h2>
-          <nav class="discovery-shelf" aria-label="更多小游戏">
-            <button class="discovery-entry bubbles-entry" data-game="bubbles" type="button"><span><small>点一点 · 小惊喜</small><b>泡泡海洋</b><em>泡泡里，住着谁？</em></span><svg aria-hidden="true"><use href="#mini-fish"/></svg></button>
-            <button class="discovery-entry memory-entry" data-game="memory" type="button"><span><small>翻一翻 · 找朋友</small><b>翻翻乐</b><em>相同的朋友在哪里？</em></span><svg aria-hidden="true"><use href="#garden-butterfly-art"/></svg></button>
-            <button class="discovery-entry train-entry" data-game="train" type="button"><span><small>拖一拖 · 认形状</small><b>形状小火车</b><em>装好车厢，出发啦！</em></span><svg aria-hidden="true"><use href="#mini-train"/></svg></button>
-          </nav>
-        </section>
-        <section class="discovery-home adventure-home" aria-labelledby="adventure-title"><h2 id="adventure-title">来点小挑战</h2>
-          <nav class="discovery-shelf" aria-label="有点挑战的小游戏">
-            <button class="discovery-entry maze-entry" data-game="maze" type="button"><span><small>方向键 · 随机地图</small><b>小兔寻宝</b><em>每次出发，都是新小路。</em></span><svg aria-hidden="true"><use href="#adventure-carrot"/></svg></button>
-            <button class="discovery-entry puzzle-entry" data-game="puzzle" type="button"><span><small>看线索 · 拼画面</small><b>拼图小屋</b><em>碎片里，藏着一个世界。</em></span><svg aria-hidden="true"><use href="#adventure-puzzle"/></svg></button>
-            <button class="discovery-entry music-entry" data-game="music" type="button"><span><small>跟顺序 · 奏乐句</small><b>节奏小乐队</b><em>把喜欢的声音，连起来。</em></span><svg aria-hidden="true"><use href="#music-drum"/></svg></button>
-            <button class="discovery-entry link-entry" data-game="link" type="button"><span><small>找相同 · 连朋友</small><b>连连看</b><em>十个小关卡，慢慢找朋友。</em></span><svg aria-hidden="true"><use href="#garden-rabbit-art"/></svg></button>
-          </nav>
-        </section>
-        <section class="discovery-home icecream-home" aria-labelledby="icecream-home-title"><h2 id="icecream-home-title">今天，我来当小店长</h2>
-          <button class="discovery-entry icecream-entry" data-game="icecream" type="button"><span><small>看订单 · 做点心</small><b>冰淇淋小店</b><em>叠起甜甜的冰淇淋，请朋友尝一口。</em></span><span class="icecream-entry-art" aria-hidden="true"><i></i><i></i><i></i><b></b></span></button>
-          <button class="discovery-entry cake-entry" data-game="cake" type="button"><span><small>抹奶油 · 过生日</small><b>小动物蛋糕店</b><em>摆上小草莓，给朋友一个生日惊喜。</em></span><span class="cake-entry-art" aria-hidden="true"><svg viewBox="0 0 180 150"><ellipse cx="90" cy="133" rx="83" ry="10" fill="#c5d6c8" stroke="#91a899" stroke-width="2"/><rect x="18" y="90" width="144" height="40" rx="10" fill="#ab7962" stroke="#8d6955" stroke-width="3"/><path d="M18 90Q18 81 30 81H150Q162 81 162 90V101Q151 115 140 100Q128 85 115 101Q103 115 90 100Q77 85 65 101Q52 115 40 100Q28 85 18 101Z" fill="#fff6db" stroke="#b78c77" stroke-width="2"/><rect x="27" y="48" width="126" height="36" rx="9" fill="#e5be77" stroke="#8d6955" stroke-width="3"/><path d="M27 48Q27 39 39 39H141Q153 39 153 48V59Q140 71 128 58Q115 46 102 59Q90 73 76 59Q62 45 49 59Q37 70 27 59Z" fill="#efb4c3" stroke="#b78c77" stroke-width="2"/><path d="M44 28Q40 17 57 23Q74 17 70 28Q64 44 57 46Q49 43 44 28ZM110 28Q106 17 123 23Q140 17 136 28Q130 44 123 46Q115 43 110 28Z" fill="#dd8085" stroke="#a45d61" stroke-width="2"/><path d="M49 22L57 15L65 22L57 26ZM115 22L123 15L131 22L123 26Z" fill="#7eab78"/><rect x="84" y="20" width="12" height="23" rx="3" fill="#92b8be"/><path d="M90 3Q77 21 90 18Q103 19 90 3Z" fill="#e6b85c"/></svg></span></button>
-        </section>
-        <section class="discovery-home" aria-labelledby="hideout-home-title"><h2 id="hideout-home-title">朋友们躲到哪里啦？</h2>
-          <button class="discovery-entry hideout-entry" data-game="hideout" type="button"><span><small>看线索 · 找朋友</small><b>动物捉迷藏</b><em>长耳朵、小翅膀，谁躲在后面？</em></span><svg aria-hidden="true"><use href="#hideout-fox"/></svg><span class="hideout-entry-bush" aria-hidden="true"></span></button>
-        </section>
-        <section class="discovery-home" aria-labelledby="builder-home-title"><h2 id="builder-home-title">用小积木，搭一个世界</h2><button class="discovery-entry builder-entry" data-game="builder" type="button"><span><small>拖积木 · 搭作品</small><b>小小建筑师</b><em>搭好小房子，再造一艘火箭！</em></span><svg aria-hidden="true"><use href="#adventure-house"/></svg></button></section>
-        <section class="discovery-home" aria-labelledby="carwash-home-title"><h2 id="carwash-home-title">让小车洗个泡泡澡</h2><button class="discovery-entry carwash-entry" data-game="carwash" type="button"><span><small>点泥巴 · 冲泡泡</small><b>小小洗车店</b><em>脏脏的小车，变得亮晶晶！</em></span><svg aria-hidden="true"><use href="#wash-car"/></svg></button></section>
         <footer class="home-note"><span>没有输赢，慢慢玩就好。</span><span>和小兔一起，从第一次移动开始。</span></footer>
       </section>
       <section id="garden-screen" class="screen garden-screen hidden" aria-labelledby="garden-title">
@@ -239,7 +266,7 @@
         </nav>
         <div class="garden-workspace">
           <aside class="garden-guide">
-            <svg class="guide-rabbit" aria-hidden="true"><use href="#garden-rabbit-art"/></svg>
+            <svg class="guide-rabbit" aria-hidden="true"><use href="#animal-elephant"/></svg>
             <h3 id="garden-instruction"></h3>
             <p id="garden-description"></p>
             <div id="garden-demo" class="garden-demo" aria-hidden="true">
@@ -322,7 +349,7 @@
 
       <section id="bubbles-screen" class="screen play-screen bubbles-screen hidden" aria-labelledby="bubbles-title">
         <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="bubbles-title">泡泡海洋</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
-        <div class="play-heading"><p id="bubble-level" class="play-eyebrow"></p><h3>点开泡泡，和小鱼打招呼</h3><p class="mission-note">移过去，按一下鼠标。</p></div>
+        <div class="play-heading"><p id="bubble-level" class="play-eyebrow"></p><h3>点开泡泡，和朋友打招呼</h3><p class="mission-note">移过去，按一下鼠标。</p></div>
         <div class="discovery-stage ocean-stage" aria-label="泡泡海洋操作区">
           <div class="ocean-sand" aria-hidden="true"></div><span class="seaweed seaweed-left" aria-hidden="true"></span><span class="seaweed seaweed-right" aria-hidden="true"></span>
           <div id="bubble-buttons" class="bubble-buttons"></div>
@@ -343,16 +370,103 @@
         <footer class="play-footer"><button class="play-control" data-demo="memory" type="button">看示范</button><div id="memory-trail" class="picture-progress"></div><button class="play-control" data-replay="memory" type="button">重新玩</button></footer>
       </section>
 
+      <section id="dressup-screen" class="screen play-screen dress-screen hidden" aria-labelledby="dress-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="dress-title">小动物换装屋</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="dress-level" class="play-eyebrow"></p><h3>穿好小衣服，出发去玩吧</h3><p class="mission-note">看朋友的小图片，点衣柜里的装扮。先穿哪件都可以。</p></div>
+        <div id="dress-stage" class="discovery-stage dress-stage">
+          <div class="dress-workspace"><div class="dress-order"><p id="dress-greeting"></p><div id="dress-wishes" class="dress-wishes" aria-label="朋友想穿的装扮"></div></div><div class="dress-fitting"><div id="dress-character" class="dress-character"></div><p id="dress-ready" role="status"></p></div><div class="dress-wardrobe"><div id="dress-tabs" class="dress-tabs" role="tablist" aria-label="选择衣柜类别"></div><div id="dress-choices" class="dress-choices" role="tabpanel"></div><button id="dress-depart" class="play-primary" type="button">出发啦 ♡</button></div></div>
+          <p id="dress-tip" class="dress-tip" role="status"></p><div class="dress-outing-wrap"><p>朋友们的郊游合影</p><div id="dress-outing" class="dress-outing" aria-label="已经出发的朋友"></div></div>
+          <aside class="play-demo hidden" data-demo-panel="dressup" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="dress-demo-art" aria-hidden="true"><svg viewBox="0 0 140 105"><path d="M31 63L40 25Q70 7 100 25L109 63Z" fill="#dfbf7a" stroke="#866d5d" stroke-width="3"/><ellipse cx="70" cy="65" rx="62" ry="14" fill="#dfbf7a" stroke="#866d5d" stroke-width="3"/></svg><span>→</span><svg><use href="#garden-rabbit-art"/></svg><span>♡</span></div><p>看朋友的图片，点衣柜里的装扮。先穿哪件都可以；点错就换一件，配齐后点「出发啦」。</p></aside>
+        </div>
+        <footer class="play-footer dress-footer"><button class="play-control" data-demo="dressup" type="button">看示范</button><div id="dress-trail" class="picture-progress" aria-label="已经出发的朋友"></div><button class="play-control" data-replay="dressup" type="button">重新换装</button></footer>
+      </section>
+
+      <section id="boxes-screen" class="screen play-screen boxes-screen hidden" aria-labelledby="boxes-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="boxes-title">小熊搬箱子</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><div><p id="boxes-level" class="play-eyebrow"></p><h3 id="boxes-status">把箱子都推到星形垫上</h3></div><p class="mission-note">只能推，不能拉。先想好，再动手。</p></div>
+        <div id="boxes-stage" class="boxes-stage">
+          <div id="boxes-view" class="boxes-view" role="group" aria-label="仓库地图，可滚动查看"><div id="boxes-board" class="boxes-board" role="group" aria-label="点击小熊旁边的格子走一步"></div></div>
+          <div class="boxes-controls">
+            <div class="boxes-legend" aria-hidden="true"><svg><use href="#boxes-crate"/></svg><span>→</span><span>★</span></div>
+            <div class="boxes-pad" role="group" aria-label="每点一次走一步"><button class="play-control" data-box-direction="up" aria-label="向上走一步" type="button">↑</button><button class="play-control" data-box-direction="left" aria-label="向左走一步" type="button">←</button><button class="play-control" data-box-direction="down" aria-label="向下走一步" type="button">↓</button><button class="play-control" data-box-direction="right" aria-label="向右走一步" type="button">→</button></div>
+            <div class="boxes-actions"><button id="boxes-undo" class="play-control" type="button">退一步 ↶</button><button id="boxes-reset" class="play-control" type="button">重来这关</button></div>
+            <p id="boxes-tip" class="boxes-tip" role="status"></p><p class="boxes-keyboard">也可以用方向键，或点小熊旁边的格子。地图可以滚动，走错随时退一步。</p>
+          </div>
+          <aside class="play-demo hidden" data-demo-panel="boxes" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="boxes-demo-art" aria-hidden="true"><svg><use href="#animal-polarBear"/></svg><svg><use href="#boxes-crate"/></svg><span>→ ★</span></div><p>绕到箱子后面，把它推到星形垫上。一次只能推一个，不能拉回来。箱子堵住路了，可以退一步再想想。</p></aside>
+        </div>
+        <details class="boxes-level-picker"><summary>选择仓库 · 8 关</summary><div id="boxes-levels" class="boxes-levels" role="group" aria-label="自由选择关卡，后面的更有挑战"></div></details>
+        <footer class="play-footer"><button class="play-control" data-demo="boxes" type="button">看示范</button><div id="boxes-trail" class="picture-progress" aria-label="已经推到星形垫的箱子"></div></footer>
+      </section>
+
+      <section id="beads-screen" class="screen play-screen beads-screen hidden" aria-labelledby="beads-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="beads-title">彩虹花环坊</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="beads-level" class="play-eyebrow"></p><h3>下一颗，轮到谁？</h3><p class="mission-note">看看前面的珠子，接着串下去。</p></div>
+        <div id="beads-stage" class="beads-stage">
+          <div class="beads-workspace">
+            <div class="beads-pattern-area"><p class="beads-caption">一组一组，接着来 →</p><div id="beads-sequence" class="beads-sequence" role="group" aria-label="珠子的重复规律与待补空位"></div></div>
+            <div class="beads-preview-area"><svg id="beads-friend" aria-hidden="true"><use href="#animal-elephant-head"/></svg><p id="beads-greeting"></p><div id="beads-preview" class="beads-preview"></div></div>
+          </div>
+          <div id="beads-choices" class="beads-choices" role="group" aria-label="点击下一颗珠子"></div>
+          <div class="beads-actions"><button id="beads-hint" class="play-control" type="button">看看规律 ◎</button><button id="beads-hang" class="play-primary" type="button">挂起来 ♡</button></div>
+          <p id="beads-tip" class="beads-tip" role="status"></p>
+          <div id="beads-garden" class="beads-garden" role="group" aria-label="已经挂好的花环"></div>
+          <aside class="play-demo hidden" data-demo-panel="beads" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="beads-demo-art" aria-hidden="true"><svg><use href="#beads-circle"/></svg><svg><use href="#beads-star"/></svg><span>→</span><svg><use href="#beads-circle"/></svg><svg><use href="#beads-star"/></svg></div><p>圆珠、星星，又是圆珠、星星。看看前面的规律，点一颗珠子放到亮圈里。串好后，再亲手点「挂起来」。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="beads" type="button">看示范</button><div id="beads-trail" class="picture-progress"></div><button class="play-control" data-replay="beads" type="button">重新串</button></footer>
+      </section>
+
+      <section id="pipes-screen" class="screen play-screen pipes-screen hidden" aria-labelledby="pipes-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="pipes-title">小小水管工</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="pipes-level" class="play-eyebrow"></p><h3>接通小水路，让花园开花</h3><p class="mission-note">点水管转一转，从龙头接到小花，再放水。</p></div>
+        <div id="pipes-stage" class="pipes-stage">
+          <div class="pipes-welcome"><svg id="pipes-friend" aria-hidden="true"><use href="#animal-elephant-head"/></svg><span id="pipes-greeting"></span></div>
+          <p class="pipes-scroll-note">水管区可以左右滚动，龙头在左边，小花在右边。</p>
+          <div class="pipes-view"><div class="pipes-map"><div class="pipes-source" role="img" aria-label="左侧水龙头，水从这里进入"><svg><use href="#pipes-faucet"/></svg></div><div id="pipes-board" class="pipes-board" role="group" aria-label="点击水管顺时针转动"></div><div class="pipes-goal" role="img" aria-label="右侧小花，接通后开花"><svg class="pipes-bud"><use href="#garden-bud-art"/></svg><svg class="pipes-bloom"><use href="#garden-flower-art"/></svg></div></div></div>
+          <div class="pipes-actions"><button id="pipes-hint" class="play-control" type="button">找找断口 ◎</button><button id="pipes-water" class="play-primary" type="button">放水啦 ♧</button></div>
+          <p id="pipes-tip" class="pipes-tip" role="status"></p>
+          <aside class="play-demo hidden" data-demo-panel="pipes" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="pipes-demo-art" aria-hidden="true"><svg viewBox="0 0 100 100"><g class="pipes-demo-turn"><path d="M0 50H50V0" fill="none" stroke="#70938d" stroke-width="28"/><path d="M0 50H50V0" fill="none" stroke="#d1e2dc" stroke-width="18"/></g></svg><span>↻</span><svg><use href="#garden-flower-art"/></svg></div><p>每点一下，水管转一个方向。让相邻管口接起来，从左边龙头连到右边小花，再点「放水啦」。水停住也没关系，转转断口再试；提示不会帮你转水管。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="pipes" type="button">看示范</button><div id="pipes-trail" class="picture-progress"></div><button class="play-control" data-replay="pipes" type="button">重新接</button></footer>
+      </section>
+
+      <section id="mail-screen" class="screen play-screen mail-screen hidden" aria-labelledby="mail-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="mail-title">动物小邮局</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="mail-level" class="play-eyebrow"></p><h3>把小小问候送给朋友</h3><p class="mission-note">按住信封，送到头像一样的邮箱。</p></div>
+        <p class="mail-scroll-note">先把信封和邮箱滚动到一起能看见的位置，再拿起信。</p>
+        <div id="mail-stage" class="mail-stage">
+          <div id="mail-houses" class="mail-houses" role="group" aria-label="朋友的邮箱"></div>
+          <div class="mail-table"><p>今天要送的信</p><div id="mail-letters" class="mail-letters" role="group" aria-label="拿起信封"></div></div>
+          <p id="mail-tip" class="mail-tip" role="status"></p>
+          <aside class="play-demo hidden" data-demo-panel="mail" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="mail-demo-art" aria-hidden="true"><svg><use href="#mail-envelope"/></svg><span>→</span><svg><use href="#animal-elephant-head"/></svg></div><p>看信封上的动物头像。按住信封，移动到头像一样的邮箱；邮箱亮起来，再松开。先送哪封都可以；信回来了，就慢慢再送一次。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="mail" type="button">看示范</button><div id="mail-trail" class="picture-progress"></div><button class="play-control" data-replay="mail" type="button">重新玩</button></footer>
+      </section>
+
+      <section id="juice-screen" class="screen play-screen juice-screen hidden" aria-labelledby="juice-title">
+        <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="juice-title">彩虹果汁屋</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
+        <div class="play-heading"><p id="juice-level" class="play-eyebrow"></p><h3>给朋友做一杯清甜果汁</h3><p class="mission-note">看水果图片，放好再打汁。</p></div>
+        <div id="juice-stage" class="juice-stage">
+          <div class="juice-customer"><svg id="juice-guest" aria-hidden="true"><use href="#animal-elephant"/></svg><p id="juice-greeting"></p><div id="juice-recipe" class="juice-recipe" role="group" aria-label="客人的水果订单"></div></div>
+          <div class="juice-workbench"><div class="juice-machine" role="group" aria-label="果汁机"><span class="juice-lid" aria-hidden="true"></span><div class="juice-jar"><div id="juice-contents" role="img"></div></div><span class="juice-base" aria-hidden="true"><i></i></span></div><button id="juice-mix" class="play-primary" type="button">打成果汁 ✦</button></div>
+          <div class="juice-supplies"><div id="juice-fruits" class="juice-fruits" role="group" aria-label="选择水果"></div><div class="juice-actions"><button id="juice-undo" class="play-control" type="button">拿回一个 ↶</button><button id="juice-serve" class="play-primary" type="button">递给朋友 ♡</button></div></div>
+          <p id="juice-tip" class="juice-tip" role="status"></p><div id="juice-shelf" class="juice-shelf" role="group" aria-label="送给朋友的果汁"></div>
+          <aside class="play-demo hidden" data-demo-panel="juice" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="juice-demo-art" aria-hidden="true"><svg><use href="#play-apple"/></svg><span>→</span><svg><use href="#juice-glass"/></svg><span>♡</span></div><p>看水果图片，点水果放进果汁机。先放哪种都可以；点错就拿回一个。放好后点「打成果汁」，再点「递给朋友」。</p></aside>
+        </div>
+        <footer class="play-footer"><button class="play-control" data-demo="juice" type="button">看示范</button><div id="juice-trail" class="picture-progress"></div><button class="play-control" data-replay="juice" type="button">重新玩</button></footer>
+      </section>
+
       <section id="carwash-screen" class="screen play-screen carwash-screen hidden" aria-labelledby="carwash-title">
         <header class="play-header"><button class="play-control" data-home type="button">⌂ 回家</button><h2 id="carwash-title">小小洗车店</h2><button class="play-control" data-sound type="button" aria-pressed="true">声音：开</button></header>
-        <div class="play-heading"><p id="carwash-level" class="play-eyebrow"></p><h3>给小车洗个泡泡澡</h3><p class="mission-note">点一点脏脏的地方，小车就变漂亮啦！</p></div>
+        <div class="play-heading"><p id="carwash-level" class="play-eyebrow"></p><h3>给小车洗个泡泡澡</h3><p class="mission-note">按住来回刷，再用水枪冲一冲。</p></div>
         <div id="carwash-stage" class="discovery-stage carwash-stage">
           <div class="carwash-welcome"><div class="carwash-customer"><svg id="carwash-guest" aria-hidden="true"><use href="#garden-rabbit-art"/></svg><p id="carwash-greeting"></p></div>
           <div id="carwash-steps" class="carwash-steps" aria-label="洗车步骤"></div></div>
-          <div class="carwash-bay"><div id="carwash-vehicle" class="carwash-vehicle"></div><div id="carwash-zones" class="carwash-zones" role="group" aria-label="点击车前面或车后面的泥巴、泡泡和水珠"></div></div>
-          <div class="carwash-actions"><div id="carwash-tool" class="carwash-tool"></div><button id="carwash-serve" class="play-primary" type="button">交还给客人 ♡</button></div>
+          <p class="carwash-scroll-note">左右滑动洗车区，看看小车另一边。</p>
+          <div id="carwash-view" class="carwash-view"><div class="carwash-bay"><div id="carwash-vehicle" class="carwash-vehicle"></div><canvas id="carwash-canvas" width="720" height="340" tabindex="0" aria-describedby="carwash-keyboard">洗车区，按住鼠标移动来刷洗。</canvas><span id="carwash-pointer" class="carwash-pointer hidden" aria-hidden="true"><svg><use href="#wash-brush"/></svg><i class="carwash-spray"></i></span></div></div>
+          <div class="carwash-actions"><div id="carwash-tools" class="carwash-tools" role="group" aria-label="选择洗车工具"></div><button id="carwash-serve" class="play-primary" type="button">交还给客人 ♡</button></div>
+          <p id="carwash-keyboard" class="carwash-keyboard">键盘：Tab 选工具和洗车区；空格开始，方向键移动，空格停止，Escape 取消。</p>
           <p id="carwash-tip" class="carwash-tip" role="status"></p>
-          <aside class="play-demo hidden" data-demo-panel="carwash" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="carwash-demo-art" aria-hidden="true"><svg><use href="#wash-brush"/></svg><span>→</span><svg><use href="#wash-shower"/></svg><span>→</span><svg><use href="#wash-cloth"/></svg></div><div class="play-demo-art" aria-hidden="true"><span class="demo-mouse"><i></i></span><span class="help-pointer">↖</span><svg class="help-fruit"><use href="#wash-car"/></svg></div><p>点两块泥巴，刷出泡泡；再点泡泡冲干净，点水珠擦亮，最后交还给客人。</p></aside>
+          <aside class="play-demo hidden" data-demo-panel="carwash" aria-label="操作示范"><button data-close-demo type="button" aria-label="收起示范">×</button><div class="carwash-demo-art" aria-hidden="true"><svg><use href="#wash-brush"/></svg><span>→</span><svg><use href="#wash-shower"/></svg></div><div class="carwash-demo-scrub" aria-hidden="true"><span class="demo-mouse"><i></i></span><span class="carwash-demo-dirt"></span><svg><use href="#wash-brush"/></svg></div><p>选泡泡刷，按住鼠标来回刷泥巴；换小水枪，按住移动冲掉泡泡。洗干净，再交还给客人。</p></aside>
         </div>
         <footer class="play-footer carwash-footer"><button class="play-control" data-demo="carwash" type="button">看示范</button><div id="carwash-trail" class="picture-progress"></div><button class="play-control" data-replay="carwash" type="button">重新玩</button></footer>
       </section>
@@ -382,8 +496,12 @@
         <div id="cake-stage" class="discovery-stage cake-stage">
           <div class="cake-awning" aria-hidden="true"></div>
           <div class="cake-workspace">
-            <div class="cake-customer"><svg id="cake-guest" aria-hidden="true"><use href="#garden-rabbit-art"/></svg><p id="cake-greeting"></p><div class="cake-order-card"><span>我想要这个蛋糕</span><div id="cake-order" class="cake-confection" role="img"></div></div></div>
-            <div class="cake-making"><p class="cake-caption">我的小蛋糕</p><div id="cake-made" class="cake-confection" role="img"></div><div id="cake-recipe" class="cake-recipe" aria-label="从左到右的制作步骤"></div><div class="cake-actions"><button id="cake-undo" class="play-control" type="button">拿回一步</button><button id="cake-serve" class="play-primary" type="button">递给客人 ♡</button></div></div>
+            <div class="cake-customer"><svg id="cake-guest" aria-hidden="true"><use href="#garden-rabbit-art"/></svg><p id="cake-greeting"></p></div>
+            <div class="cake-order-card"><span>我想要这个蛋糕</span><div id="cake-order" class="cake-confection" role="img"></div></div>
+            <div class="cake-making"><p class="cake-caption">我的小蛋糕</p><div id="cake-made" class="cake-confection" role="img"></div></div>
+            <div class="cake-workbench" aria-hidden="true"></div>
+            <div id="cake-recipe" class="cake-recipe" aria-label="从左到右的制作步骤"></div>
+            <div class="cake-actions"><button id="cake-undo" class="play-control" type="button">拿回一步</button><button id="cake-serve" class="play-primary" type="button">递给客人 ♡</button></div>
           </div>
           <div class="cake-supply"><p id="cake-step" role="status"></p><div id="cake-pantry" class="cake-pantry" aria-label="点击亮起的材料做蛋糕"></div></div>
           <div id="cake-served" class="cake-served" aria-label="已经送出的蛋糕"></div><p id="cake-tip" class="cake-tip" role="status"></p>
@@ -398,8 +516,12 @@
         <div id="icecream-stage" class="discovery-stage icecream-stage">
           <div class="icecream-awning" aria-hidden="true"></div>
           <div class="icecream-workspace">
-            <div id="icecream-customer" class="icecream-customer"><svg id="icecream-guest" aria-hidden="true"><use href="#garden-rabbit-art"/></svg><p id="icecream-greeting"></p><div class="icecream-order-card"><span>我想要这一份</span><div id="icecream-order" class="icecream-confection" role="img"></div></div></div>
-            <div class="icecream-making"><p class="icecream-caption">我的冰淇淋</p><div id="icecream-made" class="icecream-confection" role="img"></div><div id="icecream-recipe" class="icecream-recipe" aria-label="从左到右选择口味"></div><div class="icecream-actions"><button id="icecream-undo" class="play-control" type="button">撤回一球</button><button id="icecream-serve" class="play-primary" type="button">递给客人 ♡</button></div></div>
+            <div id="icecream-customer" class="icecream-customer"><svg id="icecream-guest" aria-hidden="true"><use href="#garden-rabbit-art"/></svg><p id="icecream-greeting"></p></div>
+            <div class="icecream-order-card"><span>我想要这一份</span><div id="icecream-order" class="icecream-confection" role="img"></div></div>
+            <div class="icecream-making"><p class="icecream-caption">我的冰淇淋</p><div id="icecream-made" class="icecream-confection" role="img"></div></div>
+            <div class="icecream-workbench" aria-hidden="true"></div>
+            <div id="icecream-recipe" class="icecream-recipe" aria-label="从左到右选择口味"></div>
+            <div class="icecream-actions"><button id="icecream-undo" class="play-control" type="button">撤回一球</button><button id="icecream-serve" class="play-primary" type="button">递给客人 ♡</button></div>
           </div>
           <div id="icecream-flavors" class="icecream-flavors" aria-label="点击口味，加入一球"></div>
           <div id="icecream-served" class="icecream-served" aria-label="已经送出的冰淇淋"></div><p id="icecream-tip" class="icecream-tip" role="status"></p>
@@ -526,7 +648,7 @@
         <div class="parent-content">
           <section class="parent-summary" aria-labelledby="summary-title">
             <div class="summary-lead"><span class="summary-label" id="summary-title">今天玩了</span><strong><span id="today-minutes">0</span><small> 分钟</small></strong></div>
-            <div class="summary-note">这些记录只保存在这台电脑上。</div>
+            <div class="summary-note"><span>这些记录只保存在这台电脑上。</span><span id="today-limit-note">目前没有设置每日上限</span></div>
           </section>
           <section class="parent-section" aria-labelledby="stats-title">
             <h3 id="stats-title">一起玩过的游戏</h3>
@@ -547,11 +669,18 @@
               <div class="stat-card"><div><b>小小建筑师</b><span><strong id="stat-builder-models">0</strong> 件作品搭好</span></div></div>
               <div class="stat-card"><div><b>小动物蛋糕店</b><span><strong id="stat-cake-orders">0</strong> 份蛋糕送出</span></div></div>
               <div class="stat-card"><div><b>小小洗车店</b><span><strong id="stat-carwash-cars">0</strong> 辆小车洗好</span></div></div>
+              <div class="stat-card"><div><b>小动物换装屋</b><span><strong id="stat-dress-friends">0</strong> 位朋友换好装</span></div></div>
+              <div class="stat-card"><div><b>彩虹果汁屋</b><span><strong id="stat-juice-orders">0</strong> 杯果汁送出</span></div></div>
+              <div class="stat-card"><div><b>动物小邮局</b><span><strong id="stat-mail-letters">0</strong> 封信送到</span></div></div>
+              <div class="stat-card"><div><b>小小水管工</b><span><strong id="stat-pipe-gardens">0</strong> 座花园喝到水</span></div></div>
+              <div class="stat-card"><div><b>彩虹花环坊</b><span><strong id="stat-bead-wreaths">0</strong> 个花环挂起来</span></div></div>
+              <div class="stat-card"><div><b>小熊搬箱子</b><span><strong id="stat-box-boards">0</strong> 间仓库整理好</span></div></div>
             </div>
           </section>
           <section class="parent-section settings-section" aria-labelledby="settings-title">
             <h3 id="settings-title">游戏设置</h3>
             <label class="setting-row" for="fruit-level-setting"><span><b>水果篮关卡数量</b><small>每次游戏要完成的关卡数</small></span><select id="fruit-level-setting"><option value="1">1 关</option><option value="2">2 关</option><option value="3">3 关</option><option value="4">4 关</option></select></label>
+            <label class="setting-row" for="play-limit-setting"><span><b>每日游玩时间</b><small>时间到了会锁住所有游戏，只有家长能调整</small></span><select id="play-limit-setting"><option value="0">不限制</option><option value="15">15 分钟</option><option value="30">30 分钟</option><option value="45">45 分钟</option><option value="60">60 分钟</option><option value="90">90 分钟</option><option value="120">120 分钟</option></select></label>
             <button class="primary-button save-settings" id="save-settings" type="button">保存设置</button>
             <p class="settings-saved" id="settings-saved" role="status"></p>
           </section>
@@ -582,6 +711,7 @@
         </div>
       </div>
     </main>
+    <script src="games/animals.js"></script>
     <script src="app.js"></script>
     <script src="games/stars.js"></script>
     <script src="games/fruits.js"></script>
@@ -600,5 +730,13 @@
     <script src="games/builder.js"></script>
     <script src="games/cake.js"></script>
     <script src="games/carwash.js"></script>
+    <script src="games/dressup.js"></script>
+    <script src="games/juice.js"></script>
+    <script src="games/mail.js"></script>
+    <script src="games/pipes-path.js"></script>
+    <script src="games/pipes.js"></script>
+    <script src="games/beads.js"></script>
+    <script src="games/boxes-rules.js"></script>
+    <script src="games/boxes.js"></script>
   </body>
 </html>

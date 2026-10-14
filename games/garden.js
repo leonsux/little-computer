@@ -28,7 +28,7 @@
   let transitioning = false;
 
   function stopHold() {
-    clearTimeout(holdTimer);
+    window.GameClock.clearTimeout(holdTimer);
     holdIndex = -1;
     holdOrigin = null;
     plants.forEach((plant) => plant.classList.remove('is-holding'));
@@ -184,7 +184,7 @@
     holdIndex = index;
     holdOrigin = point;
     plants[index].classList.add('is-holding');
-    holdTimer = setTimeout(() => {
+    holdTimer = window.GameClock.setTimeout(() => {
       if (active && step === 1 && holdIndex === index && !document.hidden) succeed(index);
     }, 700);
   }
@@ -317,7 +317,7 @@
   stepButtons.forEach((button, index) => button.addEventListener('click', () => {
     if (!transitioning) selectStep(index, keyboard);
   }));
-  document.querySelector('[data-game="garden"]').addEventListener('click', start);
+  document.querySelector('[data-game="garden"]').addEventListener('click', () => window.StartGame('garden', start));
   document.querySelector('#garden-replay').addEventListener('click', start);
   document.querySelector('#garden-demonstrate').addEventListener('click', demonstrate);
   next.addEventListener('click', () => {

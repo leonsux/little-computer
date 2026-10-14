@@ -14,6 +14,7 @@
     { name: '小狐狸', symbol: 'hideout-fox' },
     { name: '猫头鹰', symbol: 'hideout-owl' },
     { name: '小乌龟', symbol: 'hideout-turtle' },
+    ...window.GameAnimals.friends,
   ];
   const rounds = [
     { name: '蛋糕店开张啦', orders: [['vanilla', 'cream', 'strawberry'], ['chocolate', 'cream', 'blueberry']] },
@@ -83,7 +84,8 @@
   }
   function setup(focus = false) {
     layers = [];
-    const guest = guests[(round + customer) % guests.length];
+    const orderIndex = rounds.slice(0, round).reduce((total, group) => total + group.orders.length, 0) + customer;
+    const guest = guests[orderIndex % guests.length];
     document.querySelector('#cake-level').textContent = rounds[round].name;
     document.querySelector('#cake-guest use').setAttribute('href', '#' + guest.symbol);
     document.querySelector('#cake-greeting').textContent = guest.name + (round === 4 ? '过生日啦！' : '来做客啦！');

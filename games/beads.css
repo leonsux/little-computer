@@ -1,0 +1,91 @@
+.beads-screen { background: #f7f4e9; }
+#home-screen .beads-entry { background: #f0e2d8; }
+.beads-stage { position: relative; width: min(100%, 1180px); margin: 0 auto; padding: 24px 32px 0; border: 2px solid #d8c8ab; border-radius: 30px; background: #f1e7d3; }
+.beads-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 280px; align-items: center; gap: 38px; }
+.beads-pattern-area { position: relative; min-width: 0; padding: 18px 24px 20px; border: 2px solid #dcccaa; border-radius: 5px 5px 26px 26px; background: #fffcf0; box-shadow: 0 7px 0 #dacba633; }
+.beads-pattern-area::before, .beads-pattern-area::after { content: ''; position: absolute; top: -10px; width: 58px; height: 22px; background: #d7b89bcc; transform: rotate(-5deg); }
+.beads-pattern-area::before { left: 18px; }
+.beads-pattern-area::after { right: 18px; transform: rotate(5deg); }
+.beads-caption { margin: 0 0 12px; font-size: 19px; font-weight: 800; text-align: center; color: #705b47; }
+.beads-sequence { display: grid; gap: 9px; }
+.beads-group { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 2vw, 26px); padding: 5px 8px; border: 2px solid #e4dac5; border-radius: 16px; background: #f7f2e4; }
+.beads-group[data-repeat="2"] { border-style: dashed; border-color: #b3be9d; background: #f0f3e6; }
+.beads-slot { position: relative; display: grid; place-items: center; flex: 0 1 76px; min-width: 0; aspect-ratio: 1; border: 2px solid transparent; border-radius: 18px; }
+.beads-slot > svg { display: block; width: 100%; height: 100%; }
+.beads-slot > b { display: grid; place-items: center; width: 66%; height: 66%; border: 2px dashed #b6bba5; border-radius: 50%; color: #7e8e77; font-size: 30px; line-height: 1; }
+.beads-slot.is-current { border: 3px solid #6d8d58; background: #fffdf2; box-shadow: 0 0 0 4px #d7e2bc; }
+.beads-slot.is-current > b { border: 0; color: #47673f; }
+.beads-slot.is-filled::after { content: '✓'; position: absolute; right: -2px; bottom: -2px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #608254; color: #fffdf3; font-size: 16px; font-weight: 900; }
+.beads-slot.is-hint { border-color: #bf8739; background: #ffedb8; box-shadow: 0 0 0 3px #ecd18d; }
+.beads-preview-area { display: grid; grid-template-columns: 74px minmax(0, 1fr); align-items: center; gap: 0 8px; min-width: 0; }
+#beads-friend { display: block; width: 74px; height: 84px; }
+#beads-greeting { margin: 0; font-size: 18px; font-weight: 800; line-height: 1.6; color: #566b4d; }
+.beads-preview { grid-column: 1 / -1; position: relative; min-width: 0; border-radius: 50% 50% 26px 26px; background: #e6ecd8; }
+.beads-wreath-art { display: block; width: 100%; height: auto; }
+.beads-preview .beads-wreath-art { max-width: 280px; margin: 0 auto; }
+.beads-stage.is-ready .beads-preview { background: #e0edc8; box-shadow: inset 0 0 0 3px #bdd1a1; }
+.beads-choices { display: grid; grid-template-columns: repeat(4, minmax(100px, 136px)); justify-content: center; gap: 14px; margin-top: 22px; }
+.beads-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-width: 100px; min-height: 110px; padding: 8px; border: 2px solid #cbb89d; border-radius: 22px; background: #fffdf4; color: #65543f; font-size: 17px; font-weight: 800; box-shadow: 0 4px 0 #c9b89966; }
+.beads-choice > svg { display: block; width: 62px; height: 62px; pointer-events: none; }
+.beads-choice:hover:not(:disabled) { background: #fff7de; border-color: #9b7e58; }
+.beads-choice:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #c9b89966; }
+.beads-choice:disabled { opacity: .45; cursor: var(--cursor-default); }
+.beads-actions { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 18px; }
+.beads-actions > button { min-width: 160px; }
+.beads-actions .play-primary { background: #6b8052; border-color: #6b8052; }
+.beads-tip { min-height: 28px; margin: 12px 0; text-align: center; font-size: 17px; font-weight: 700; line-height: 1.6; color: #65704f; }
+.beads-garden { position: relative; display: flex; align-items: flex-start; justify-content: center; gap: 14px; min-height: 100px; margin: 20px -32px 0; padding: 0 18px 9px; border-top: 5px solid #bba77f; border-radius: 0 0 28px 28px; background: #e4ead0; }
+.beads-garden:empty::after { content: '你的花环会挂在这里'; margin-top: 27px; color: #7c8968; font-size: 16px; }
+.beads-gift { display: block; flex: 0 1 100px; min-width: 0; position: relative; transform-origin: top center; }
+.beads-gift::before { content: ''; position: absolute; top: 0; left: calc(50% - 1px); height: 9px; width: 2px; background: #a9876d; }
+.beads-gift > svg { width: 100%; }
+.beads-stage.is-hung .beads-gift:last-child { animation: beads-hang .5s ease-out; }
+.beads-demo-art { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 0; }
+.beads-demo-art svg { width: 42px; height: 42px; }
+.beads-demo-art span { font-size: 26px; color: #678054; }
+.beads-screen .play-footer { grid-template-columns: 130px minmax(0, 1fr) 160px; }
+@keyframes beads-hang { from { transform: rotate(-12deg); } 65% { transform: rotate(5deg); } to { transform: rotate(0); } }
+@media (min-width: 1000px) {
+  .beads-stage { display: grid; grid-template-columns: minmax(0, 1fr) 248px; gap: 16px 24px; }
+  .beads-workspace { display: contents; }
+  .beads-pattern-area { grid-column: 1; grid-row: 1; padding: 16px; }
+  .beads-sequence { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .beads-group { gap: 3px; padding: 5px; }
+  .beads-slot { flex-basis: 62px; border-radius: 15px; }
+  .beads-preview-area { grid-column: 2; grid-row: 1 / 4; align-self: center; }
+  .beads-choices { grid-column: 1; grid-row: 2; grid-template-columns: repeat(4, minmax(100px, 1fr)); margin: 0; }
+  .beads-actions { grid-column: 1; grid-row: 3; margin: 0; }
+  .beads-tip { grid-column: 1 / -1; grid-row: 4; margin: 0; }
+  .beads-garden { grid-column: 1 / -1; grid-row: 5; margin-top: 0; }
+}
+@media (max-width: 1000px) {
+  .beads-stage { padding: 20px 20px 0; }
+  .beads-workspace { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; }
+  .beads-pattern-area { padding: 16px 12px; }
+  .beads-slot { flex-basis: 65px; }
+  .beads-garden { margin-inline: -20px; }
+}
+@media (max-width: 640px) {
+  .beads-stage { display: grid; grid-template-columns: minmax(0, 1fr); padding: 18px 10px 0; border-radius: 24px; }
+  .beads-workspace { display: contents; }
+  .beads-pattern-area { grid-row: 1; padding: 15px 8px 12px; }
+  .beads-caption { font-size: 17px; }
+  .beads-group { gap: 8px; padding: 5px; }
+  .beads-slot { flex-basis: 64px; border-radius: 15px; }
+  .beads-slot > b { font-size: 26px; }
+  .beads-preview-area { grid-row: 5; width: min(100%, 260px); margin: 4px auto 0; grid-template-columns: 65px minmax(0, 1fr); }
+  #beads-friend { width: 65px; height: 70px; }
+  #beads-greeting { font-size: 16px; }
+  .beads-preview .beads-wreath-art { max-width: 210px; }
+  .beads-choices { grid-row: 2; grid-template-columns: repeat(2, minmax(100px, 1fr)); gap: 12px; margin-top: 16px; }
+  .beads-choice { min-height: 108px; }
+  .beads-actions { grid-row: 3; gap: 10px; }
+  .beads-actions > button { flex: 1; min-width: 100px; padding: 10px 5px; }
+  .beads-tip { grid-row: 4; font-size: 16px; }
+  .beads-garden { grid-row: 6; min-height: 70px; gap: 0; padding: 0 2px 5px; margin-inline: -10px; border-radius: 0 0 22px 22px; }
+  .beads-garden:empty::after { margin-top: 18px; font-size: 14px; }
+  .beads-screen .play-footer { grid-template-columns: 100px minmax(0, 1fr) 110px; }
+  #beads-trail { grid-column: 1 / -1; grid-row: 2; }
+  .beads-stage .play-demo { max-width: calc(100% - 20px); right: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .beads-stage.is-hung .beads-gift:last-child { animation: none; } }

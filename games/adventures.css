@@ -1,5 +1,4 @@
 /* More involved games retain the existing large controls and quiet storybook palette. */
-.adventure-home { margin-top: 28px; }
 .maze-entry { background: #e9edd6; border-color: #ccd2b2; }
 .maze-entry > svg { transform: rotate(16deg); }
 .maze-screen { background: #f3f5e9; }
@@ -77,4 +76,4 @@
   :is(.maze-screen, .puzzle-screen, .music-screen) .play-footer > .picture-progress { grid-column: 1 / -1; grid-row: 2; margin-top: 8px; }
   :is(.maze-screen, .puzzle-screen, .music-screen) .play-footer > button { grid-row: 1; }
 }
-@media (prefers-reduced-motion: reduce) { .adventure-home *, .maze-stage *, .puzzle-stage *, .music-stage * { animation: none !important; transition: none !important; } .maze-cell.is-collecting::before, .maze-cell.is-collecting::after { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .maze-stage *, .puzzle-stage *, .music-stage * { animation: none !important; transition: none !important; } .maze-cell.is-collecting::before, .maze-cell.is-collecting::after { animation: none; } }

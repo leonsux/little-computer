@@ -1,0 +1,10 @@
+.play-header h2, .garden-header h2 { min-width: 0; }
+.animal-companions { display: flex; justify-content: center; gap: 8px; width: min(208px, 100%); margin: 4px auto 0; pointer-events: none; }
+.animal-companions > svg { display: block; flex: 1; min-width: 0; width: 46px; height: 36px; }
+.train-slot .animal-passenger { visibility: hidden; }
+.train-slot.is-filled .animal-passenger { visibility: visible; }
+.builder-surprise .builder-animal-party { width: 180px; height: 72px; }
+@media (max-width: 640px) {
+  .animal-companions { gap: 2px; margin-top: 3px; }
+  .animal-companions > svg { height: 22px; }
+}

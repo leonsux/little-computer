@@ -121,14 +121,15 @@
     slots.replaceChildren();
     pieces.replaceChildren();
     window.GameProgress.render(document.querySelector('#train-trail'), levels[level].slots.length, 0, 'mini-train');
-    levels[level].slots.forEach(kind => {
+    levels[level].slots.forEach((kind, index) => {
       const slot = document.createElement('div');
       slot.className = 'train-slot';
       slot.dataset.shape = kind;
       slot.style.setProperty('--shape-color', kinds[kind].color);
       slot.setAttribute('role', 'region');
       slot.setAttribute('aria-label', kinds[kind].name + '车厢');
-      slot.innerHTML = '<svg aria-hidden="true"><use href="#shape-' + kind + '"/></svg>';
+      const friend = window.GameAnimals.friends[index % window.GameAnimals.friends.length];
+      slot.innerHTML = '<svg aria-hidden="true" viewBox="0 0 100 100"><use href="#shape-' + kind + '" width="100" height="100"/><use class="animal-passenger" href="#' + friend.symbol + '-head" x="66" y="64" width="34" height="28"/></svg>';
       slots.append(slot);
     });
     levels[level].pieces.forEach(kind => {

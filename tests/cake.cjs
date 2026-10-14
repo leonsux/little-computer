@@ -21,7 +21,25 @@ const { chromium } = require('playwright');
     const order = () => page.locator('#cake-recipe > span').evaluateAll(nodes => nodes.map(node => node.dataset.ingredient));
     const record = () => page.evaluate(() => Number(localStorage.getItem('littleComputer.cakeOrders')) || 0);
     const settle = () => page.waitForTimeout(1650);
-    const fill = async () => { for (const key of await order()) await ingredient(key).click(); };
+    const seenGuests = new Set();
+    const checkWorkbench = async () => {
+      seenGuests.add(await page.locator('#cake-guest use').getAttribute('href'));
+      const layout = await page.evaluate(() => {
+        const rect = selector => document.querySelector(selector).getBoundingClientRect();
+        const sample = rect('#cake-order'), made = rect('#cake-made'), table = rect('.cake-workbench');
+        const samplePlate = rect('#cake-order .cake-plate'), madePlate = rect('#cake-made .cake-plate');
+        const pictures = ['#cake-order', '#cake-made'].map(selector => [...document.querySelectorAll(selector + ' .cake-piece')].map(node => {
+          const r = node.getBoundingClientRect(); return { top: r.top, width: r.width, height: r.height };
+        }));
+        return { aligned: Math.abs(sample.top - made.top) < 1 && Math.abs(sample.bottom - made.bottom) < 1,
+          sideBySide: sample.right < made.left,
+          onTable: Math.abs(samplePlate.bottom - table.top) < 1 && Math.abs(madePlate.bottom - table.top) < 1,
+          samePlate: samplePlate.width === madePlate.width, pictures };
+      });
+      assert.ok(layout.aligned && layout.sideBySide && layout.onTable && layout.samePlate, 'Sample and cake share a baseline on the workbench');
+      if (layout.pictures[0].length === layout.pictures[1].length) assert.deepEqual(layout.pictures[1], layout.pictures[0], 'Matching cakes have the same size and height');
+    };
+    const fill = async () => { for (const key of await order()) { await ingredient(key).click(); await checkWorkbench(); } };
     await page.locator('[data-game="cake"]').scrollIntoViewIfNeeded();
     for (const width of [1920, 1366, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
@@ -30,7 +48,8 @@ const { chromium } = require('playwright');
         const title = button.querySelector('b').getBoundingClientRect();
         const art = button.querySelector('.cake-entry-art').getBoundingClientRect();
         const entry = button.getBoundingClientRect();
-        return title.right <= art.left && art.left >= entry.left && art.right <= entry.right;
+        const separate = title.right <= art.left || art.right <= title.left || title.bottom <= art.top || art.bottom <= title.top;
+        return separate && art.left >= entry.left && art.right <= entry.right && art.top >= entry.top && art.bottom <= entry.bottom;
       }), 'Home title and artwork do not overlap at ' + width);
     }
     await page.setViewportSize({ width: 1366, height: 900 });
@@ -38,6 +57,7 @@ const { chromium } = require('playwright');
     await enter();
     assert.equal(await page.locator('[data-demo-panel="cake"]').isVisible(), true);
     await page.locator('[data-demo="cake"]').click();
+    await checkWorkbench();
     await ingredient('vanilla').hover();
     assert.deepEqual(await selection(), [], 'Hover and demo cannot make a cake');
     assert.equal(await record(), 0);
@@ -90,13 +110,15 @@ const { chromium } = require('playwright');
           await ingredient(keys[2]).click();
         } else await fill();
         assert.deepEqual(await selection(), keys);
+        await checkWorkbench();
         assert.equal(await page.locator('#cake-recipe .is-done').count(), keys.length);
         assert.equal(await page.locator('.cake-ingredient:not(:disabled)').count(), 0);
         if (round === 4 && guest === 0) {
-          for (const width of [1920, 1366, 768, 390, 320]) {
+          for (const width of [1920, 1366, 1100, 1099, 768, 701, 700, 390, 320]) {
             await page.setViewportSize({ width, height: 900 });
             await page.waitForTimeout(100);
             assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'No overflow at ' + width);
+            await checkWorkbench();
             assert.deepEqual(await page.locator('#cake-screen button:visible').evaluateAll(buttons => buttons.filter(button => {
               const r = button.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1;
             }).map(button => button.textContent)), []);
@@ -124,6 +146,7 @@ const { chromium } = require('playwright');
       }
     }
     assert.equal(await record(), 11);
+    for (const animal of ['elephant', 'panda', 'polarBear', 'giraffe']) assert.ok(seenGuests.has('#animal-' + animal), animal + ' orders a cake');
     assert.equal(await page.locator('#cake-level').textContent(), '蛋糕店开张啦', 'Five rounds cycle');
     await page.evaluate(() => refreshParentPage());
     assert.equal(await page.locator('#stat-cake-orders').textContent(), '11');

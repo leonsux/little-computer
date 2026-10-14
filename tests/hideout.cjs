@@ -16,7 +16,7 @@ const { chromium } = require('playwright');
     const enter = () => page.locator('[data-game="hideout"]').click();
     const home = () => page.locator('#hideout-screen [data-home]').click();
     const spot = name => page.locator('.hideout-spot[data-friend="' + name + '"]').first();
-    const names = { 小兔: 'rabbit', 蝴蝶: 'butterfly', 小乌龟: 'turtle', 小狐狸: 'fox', 猫头鹰: 'owl', 小鱼: 'fish' };
+    const names = { 小兔: 'rabbit', 蝴蝶: 'butterfly', 小乌龟: 'turtle', 小狐狸: 'fox', 猫头鹰: 'owl', 小鱼: 'fish', 大象: 'elephant', 熊猫: 'panda', 北极熊: 'polarBear', 长颈鹿: 'giraffe' };
     const next = async () => spot(names[await page.locator('#hideout-friend').textContent()]);
     const found = () => page.locator('.hideout-spot.is-found').count();
     const record = () => page.evaluate(() => Number(localStorage.getItem('littleComputer.hideoutScenes')) || 0);

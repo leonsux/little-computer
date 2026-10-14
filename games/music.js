@@ -5,10 +5,10 @@
   const listen = document.querySelector('#music-listen');
   const tip = document.querySelector('#music-tip');
   const notes = {
-    drum: { name: '小鼓', color: '#e4aa96' },
-    bell: { name: '铃铛', color: '#e8cf89' },
-    keys: { name: '木琴', color: '#a0c5c8' },
-    shaker: { name: '沙锤', color: '#bbce9d' },
+    drum: { name: '小鼓', color: '#e4aa96', friend: 'elephant' },
+    bell: { name: '铃铛', color: '#e8cf89', friend: 'panda' },
+    keys: { name: '木琴', color: '#a0c5c8', friend: 'polarBear' },
+    shaker: { name: '沙锤', color: '#bbce9d', friend: 'giraffe' },
   };
   const songs = [
     { name: '小鼓和铃铛', sequence: ['drum', 'bell', 'drum'] },
@@ -21,18 +21,18 @@
 
   function clearFlash() { instruments.querySelectorAll('.is-sounding').forEach(button => button.classList.remove('is-sounding')); }
   function cancelDemo() {
-    clearTimeout(demoTimer);
-    clearTimeout(flashTimer);
+    window.GameClock.clearTimeout(demoTimer);
+    window.GameClock.clearTimeout(flashTimer);
     demonstrating = false;
     demoIndex = -1;
     clearFlash();
   }
   function sound(note) {
-    clearTimeout(flashTimer);
+    window.GameClock.clearTimeout(flashTimer);
     clearFlash();
     instruments.querySelector('[data-note="' + note + '"]').classList.add('is-sounding');
     window.GameAudio.playInstrument(note);
-    flashTimer = setTimeout(clearFlash, 500);
+    flashTimer = window.GameClock.setTimeout(clearFlash, 500);
   }
   function render() {
     [...score.children].forEach((step, index) => {
@@ -66,7 +66,7 @@
       demoIndex = index;
       sound(songs[level].sequence[index]);
       render();
-      demoTimer = setTimeout(() => tick(index + 1), 750);
+      demoTimer = window.GameClock.setTimeout(() => tick(index + 1), 750);
     };
     tick(0);
   }
@@ -117,7 +117,7 @@
       button.dataset.note = note;
       button.style.setProperty('--note-color', data.color);
       button.setAttribute('aria-label', '演奏' + data.name);
-      button.innerHTML = '<svg aria-hidden="true"><use href="#music-' + note + '"/></svg><span>' + data.name + '</span>';
+      button.innerHTML = '<svg aria-hidden="true" viewBox="0 0 120 100"><use href="#music-' + note + '" width="120" height="100"/><use href="#animal-' + data.friend + '-head" x="77" y="61" width="42" height="34"/></svg><span>' + data.name + '</span>';
       button.addEventListener('click', event => play(note, event.detail === 0));
       instruments.append(button);
     });

@@ -7,6 +7,7 @@
   const hint = document.querySelector('#link-hint');
   const pictures = {
     rabbit: ['garden-rabbit-art', '小兔'], fish: ['mini-fish', '小鱼'],
+    ...Object.fromEntries(window.GameAnimals.friends.map(friend => [friend.key, [friend.symbol, friend.name]])),
     butterfly: ['garden-butterfly-art', '蝴蝶'], flower: ['garden-flower-art', '小花'],
     apple: ['play-apple', '苹果'], pear: ['play-pear', '梨子'],
     star: ['shape-star', '星星'], bell: ['music-bell', '铃铛'],
@@ -31,7 +32,7 @@
     { name: '玩具小火车', columns: 9, pictures: pictureOrder.slice(0, 18) },
     { name: '音乐游乐会', columns: 10, pictures: pictureOrder.slice(0, 20) },
     { name: '花园大野餐', columns: 11, pictures: pictureOrder.slice(0, 22) },
-    { name: '朋友大联欢', columns: 12, pictures: pictureOrder.slice(0, 24) },
+    { name: '朋友大联欢', columns: 12, pictures: [...pictureOrder.slice(0, 18), ...pictureOrder.slice(-6)] },
   ];
   let active = false, transitioning = false;
   let level = 0, columns = 2, selected = null;
@@ -39,7 +40,7 @@
   let lineTimer;
 
   function currentBoard() { return deck.map((picture, index) => matched.has(index) ? null : picture); }
-  function clearLine() { clearTimeout(lineTimer); line.replaceChildren(); }
+  function clearLine() { window.GameClock.clearTimeout(lineTimer); line.replaceChildren(); }
   function updateColumns() {
     columns = Math.min(levels[level].columns, Math.max(2, Math.floor((stage.clientWidth - 36 + 12) / 112)));
     cards.style.setProperty('--link-columns', columns);
@@ -79,7 +80,7 @@
     const route = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     route.setAttribute('points', path.map(([row, column]) => x(column) + ',' + y(row)).join(' '));
     line.append(route);
-    lineTimer = setTimeout(clearLine, 650);
+    lineTimer = window.GameClock.setTimeout(clearLine, 650);
   }
   function choose(index, keyboard) {
     if (!active || transitioning || matched.has(index)) return;

@@ -9,6 +9,7 @@
     { name: '小兔', symbol: 'garden-rabbit-art' },
     { name: '蝴蝶', symbol: 'garden-butterfly-art' },
     { name: '小鱼', symbol: 'mini-fish' },
+    ...window.GameAnimals.friends,
   ];
   // Orders list scoops from the cone upwards; the picture and recipe use that same order.
   const rounds = [
@@ -70,7 +71,8 @@
   }
   function setup(focus = false) {
     scoops = [];
-    const guest = guests[(round + customer) % guests.length];
+    const orderIndex = rounds.slice(0, round).reduce((total, group) => total + group.orders.length, 0) + customer;
+    const guest = guests[orderIndex % guests.length];
     document.querySelector('#icecream-level').textContent = rounds[round].name;
     document.querySelector('#icecream-guest use').setAttribute('href', '#' + guest.symbol);
     document.querySelector('#icecream-greeting').textContent = guest.name + '来啦！';

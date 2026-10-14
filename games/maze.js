@@ -97,7 +97,7 @@
 
   function clearPickupEffects() {
     pickupEffects.forEach((timer, cell) => {
-      clearTimeout(timer);
+      window.GameClock.clearTimeout(timer);
       cell.classList.remove('is-collecting');
     });
     pickupEffects.clear();
@@ -106,7 +106,7 @@
   function showPickup(index) {
     const cell = board.children[index];
     cell.classList.add('is-collecting');
-    pickupEffects.set(cell, setTimeout(() => {
+    pickupEffects.set(cell, window.GameClock.setTimeout(() => {
       cell.classList.remove('is-collecting');
       pickupEffects.delete(cell);
     }, 550));

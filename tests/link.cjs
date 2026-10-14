@@ -261,7 +261,7 @@ assert.ok(findPair(fixed, 2));
         await page.screenshot({ path: '.tmp/link-game/home-overflow.png', fullPage: true });
       }
       assert.ok(homeWidth.content <= homeWidth.viewport, 'Home fits the viewport: ' + JSON.stringify(homeWidth));
-      assert.equal(await page.locator('[data-game]').count(), 16, 'All sixteen entries remain available');
+      assert.equal(await page.locator('[data-game]').count(), 22, 'All twenty-two entries remain available');
     }
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);

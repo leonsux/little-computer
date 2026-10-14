@@ -1,4 +1,3 @@
-.adventure-home .discovery-shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .link-entry { background: #e7efde; border-color: #c5d4b9; }
 .link-entry > svg { transform: rotate(8deg); }
 .link-screen { background: #f3f6eb; }
@@ -23,7 +22,6 @@
 .link-demo-pair::after { content: ''; position: absolute; left: 22px; right: 22px; top: 50%; border-top: 3px dashed #547959; }
 .play-demo[data-demo-panel='link'].is-playing .demo-mouse i { animation: help-click 3.4s linear 1; }
 @media (max-width: 640px) {
-  .adventure-home .discovery-shelf { grid-template-columns: 1fr; }
   .link-footer { grid-template-columns: 100px 1fr 110px; }
   .link-footer .picture-progress { grid-column: 1 / -1; grid-row: 1; }
   .link-footer > button { grid-row: 2; }

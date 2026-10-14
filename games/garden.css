@@ -12,42 +12,12 @@
 .home-welcome { margin: 2px 0 4px; display: flex; align-items: baseline; gap: 24px; }
 .home-welcome h2 { font-size: clamp(28px, 3vw, 40px); letter-spacing: -.03em; margin: 0; }
 .home-welcome p { margin: 0; color: #627461; font-size: 18px; }
-.world-map { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; flex: 1; }
-.world-map > button { position: relative; display: block; text-align: left; min-width: 0; min-height: 250px; border: 2px solid #bdcdb3; border-radius: 32px; overflow: hidden; isolation: isolate; transition: transform .2s, box-shadow .2s; }
-.world-map > button:hover { transform: translateY(-4px); box-shadow: 0 9px 0 #304e4210; }
-.world-map > button:active { transform: translateY(1px); }
-.garden-entry { grid-column: span 7; background: #e0efcf; padding: 0; }
-.stars-entry { grid-column: span 5; background: #dbe9ef; border-color: #bfd3dd !important; }
-.fruit-entry { grid-column: span 5; background: #f9ead0; border-color: #e4cfac !important; }
-.drawing-entry { grid-column: span 7; background: #f4e2df; border-color: #dfc7c2 !important; }
-.garden-entry-copy, .portal-copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 28px; z-index: 2; width: 60%; pointer-events: none; }
-.game-skill { font-size: 14px; color: #536b4b; font-weight: 700; }
-.garden-entry-title, .portal-copy b { font-size: clamp(28px, 3vw, 38px); font-weight: 900; line-height: 1.25; white-space: nowrap; color: #304e42; letter-spacing: -.03em; }
-.garden-entry-note, .portal-copy small { font-size: 17px; color: #52664b; line-height: 1.5; }
-.portal-go { margin-top: 13px; min-height: 52px; display: flex; align-items: center; padding: 10px 20px; border-radius: 18px; color: #fff; background: #355e48; font-weight: 800; font-size: 18px; box-shadow: 0 4px 0 #284a36; white-space: nowrap; }
-.garden-entry-art { position: absolute; right: 0; top: 0; bottom: 0; width: 55%; display: block; overflow: hidden; pointer-events: none; }
-.garden-sun { position: absolute; right: 22%; top: 10%; width: 44px; height: 44px; background: #f0ce70; border-radius: 50%; }
+.garden-entry { background: #e0efcf; }
+.stars-entry { background: #dbe9ef; border-color: #bfd3dd !important; }
+.fruit-entry { background: #f9ead0; border-color: #e4cfac !important; }
+.drawing-entry { background: #f4e2df; border-color: #dfc7c2 !important; }
 .garden-cloud { position: absolute; width: 80px; height: 25px; border-radius: 50px; background: #fffdf3; }
 .garden-cloud::before { content: ''; position: absolute; width: 38px; height: 38px; left: 18px; top: -17px; border-radius: 50%; background: inherit; }
-.garden-entry-art > .garden-cloud { top: 20%; left: 12%; }
-.garden-hill { position: absolute; width: 150%; height: 38%; left: -10%; bottom: -10%; border-radius: 50% 40% 0 0; background: #bdd7a5; transform: rotate(-5deg); }
-.entry-flower { position: absolute; width: 30%; height: 67%; bottom: 12%; }
-.entry-flower.flower-peach { left: 0; transform: rotate(-8deg); }
-.entry-flower.flower-gold { left: 24%; bottom: 18%; }
-.entry-flower.flower-blue { left: 49%; transform: rotate(7deg); }
-.entry-rabbit { position: absolute; right: -1%; bottom: 6%; width: 32%; height: 61%; transform: rotate(5deg); }
-.entry-can { position: absolute; bottom: 0; left: 26%; width: 28%; height: 30%; transform: rotate(-10deg); }
-.portal-art { position: absolute; inset: 0 0 0 46%; display: block; pointer-events: none; }
-.sky-art { background: #668797; border-radius: 50% 0 0 0; margin-top: 20px; }
-.sky-art > svg { position: absolute; width: 100%; height: 80%; right: -4%; bottom: -2%; }
-.portal-moon { position: absolute; width: 45px; height: 45px; top: 12%; right: 13%; border-radius: 50%; box-shadow: inset 12px -3px #fff0bd; transform: rotate(-20deg); }
-.picnic-cloth { position: absolute; width: 115%; height: 45%; bottom: -4%; left: -6%; transform: rotate(-8deg); background: repeating-linear-gradient(0deg, #efcc9760 0 24px, transparent 24px 48px), repeating-linear-gradient(90deg, #efcc9760 0 24px, #fff5db 24px 48px); border-radius: 24px; }
-.portal-basket { position: absolute; width: 70%; height: 80%; bottom: 4%; right: -3%; transform: rotate(9deg); }
-.portal-apple { position: absolute; width: 36%; height: 40%; bottom: 4%; left: 0; transform: rotate(-15deg); }
-.portal-pear { position: absolute; width: 25%; height: 35%; right: 4%; top: 4%; transform: rotate(16deg); }
-.studio-art { inset-inline-start: 49%; }
-.portal-paper { position: absolute; width: 105%; height: 92%; right: -6%; bottom: -4%; transform: rotate(-9deg); filter: drop-shadow(0 6px 0 #c99e8b22); }
-.portal-pencil { position: absolute; right: 0; bottom: -8%; height: 70%; width: 33%; transform: rotate(12deg); }
 .home-note { display: flex; justify-content: space-between; gap: 20px; font-size: 15px; color: #61745f; }
 .garden-screen { background: #f5f8ef; color: #304e42; padding: 16px clamp(16px, 4vw, 64px) 20px; display: flex; flex-direction: column; gap: 14px; }
 .garden-header { display: grid; grid-template-columns: 130px 1fr 130px; align-items: center; gap: 10px; }
@@ -121,16 +91,11 @@
 @keyframes garden-demo-click { 0%, 52%, 70%, 100% { background: transparent; } 55%, 67% { background: #d89576; } }
 @keyframes garden-demo-press { 0%, 8%, 82%, 100% { background: transparent; } 12%, 78% { background: #d89576; } }
 @media (min-width: 1600px) { .garden-plant { flex-basis: 210px; width: 210px; height: 292px; } }
-@media (max-width: 1000px) { .garden-workspace { grid-template-columns: 180px minmax(0, 1fr); gap: 16px; } .garden-guide h3 { font-size: 24px; } .garden-plants { inset-inline: 3%; gap: 4px; } .garden-plant { height: 220px; } .garden-entry-copy, .portal-copy { padding: 22px; } .game-skill { font-size: 12px; } .garden-entry-note, .portal-copy small { font-size: 15px; } .garden-entry-title, .portal-copy b { font-size: 30px; } }
-@media (max-width: 760px) { .home-welcome { display: block; } .home-welcome p { margin-top: 8px; } .world-map > button { grid-column: span 6; min-height: 310px; } .garden-entry-copy, .portal-copy { width: 100%; padding: 22px; } .garden-entry-art { width: 67%; height: 55%; top: auto; } .portal-art { inset: 42% 0 0 30%; } .portal-go { position: relative; margin-top: 8px; font-size: 16px; min-height: 46px; padding: 8px 16px; } .home-note > :last-child { display: none; } }
+@media (max-width: 1000px) { .garden-workspace { grid-template-columns: 180px minmax(0, 1fr); gap: 16px; } .garden-guide h3 { font-size: 24px; } .garden-plants { inset-inline: 3%; gap: 4px; } .garden-plant { height: 220px; } }
 @media (max-width: 640px) {
   #home-screen { padding: 16px; gap: 18px; }
   #home-title { font-size: 21px; } .home-brand { gap: 8px; } .home-brand > svg { width: 34px; height: 48px; }
   .garden-home-header { flex-wrap: wrap; } .home-controls { gap: 8px; } .home-controls .garden-control, #home-screen .parent-button { min-width: 80px; min-height: 52px; padding: 10px; font-size: 15px; }
-  .world-map { gap: 14px; } .world-map > button { grid-column: 1 / -1; min-height: 250px; }
-  .garden-entry-copy, .portal-copy { width: 66%; padding: 22px; } .garden-entry-title, .portal-copy b { font-size: 30px; }
-  .garden-entry-art { width: 49%; height: 77%; } .portal-art { inset: 25% 0 0 52%; }
-  .garden-entry .game-skill { max-width: 160px; line-height: 1.6; } .garden-entry-note, .portal-copy small { max-width: 160px; }
   .garden-screen { padding: 12px; gap: 12px; } .garden-header { grid-template-columns: 100px 1fr 100px; gap: 6px; } .garden-header h2 { font-size: 19px; } .garden-control { padding: 10px; font-size: 16px; }
   .garden-skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; } .garden-skills button { min-width: 100px; font-size: 18px; padding: 8px; }
   .garden-workspace { grid-template-columns: 1fr; gap: 12px; } .garden-guide { display: grid; grid-template-columns: 54px 1fr 100px; align-items: center; text-align: left; gap: 4px 8px; }
@@ -141,4 +106,4 @@
   .garden-footer { grid-template-columns: 100px 1fr 110px; gap: 5px; } .garden-footer p { font-size: 14px; } .garden-next { min-width: 100px; font-size: 18px; }
 }
 @media (max-width: 360px) { .garden-field { min-height: 600px; } .garden-plants { inset-block: 80px 130px; } .garden-plant { flex-basis: 120px; } }
-@media (prefers-reduced-motion: reduce) { .garden-screen *, .world-map, .world-map * { animation: none !important; transition: none !important; } .garden-demo .demo-pointer { transform: translateX(80px); } .garden-demo[data-step='2'] .demo-mouse i, .garden-demo[data-step='3'] .demo-mouse i { background: #d89576; } }
+@media (prefers-reduced-motion: reduce) { .garden-screen * { animation: none !important; transition: none !important; } .garden-demo .demo-pointer { transform: translateX(80px); } .garden-demo[data-step='2'] .demo-mouse i, .garden-demo[data-step='3'] .demo-mouse i { background: #d89576; } }

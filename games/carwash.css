@@ -2,40 +2,60 @@
 .carwash-entry > span { max-width: calc(100% - 165px); }
 .carwash-entry > svg { width: 180px; height: 140px; right: 22px; bottom: 18px; opacity: 1; transform: rotate(-4deg); }
 .carwash-screen { background: #f1f7f0; }
-.carwash-stage { flex: initial; padding: 24px 24px 18px; background: #e4efea; border-color: #afc7be; }
-.carwash-stage::before { content: ''; position: absolute; inset: 0 0 auto; height: 115px; background: repeating-linear-gradient(90deg, transparent 0 80px, #b9d4c530 80px 84px); z-index: -1; }
+.carwash-stage { flex: initial; padding: 20px 20px 16px; background: #e4efea; border-color: #afc7be; }
+.carwash-stage::before { content: ''; position: absolute; inset: 0 0 auto; height: 110px; background: repeating-linear-gradient(90deg, transparent 0 80px, #b9d4c530 80px 84px); z-index: -1; }
 .carwash-welcome { display: flex; justify-content: center; align-items: center; gap: 36px; }
 .carwash-customer { display: flex; gap: 14px; align-items: center; justify-content: center; }
 .carwash-customer > svg { width: 68px; height: 80px; }
-.carwash-customer p { margin: 0; padding: 12px 20px; border: 2px solid #c0cfbc; border-radius: 22px 22px 22px 4px; background: #fffaf0; font-size: 18px; font-weight: 800; }
-.carwash-bay { position: relative; width: min(100%, 620px); margin: 16px auto 0; }
-.carwash-vehicle > svg { display: block; width: 100%; height: auto; }
-.carwash-zones { position: absolute; inset: 0; }
-.carwash-zone { position: absolute; top: 18%; left: 6%; width: 44%; height: 64%; min-width: 100px; min-height: 80px; background: transparent; border: 3px solid transparent; border-radius: 30px; padding: 0; }
-.carwash-zone:nth-child(2) { left: 50%; }
-.carwash-zone > svg { width: clamp(72px, 12vw, 118px); height: auto; pointer-events: none; }
-.carwash-zone:hover:not(:disabled), .carwash-zone:focus-visible { background: #ffffff30; border-color: #527b6b; }
-.carwash-zone:disabled { cursor: var(--cursor-default); opacity: 1; }
-.carwash-zone svg g { display: none; }
-.carwash-zone[data-clean='0'] .wash-mud, .carwash-zone[data-clean='1'] .wash-foam, .carwash-zone[data-clean='2'] .wash-water, .carwash-zone[data-clean='3'] .wash-shine { display: block; }
-.carwash-zone-mark { display: none; position: absolute; bottom: 5px; right: 12px; font-size: 27px; color: #365e4a; }
-.carwash-stage[data-step='0'] .carwash-zone[data-clean='1'] .carwash-zone-mark, .carwash-stage[data-step='1'] .carwash-zone[data-clean='2'] .carwash-zone-mark, .carwash-zone[data-clean='3'] .carwash-zone-mark { display: block; }
-.carwash-steps { display: flex; gap: 16px; align-items: center; justify-content: center; }
+.carwash-customer p { margin: 0; padding: 12px 20px; max-width: 260px; border: 2px solid #c0cfbc; border-radius: 22px 22px 22px 4px; background: #fffaf0; font-size: 18px; font-weight: 800; }
+.carwash-view { width: min(100%, 760px); margin: 12px auto 0; overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain; border-radius: 18px; background: #e4efea; }
+.carwash-bay { position: relative; width: 720px; height: 340px; margin: auto; overflow: hidden; }
+.carwash-vehicle > svg { display: block; width: 720px; height: 340px; }
+#carwash-canvas { position: absolute; inset: 0; width: 720px; height: 340px; touch-action: none; cursor: none; border-radius: 16px; }
+#carwash-canvas:focus-visible { outline: 3px dashed #527b6b; outline-offset: -4px; }
+.carwash-stage.is-ready #carwash-canvas { cursor: var(--cursor-default); }
+.carwash-pointer { position: absolute; width: 60px; height: 60px; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; }
+.carwash-pointer > svg { width: 60px; height: 60px; filter: drop-shadow(0 2px 2px #355e4833); }
+.carwash-pointer::before { content: ''; position: absolute; inset: 2px; border: 2px dashed #fff9; border-radius: 50%; }
+.carwash-spray { display: none; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #8fc6dbaa; background: radial-gradient(circle, #ceeff47a, transparent 72%); }
+.is-washing .carwash-pointer[data-tool='1'] .carwash-spray { display: block; }
+.is-washing .carwash-pointer[data-tool='0'] > svg { animation: carwash-brush .25s alternate infinite; }
+.carwash-steps { display: flex; gap: 12px; align-items: center; justify-content: center; }
 .carwash-steps > span { position: relative; display: grid; justify-items: center; gap: 4px; padding: 8px 16px; border: 3px solid transparent; border-radius: 22px; color: #6c8175; }
-.carwash-steps svg { width: 60px; height: 60px; }
-.carwash-steps b { font-size: 16px; }
+.carwash-steps svg { width: 48px; height: 48px; }.carwash-steps b { font-size: 16px; }
 .carwash-steps i { display: none; position: absolute; right: 5px; top: 4px; font-style: normal; color: #35634c; }
 .carwash-steps .is-current { color: #365b49; border-color: #527b6b; background: #fff8da; }
 .carwash-steps .is-done { background: #f8fcf1; }.carwash-steps .is-done i { display: block; }
-.carwash-actions { display: flex; align-items: center; justify-content: center; gap: 32px; margin-top: 8px; }
-.carwash-tool { display: flex; align-items: center; gap: 10px; color: #355e48; font-size: 20px; font-weight: 800; }
-.carwash-tool svg { width: 64px; height: 64px; }
-.carwash-tip { text-align: center; margin: 14px 0 0; font-size: 18px; line-height: 1.5; font-weight: 700; color: #507160; }
+.carwash-actions { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 16px; }
+.carwash-tools { display: flex; gap: 12px; }
+.carwash-tool { display: grid; justify-items: center; gap: 4px; min-width: 112px; min-height: 100px; padding: 8px; border: 3px solid #abc3b4; border-radius: 22px; background: #fffaf0; color: #355e48; font-size: 18px; font-weight: 800; }
+.carwash-tool svg { width: 58px; height: 58px; }
+.carwash-tool[aria-pressed='true'] { background: #fff3c9; border-color: #355e48; box-shadow: 0 0 0 3px #355e481a; }
+.carwash-tool.is-recommended::after { content: '用这个'; font-size: 13px; color: #527b6b; }
+.carwash-tool:disabled { opacity: .5; cursor: var(--cursor-default); }
+.carwash-tip { text-align: center; margin: 12px 0 0; font-size: 18px; line-height: 1.5; font-weight: 700; color: #507160; }
+.carwash-scroll-note { display: none; text-align: center; font-size: 14px; color: #607c6b; margin: 12px 0 0; }
+.carwash-keyboard { display: none; text-align: center; font-size: 14px; line-height: 1.5; }
+.carwash-screen:has(#carwash-canvas:focus-visible) .carwash-keyboard { display: block; }
 .carwash-stage.is-ready .carwash-vehicle { animation: carwash-happy .45s ease-out; }
-.carwash-demo-art { display: flex; justify-content: center; gap: 8px; align-items: center; margin: 12px 0; }
+.carwash-stage.is-complete .carwash-vehicle { animation: carwash-depart 1.3s ease-in both; }
+.carwash-stage.is-complete .carwash-customer > svg { animation: carwash-wave .3s alternate 4; }
+.carwash-stage.is-complete #carwash-canvas { opacity: 0; }
+.carwash-demo-art { display: flex; justify-content: center; gap: 14px; align-items: center; margin: 8px 0; }
 .carwash-demo-art svg { width: 58px; height: 58px; }.carwash-demo-art span { font-size: 22px; color: #527b6b; }
+.carwash-demo-scrub { position: relative; width: 220px; height: 85px; margin: 10px auto; }
+.carwash-demo-scrub .demo-mouse { left: 3px; top: 16px; }
+.carwash-demo-dirt { position: absolute; left: 82px; top: 12px; width: 126px; height: 62px; border-radius: 40%; background: #a58a67; border: 3px solid #897252; }
+.carwash-demo-scrub > svg { position: absolute; left: 94px; top: 2px; width: 68px; height: 68px; }
+.play-demo[data-demo-panel='carwash'].is-playing .carwash-demo-scrub > svg { animation: carwash-demo-sweep 1s ease-in-out 5; }
+.play-demo[data-demo-panel='carwash'].is-playing .demo-mouse i { background: #d993a0; }
+@keyframes carwash-brush { to { transform: rotate(8deg); } }
+@keyframes carwash-demo-sweep { 50% { transform: translateX(46px) rotate(10deg); } }
 @keyframes carwash-happy { 50% { transform: translateY(-5px); } }
-@media (max-width: 1000px) { .carwash-welcome { flex-direction: column; gap: 12px; } }
+@keyframes carwash-depart { 25% { transform: translateX(6px); } 100% { transform: translateX(720px); } }
+@keyframes carwash-wave { to { transform: rotate(7deg); } }
+@media (max-width: 1000px) { .carwash-welcome { flex-direction: column; gap: 8px; } }
+@media (max-width: 820px) { .carwash-scroll-note { display: block; } }
 @media (max-width: 640px) {
   .carwash-entry { padding: 22px 18px; min-height: 180px; }
   .carwash-entry > span { max-width: calc(100% - 100px); }.carwash-entry b { font-size: 24px; }
@@ -43,11 +63,9 @@
   .carwash-stage { padding: 16px 10px; }
   .carwash-customer { gap: 7px; }.carwash-customer > svg { width: 55px; height: 70px; }
   .carwash-customer p { font-size: 15px; padding: 10px; }
-  .carwash-bay { margin-top: 18px; }
-  .carwash-steps { gap: 4px; }.carwash-steps > span { padding: 6px 5px; border-radius: 16px; }
-  .carwash-steps svg { width: 45px; height: 45px; }.carwash-steps b { font-size: 14px; }
-  .carwash-actions { flex-direction: column; gap: 10px; margin-top: 8px; }
-  .carwash-tool { font-size: 19px; }.carwash-tool svg { width: 48px; height: 48px; }
+  .carwash-actions { flex-direction: column; gap: 14px; }
+  .carwash-steps > span { padding: 6px 14px; border-radius: 16px; }
+  .carwash-steps svg { width: 42px; height: 42px; }.carwash-steps b { font-size: 14px; }
   .carwash-tip { font-size: 16px; }
   .carwash-footer { grid-template-columns: 1fr 1fr; }.carwash-footer > :last-child { grid-column: 2; }
   .carwash-footer .picture-progress { grid-column: 1 / -1; grid-row: 2; }

@@ -178,7 +178,7 @@
       });
       pieces.append(element);
     });
-    surprise.innerHTML = model.scene === 'rocket' ? '<span class="builder-flame">✦</span>' : '<svg><use href="#' + (model.scene === 'bridge' || model.scene === 'train' ? 'mini-train' : 'garden-rabbit-art') + '"/></svg><span>♡</span>';
+    surprise.innerHTML = model.scene === 'castle' ? '<svg class="builder-animal-party" viewBox="0 0 400 160">' + window.GameAnimals.friends.map((friend, index) => '<use href="#' + friend.symbol + '-head" x="' + index * 100 + '" width="100" height="160"/>').join('') + '</svg>' : model.scene === 'rocket' ? '<span class="builder-flame">✦</span>' : '<svg><use href="#' + (model.scene === 'bridge' || model.scene === 'train' ? 'mini-train' : 'garden-rabbit-art') + '"/></svg><span>♡</span>';
     tip.textContent = '照着轮廓搭，先搭哪一块都可以。';
     render();
     if (focus) pieces.firstElementChild.focus({ preventScroll: true });

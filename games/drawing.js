@@ -30,6 +30,9 @@
     sky: { prompt: '画一片属于你的天空吧', art: '<circle cx="57" cy="48" r="27" fill="#edca64"/><path d="M57 9V1M57 95V87M18 48H9M105 48H97M27 19L20 12M88 80L95 87" stroke="#edca64" stroke-width="5" stroke-linecap="round"/><path d="M114 103Q102 86 124 78Q118 53 146 56Q163 26 184 59Q216 52 210 82Q240 102 218 111H125Z" fill="#b6d8de"/><path d="M92 31q12-17 25 0m52-10q12-17 25 0" fill="none" stroke="#6d9197" stroke-width="4" stroke-linecap="round"/>' },
   };
   let idea = 'free';
+  window.GameAnimals.friends.forEach(friend => {
+    ideas[friend.key] = { prompt: '画一画' + friend.name + '朋友吧', art: '<use href="#' + friend.symbol + '" x="60" y="0" width="120" height="140"/>' };
+  });
   try {
     const savedIdea = localStorage.getItem('littleComputer.drawingIdea');
     if (Object.hasOwn(ideas, savedIdea)) idea = savedIdea;
@@ -249,7 +252,7 @@
   }));
   document.querySelectorAll('[data-idea]').forEach((button) => button.addEventListener('click', () => selectIdea(button.dataset.idea)));
   document.querySelector('#next-idea').addEventListener('click', () => {
-    const names = ['garden', 'sea', 'sky'];
+    const names = Object.keys(ideas).filter(name => name !== 'free');
     selectIdea(names[(names.indexOf(idea) + 1) % names.length]);
   });
   document.querySelectorAll('[data-size]').forEach((button) => button.addEventListener('click', () => {

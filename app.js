@@ -16,6 +16,12 @@ const screens = {
   builder: document.querySelector('#builder-screen'),
   cake: document.querySelector('#cake-screen'),
   carwash: document.querySelector('#carwash-screen'),
+  dressup: document.querySelector('#dressup-screen'),
+  juice: document.querySelector('#juice-screen'),
+  mail: document.querySelector('#mail-screen'),
+  pipes: document.querySelector('#pipes-screen'),
+  beads: document.querySelector('#beads-screen'),
+  boxes: document.querySelector('#boxes-screen'),
   'drawing-finish': document.querySelector('#drawing-finish-screen'),
   parent: document.querySelector('#parent-screen'),
 };
@@ -30,13 +36,111 @@ let parentChallengeAnswer = 0;
 let parentAttempts = 0;
 let parentLockedUntil = 0;
 
-const defaultSettings = { fruitLevels: 4 };
+const GAME_SCREEN_NAMES = ['garden', 'stars', 'fruit', 'drawing', 'bubbles', 'memory', 'train', 'maze', 'puzzle', 'music', 'link', 'icecream', 'hideout', 'builder', 'cake', 'carwash', 'dressup', 'juice', 'mail', 'pipes', 'beads', 'boxes'];
+const defaultSettings = { fruitLevels: 4, playLimitMinutes: 0 };
+const pauseDialog = document.querySelector('#pause-dialog');
+const pauseButton = document.querySelector('#pause-play');
+const resumeButton = document.querySelector('#resume-play');
+let playPaused = false;
+let pauseOrigin;
+try { playPaused = localStorage.getItem('littleComputer.paused') === 'true'; } catch (_) {}
+
+// Only gameplay callbacks use this clock; daily accounting and parent controls keep running.
+window.GameClock = (() => {
+  const timers = new Set();
+  function schedule(timer) {
+    timer.started = performance.now();
+    timer.id = window.setTimeout(() => {
+      timers.delete(timer);
+      timer.callback();
+    }, timer.remaining);
+  }
+  return {
+    setTimeout(callback, delay) {
+      const timer = { callback, remaining: delay, id: null, started: 0 };
+      timers.add(timer);
+      if (!playPaused) schedule(timer);
+      return timer;
+    },
+    clearTimeout(timer) {
+      if (!timer) return;
+      window.clearTimeout(timer.id);
+      timers.delete(timer);
+    },
+    pause() {
+      timers.forEach(timer => {
+        window.clearTimeout(timer.id);
+        timer.remaining = Math.max(0, timer.remaining - (performance.now() - timer.started));
+      });
+    },
+    resume() { timers.forEach(schedule); },
+  };
+})();
+
+function refreshPlayTime() {
+  const limit = playLimitSeconds();
+  const remaining = Math.max(0, Math.ceil(limit - currentPlayedSeconds()));
+  document.querySelector('#play-time-label').textContent = playPaused ? '已暂停' : '今日剩余';
+  document.querySelector('#play-time-value').textContent = limit
+    ? String(Math.floor(remaining / 60)).padStart(2, '0') + ':' + String(remaining % 60).padStart(2, '0')
+    : '时间不限';
+  pauseButton.disabled = !parentModal.classList.contains('hidden');
+}
+
+function pausePlay() {
+  if (playPaused || !parentModal.classList.contains('hidden')) return;
+  recordTodayTime();
+  if (enforcePlayTimeLimit()) { refreshPlayTime(); return; }
+  pauseOrigin = document.activeElement;
+  // Reuse each game's cancellation path for held pointers, keyboard drags and unfinished strokes.
+  window.dispatchEvent(new Event('blur'));
+  window.GameClock.pause();
+  playPaused = true;
+  try { localStorage.setItem('littleComputer.paused', 'true'); } catch (_) {}
+  document.body.classList.add('is-paused');
+  if (audioContext?.state === 'running') audioContext.suspend().catch(() => {});
+  pauseDialog.showModal();
+  resumeButton.focus();
+  refreshPlayTime();
+}
+
+function resumePlay() {
+  if (!playPaused) return;
+  recordTodayTime();
+  playPaused = false;
+  try { localStorage.setItem('littleComputer.paused', 'false'); } catch (_) {}
+  pauseDialog.close();
+  document.body.classList.remove('is-paused');
+  window.GameClock.resume();
+  if (audioContext) audioContext.resume().catch(() => {});
+  if (pauseOrigin?.isConnected && !pauseOrigin.closest('.hidden')) pauseOrigin.focus({ preventScroll: true });
+  else pauseButton.focus({ preventScroll: true });
+  enforcePlayTimeLimit();
+  refreshPlayTime();
+}
+pauseButton.addEventListener('click', pausePlay);
+resumeButton.addEventListener('click', resumePlay);
+pauseDialog.addEventListener('cancel', event => event.preventDefault());
+// Capture at window level so game listeners on document cannot receive keys from the dialog.
+['keydown', 'keyup', 'pointerdown', 'pointermove', 'pointerup', 'click', 'wheel'].forEach(type => {
+  window.addEventListener(type, event => {
+    if (!playPaused) return;
+    if (!pauseDialog.contains(event.target)) {
+      event.preventDefault(); event.stopImmediatePropagation();
+    } else if (type === 'keydown' || type === 'keyup') {
+      event.stopImmediatePropagation();
+      if (event.key === 'Tab') { event.preventDefault(); resumeButton.focus(); }
+      if (event.key === 'Escape') event.preventDefault();
+    }
+  }, { capture: true, passive: false });
+});
 
 function getSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem('littleComputer.settings') || '{}') || {};
     return {
       fruitLevels: [1, 2, 3, 4].includes(Number(saved.fruitLevels)) ? Number(saved.fruitLevels) : defaultSettings.fruitLevels,
+      playLimitMinutes: [0, 15, 30, 45, 60, 90, 120].includes(Number(saved.playLimitMinutes)) ? Number(saved.playLimitMinutes) : defaultSettings.playLimitMinutes,
     };
   } catch (_) {
     return { ...defaultSettings };
@@ -56,8 +160,8 @@ function recordTodayTime() {
   try {
     const now = Date.now();
     const previous = Number(localStorage.getItem('littleComputer.lastTimeAt') || now);
-    const seconds = Math.min(Math.max(0, Math.round((now - previous) / 1000)), 60);
-    localStorage.setItem(todayKey(), String(Number(localStorage.getItem(todayKey()) || 0) + seconds));
+    const seconds = showScreen.currentGame && !playPaused ? Math.min(Math.max(0, (now - previous) / 1000), 60) : 0;
+    if (seconds) localStorage.setItem(todayKey(), String(Number(localStorage.getItem(todayKey()) || 0) + seconds));
     localStorage.setItem('littleComputer.lastTimeAt', String(now));
   } catch (_) { /* Storage is optional for playing. */ }
 }
@@ -66,9 +170,48 @@ function readNumber(key) {
   try { return Math.max(0, Number(localStorage.getItem(key)) || 0); } catch (_) { return 0; }
 }
 
+function currentPlayedSeconds() {
+  let seconds = readNumber(todayKey());
+  try {
+    if (showScreen.currentGame && !playPaused) {
+      const previous = Number(localStorage.getItem('littleComputer.lastTimeAt') || Date.now());
+      seconds += Math.min(Math.max(0, (Date.now() - previous) / 1000), 60);
+    }
+  } catch (_) {}
+  return seconds;
+}
+
+function playLimitSeconds() {
+  return getSettings().playLimitMinutes * 60;
+}
+
+function isPlayTimeLocked() {
+  const limit = playLimitSeconds();
+  return limit > 0 && currentPlayedSeconds() >= limit;
+}
+
+function enforcePlayTimeLimit() {
+  if (!isPlayTimeLocked() || !showScreen.currentGame || showScreen.currentGame === 'parent') return false;
+  showScreen('home');
+  showToast('今天的游戏时间到了，请让家长来调整。');
+  return true;
+}
+
+function startGame(name, start) {
+  if (playPaused) return;
+  if (isPlayTimeLocked()) {
+    showScreen('home');
+    showToast('今天的游戏时间到了，请让家长来调整。');
+    return;
+  }
+  start();
+}
+window.StartGame = startGame;
+
 function refreshParentPage() {
   const settings = getSettings();
   document.querySelector('#today-minutes').textContent = String(Math.floor(readNumber(todayKey()) / 60));
+  document.querySelector('#today-limit-note').textContent = settings.playLimitMinutes ? '每日上限：' + settings.playLimitMinutes + ' 分钟' : '目前没有设置每日上限';
   document.querySelector('#stat-star-clicks').textContent = String(readNumber('littleComputer.starClicks'));
   document.querySelector('#stat-star-rounds').textContent = String(readNumber('littleComputer.starRounds'));
   document.querySelector('#stat-fruit-rounds').textContent = String(readNumber('littleComputer.fruitRounds'));
@@ -86,7 +229,14 @@ function refreshParentPage() {
   document.querySelector('#stat-builder-models').textContent = String(readNumber('littleComputer.builderModels'));
   document.querySelector('#stat-cake-orders').textContent = String(readNumber('littleComputer.cakeOrders'));
   document.querySelector('#stat-carwash-cars').textContent = String(readNumber('littleComputer.carwashCars'));
+  document.querySelector('#stat-dress-friends').textContent = String(readNumber('littleComputer.dressFriends'));
+  document.querySelector('#stat-juice-orders').textContent = String(readNumber('littleComputer.juiceOrders'));
+  document.querySelector('#stat-mail-letters').textContent = String(readNumber('littleComputer.mailLetters'));
+  document.querySelector('#stat-pipe-gardens').textContent = String(readNumber('littleComputer.pipeGardens'));
+  document.querySelector('#stat-bead-wreaths').textContent = String(readNumber('littleComputer.beadWreaths'));
+  document.querySelector('#stat-box-boards').textContent = String(readNumber('littleComputer.boxBoards'));
   document.querySelector('#fruit-level-setting').value = String(settings.fruitLevels);
+  document.querySelector('#play-limit-setting').value = String(settings.playLimitMinutes);
 }
 
 function openParentPage() {
@@ -147,7 +297,7 @@ function prepareGameAudio() {
     masterGain.connect(audioContext.destination);
   }
   masterGain.gain.value = soundEnabled ? 1 : 0;
-  if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
+  if (!playPaused && audioContext.state === 'suspended') audioContext.resume().catch(() => {});
 }
 
 window.GameAudio = {
@@ -170,6 +320,84 @@ window.GameAudio = {
         oscillator.onended = () => { oscillator.disconnect(); gain.disconnect(); };
       });
     } catch (_) { /* All sound has an equivalent visual response. */ }
+  },
+  startWater() {
+    const nodes = [];
+    let source;
+    let gain;
+    let stopped = false;
+    let cleanupTimer;
+    const disconnect = () => {
+      clearTimeout(cleanupTimer);
+      if (source) {
+        source.onended = null;
+        try { source.stop(); } catch (_) {}
+      }
+      nodes.forEach((node) => { try { node.disconnect(); } catch (_) {} });
+      nodes.length = 0;
+    };
+    const stop = () => {
+      if (stopped) return;
+      stopped = true;
+      if (!source) return;
+      try {
+        const now = audioContext.currentTime;
+        gain.gain.cancelScheduledValues(now);
+        gain.gain.setValueAtTime(gain.gain.value, now);
+        gain.gain.linearRampToValueAtTime(0, now + .08);
+        source.stop(now + .09);
+        // Suspended contexts cannot fire onended until resumed.
+        cleanupTimer = setTimeout(disconnect, 140);
+      } catch (_) { disconnect(); }
+    };
+    try {
+      prepareGameAudio();
+      const now = audioContext.currentTime;
+      const rate = audioContext.sampleRate;
+      const buffer = audioContext.createBuffer(1, rate * 2, rate);
+      const samples = buffer.getChannelData(0);
+      let wash = 0;
+      for (let index = 0; index < samples.length; index++) {
+        wash += .22 * (Math.random() * 2 - 1 - wash);
+        const ripple = .8 + .12 * Math.sin(index / rate * Math.PI * 7);
+        samples[index] = wash * ripple;
+      }
+      // Small damped, rising bubbles give the soft rush a watery texture.
+      for (let start = 0; start < samples.length; start += Math.floor(rate * (.055 + Math.random() * .075))) {
+        const duration = Math.floor(rate * (.025 + Math.random() * .03));
+        const frequency = 450 + Math.random() * 900;
+        for (let index = 0; index < duration; index++) {
+          const time = index / rate;
+          const envelope = Math.sin(Math.PI * index / duration) * Math.exp(-time * 65);
+          samples[(start + index) % samples.length] += .24 * envelope * Math.sin(2 * Math.PI * (frequency * time + 1800 * time * time));
+        }
+      }
+      source = audioContext.createBufferSource();
+      nodes.push(source);
+      const highpass = audioContext.createBiquadFilter();
+      nodes.push(highpass);
+      const lowpass = audioContext.createBiquadFilter();
+      nodes.push(lowpass);
+      gain = audioContext.createGain();
+      nodes.push(gain);
+      source.buffer = buffer;
+      source.loop = true;
+      highpass.type = 'highpass';
+      highpass.frequency.value = 160;
+      highpass.Q.value = .5;
+      lowpass.type = 'lowpass';
+      lowpass.frequency.value = 2800;
+      lowpass.Q.value = .5;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(.16, now + .06);
+      source.connect(highpass).connect(lowpass).connect(gain).connect(masterGain);
+      source.onended = disconnect;
+      source.start(now);
+    } catch (_) {
+      stopped = true;
+      disconnect();
+    }
+    return stop;
   },
   playInstrument(instrument) {
     if (!soundEnabled || !['drum', 'bell', 'keys', 'shaker'].includes(instrument)) return;
@@ -243,7 +471,7 @@ let demoTimer;
 const demonstrated = new Set();
 window.GameHelp = {
   hide() {
-    clearTimeout(demoTimer);
+    window.GameClock.clearTimeout(demoTimer);
     document.querySelectorAll('[data-demo-panel]').forEach((panel) => {
       panel.classList.add('hidden');
       panel.classList.remove('is-playing');
@@ -257,7 +485,7 @@ window.GameHelp = {
     void panel.offsetWidth;
     panel.classList.add('is-playing');
     demonstrated.add(name);
-    demoTimer = setTimeout(() => this.hide(), 6500);
+    demoTimer = window.GameClock.setTimeout(() => this.hide(), 6500);
   },
   first(name) { if (!demonstrated.has(name)) this.show(name); },
 };
@@ -272,13 +500,13 @@ window.LevelTransition = {
     levelTransition.classList.remove('hidden');
     void levelTransition.offsetWidth;
     levelTransition.classList.add('is-showing');
-    levelTransitionTimer = window.setTimeout(() => {
+    levelTransitionTimer = window.GameClock.setTimeout(() => {
       this.cancel();
       onDone?.();
     }, 1500);
   },
   cancel() {
-    window.clearTimeout(levelTransitionTimer);
+    window.GameClock.clearTimeout(levelTransitionTimer);
     levelTransition.classList.add('hidden');
     levelTransition.classList.remove('is-showing');
   },
@@ -293,6 +521,12 @@ document.addEventListener('keydown', (event) => {
 });
 
 function showScreen(name) {
+  if (playPaused) return;
+  recordTodayTime();
+  if (GAME_SCREEN_NAMES.includes(name) && isPlayTimeLocked() && showScreen.currentGame !== name) {
+    showToast('今天的游戏时间到了，请让家长来调整。');
+    return showScreen('home');
+  }
   window.LevelTransition.cancel();
   if (name !== 'garden') window.GardenGame?.stop();
   if (name !== 'stars') window.StarsGame?.stop();
@@ -310,20 +544,30 @@ function showScreen(name) {
   if (name !== 'builder') window.BuilderGame?.stop();
   if (name !== 'cake') window.CakeGame?.stop();
   if (name !== 'carwash') window.CarwashGame?.stop();
+  if (name !== 'dressup') window.DressupGame?.stop();
+  if (name !== 'juice') window.JuiceGame?.stop();
+  if (name !== 'mail') window.MailGame?.stop();
+  if (name !== 'pipes') window.PipesGame?.stop();
+  if (name !== 'beads') window.BeadsGame?.stop();
+  if (name !== 'boxes') window.BoxesGame?.stop();
   window.GameHelp.hide();
   Object.values(screens).forEach((screen) => screen.classList.add('hidden'));
   screens[name].classList.remove('hidden');
   window.scrollTo(0, 0);
   if (name === 'home') {
+    showScreen.currentGame = null;
     const entry = screens.home.querySelector('[data-game="' + showScreen.previousGame + '"]');
     entry?.focus({ preventScroll: true });
     entry?.scrollIntoView({ block: 'nearest' });
-  } else if (['garden', 'stars', 'fruit', 'drawing', 'bubbles', 'memory', 'train', 'maze', 'puzzle', 'music', 'link', 'icecream', 'hideout', 'builder', 'cake', 'carwash'].includes(name)) {
+  } else if (GAME_SCREEN_NAMES.includes(name)) {
+    showScreen.currentGame = name;
     showScreen.previousGame = name;
     const title = screens[name].querySelector('h2');
     title.tabIndex = -1;
     title.focus({ preventScroll: true });
   }
+  if (!GAME_SCREEN_NAMES.includes(name)) showScreen.currentGame = null;
+  refreshPlayTime();
 }
 window.showScreen = showScreen;
 
@@ -347,31 +591,39 @@ function openParentModal() {
   document.querySelector('[data-submit-parent]').disabled = false;
   parentModal.classList.remove('hidden');
   mathAnswer.focus();
+  refreshPlayTime();
 }
 
 function closeParentModal() {
   parentModal.classList.add('hidden');
+  refreshPlayTime();
 }
 
-document.querySelector('[data-game="stars"]').addEventListener('click', () => window.StarsGame.start());
-document.querySelector('[data-game="fruit"]').addEventListener('click', () => window.FruitGame.start());
-document.querySelector('[data-game="bubbles"]').addEventListener('click', () => window.BubblesGame.start());
-document.querySelector('[data-game="memory"]').addEventListener('click', () => window.MemoryGame.start());
-document.querySelector('[data-game="train"]').addEventListener('click', () => window.TrainGame.start());
-document.querySelector('[data-game="maze"]').addEventListener('click', () => window.MazeGame.start());
-document.querySelector('[data-game="puzzle"]').addEventListener('click', () => window.PuzzleGame.start());
-document.querySelector('[data-game="music"]').addEventListener('click', () => window.MusicGame.start());
-document.querySelector('[data-game="link"]').addEventListener('click', () => window.LinkGame.start());
-document.querySelector('[data-game="icecream"]').addEventListener('click', () => window.IcecreamGame.start());
-document.querySelector('[data-game="hideout"]').addEventListener('click', () => window.HideoutGame.start());
-document.querySelector('[data-game="builder"]').addEventListener('click', () => window.BuilderGame.start());
-document.querySelector('[data-game="cake"]').addEventListener('click', () => window.CakeGame.start());
-document.querySelector('[data-game="carwash"]').addEventListener('click', () => window.CarwashGame.start());
-document.querySelectorAll('[data-game="drawing"], [data-drawing-replay]').forEach((button) => button.addEventListener('click', () => window.DrawingGame?.start()));
+document.querySelector('[data-game="stars"]').addEventListener('click', () => startGame('stars', () => window.StarsGame.start()));
+document.querySelector('[data-game="fruit"]').addEventListener('click', () => startGame('fruit', () => window.FruitGame.start()));
+document.querySelector('[data-game="bubbles"]').addEventListener('click', () => startGame('bubbles', () => window.BubblesGame.start()));
+document.querySelector('[data-game="memory"]').addEventListener('click', () => startGame('memory', () => window.MemoryGame.start()));
+document.querySelector('[data-game="train"]').addEventListener('click', () => startGame('train', () => window.TrainGame.start()));
+document.querySelector('[data-game="maze"]').addEventListener('click', () => startGame('maze', () => window.MazeGame.start()));
+document.querySelector('[data-game="puzzle"]').addEventListener('click', () => startGame('puzzle', () => window.PuzzleGame.start()));
+document.querySelector('[data-game="music"]').addEventListener('click', () => startGame('music', () => window.MusicGame.start()));
+document.querySelector('[data-game="link"]').addEventListener('click', () => startGame('link', () => window.LinkGame.start()));
+document.querySelector('[data-game="icecream"]').addEventListener('click', () => startGame('icecream', () => window.IcecreamGame.start()));
+document.querySelector('[data-game="hideout"]').addEventListener('click', () => startGame('hideout', () => window.HideoutGame.start()));
+document.querySelector('[data-game="builder"]').addEventListener('click', () => startGame('builder', () => window.BuilderGame.start()));
+document.querySelector('[data-game="cake"]').addEventListener('click', () => startGame('cake', () => window.CakeGame.start()));
+document.querySelector('[data-game="carwash"]').addEventListener('click', () => startGame('carwash', () => window.CarwashGame.start()));
+document.querySelector('[data-game="dressup"]').addEventListener('click', () => startGame('dressup', () => window.DressupGame.start()));
+document.querySelector('[data-game="juice"]').addEventListener('click', () => startGame('juice', () => window.JuiceGame.start()));
+document.querySelector('[data-game="mail"]').addEventListener('click', () => startGame('mail', () => window.MailGame.start()));
+document.querySelector('[data-game="pipes"]').addEventListener('click', () => startGame('pipes', () => window.PipesGame.start()));
+document.querySelector('[data-game="beads"]').addEventListener('click', () => startGame('beads', () => window.BeadsGame.start()));
+document.querySelector('[data-game="boxes"]').addEventListener('click', () => startGame('boxes', () => window.BoxesGame.start()));
+document.querySelectorAll('[data-game="drawing"], [data-drawing-replay]').forEach((button) => button.addEventListener('click', () => startGame('drawing', () => window.DrawingGame?.start())));
 document.querySelectorAll('[data-home]').forEach((button) => button.addEventListener('click', () => showScreen('home')));
 document.querySelectorAll('[data-replay]').forEach((button) => button.addEventListener('click', () => {
-  const game = { stars: window.StarsGame, fruit: window.FruitGame, bubbles: window.BubblesGame, memory: window.MemoryGame, train: window.TrainGame, maze: window.MazeGame, puzzle: window.PuzzleGame, music: window.MusicGame, link: window.LinkGame, icecream: window.IcecreamGame, hideout: window.HideoutGame, builder: window.BuilderGame, cake: window.CakeGame, carwash: window.CarwashGame }[button.dataset.replay];
-  game.start();
+  const game = { stars: window.StarsGame, fruit: window.FruitGame, bubbles: window.BubblesGame, memory: window.MemoryGame, train: window.TrainGame, maze: window.MazeGame, puzzle: window.PuzzleGame, music: window.MusicGame, link: window.LinkGame, icecream: window.IcecreamGame, hideout: window.HideoutGame, builder: window.BuilderGame, cake: window.CakeGame, carwash: window.CarwashGame, dressup: window.DressupGame, juice: window.JuiceGame, mail: window.MailGame, pipes: window.PipesGame, beads: window.BeadsGame }[button.dataset.replay];
+  startGame(button.dataset.replay, () => game.start());
 }));
 document.querySelector('[data-parent]').addEventListener('click', openParentModal);
 document.querySelector('[data-close-modal]').addEventListener('click', closeParentModal);
@@ -403,12 +655,22 @@ document.querySelector('[data-submit-parent]').addEventListener('click', () => {
 document.querySelector('#save-settings').addEventListener('click', () => {
   saveSettings({
     fruitLevels: Number(document.querySelector('#fruit-level-setting').value),
+    playLimitMinutes: Number(document.querySelector('#play-limit-setting').value),
   });
-  document.querySelector('#settings-saved').textContent = '设置已保存，下次游戏开始时生效。';
+  refreshParentPage();
+  document.querySelector('#settings-saved').textContent = '设置已保存，游玩时间到了会自动锁住游戏。';
+  enforcePlayTimeLimit();
+  refreshPlayTime();
 });
 mathAnswer.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') document.querySelector('[data-submit-parent]').click();
 });
 recordTodayTime();
-window.setInterval(recordTodayTime, 30000);
+if (playPaused) {
+  document.body.classList.add('is-paused');
+  pauseDialog.showModal();
+}
+refreshPlayTime();
+window.setInterval(() => { recordTodayTime(); enforcePlayTimeLimit(); refreshPlayTime(); }, 1000);
 window.addEventListener('beforeunload', recordTodayTime);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { recordTodayTime(); enforcePlayTimeLimit(); refreshPlayTime(); } });

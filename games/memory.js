@@ -4,11 +4,12 @@
   const tip = document.querySelector('#memory-tip');
   const hint = document.querySelector('#memory-hint');
   const pictures = {
+    ...Object.fromEntries(window.GameAnimals.friends.map(friend => [friend.key, [friend.symbol, friend.name]])),
     rabbit: ['garden-rabbit-art', '小兔'], fish: ['mini-fish', '小鱼'],
     butterfly: ['garden-butterfly-art', '蝴蝶'], flower: ['garden-flower-art', '小花'],
     apple: ['play-apple', '苹果'], pear: ['play-pear', '梨子'],
   };
-  const levels = [['rabbit', 'fish'], ['butterfly', 'flower', 'pear'], ['rabbit', 'fish', 'butterfly', 'apple']];
+  const levels = [['rabbit', 'fish'], ['butterfly', 'flower', 'pear'], ['rabbit', 'fish', 'butterfly', 'apple'], ['elephant', 'panda', 'polarBear', 'giraffe']];
   let active = false;
   let transitioning = false;
   let level = 0;
@@ -34,7 +35,7 @@
   }
 
   function setup(focus = false) {
-    clearTimeout(mismatchTimer);
+    window.GameClock.clearTimeout(mismatchTimer);
     mismatchTimer = undefined;
     open = [];
     matched = new Set();
@@ -45,7 +46,7 @@
       [deck[index], deck[other]] = [deck[other], deck[index]];
     }
     cards.dataset.pairs = String(levels[level].length);
-    document.querySelector('#memory-level').textContent = ['两个小伙伴', '花园里的朋友', '朋友来聚会'][level];
+    document.querySelector('#memory-level').textContent = ['两个小伙伴', '花园里的朋友', '朋友来聚会', '动物朋友的聚会'][level];
     tip.textContent = '先翻一张，再找它的朋友。';
     cards.replaceChildren();
     deck.forEach((picture, index) => {
@@ -83,7 +84,7 @@
             }
           } else {
             tip.textContent = '再翻翻别的，朋友就在这里。';
-            mismatchTimer = setTimeout(() => {
+            mismatchTimer = window.GameClock.setTimeout(() => {
               mismatchTimer = undefined;
               if (!active) return;
               open = [];
@@ -121,7 +122,7 @@
   function stop() {
     active = false;
     transitioning = false;
-    clearTimeout(mismatchTimer);
+    window.GameClock.clearTimeout(mismatchTimer);
     mismatchTimer = undefined;
     window.LevelTransition.cancel();
   }
